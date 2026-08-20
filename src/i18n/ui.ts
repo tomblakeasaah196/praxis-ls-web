@@ -54,6 +54,7 @@ export interface UiCopy {
     readonly security: string;
     readonly pricing: string;
     readonly about: string;
+    readonly customers: string;
     readonly contactUs: string;
   };
   readonly placeholder: {
@@ -102,6 +103,7 @@ export const UI: Record<Locale, UiCopy> = {
       security: "Security",
       pricing: "Pricing",
       about: "About",
+      customers: "Customers",
       contactUs: "Contact us",
     },
     placeholder: {
@@ -149,6 +151,7 @@ export const UI: Record<Locale, UiCopy> = {
       security: "Sécurité",
       pricing: "Tarifs",
       about: "À propos",
+      customers: "Références",
       contactUs: "Nous contacter",
     },
     placeholder: {

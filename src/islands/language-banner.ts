@@ -1,5 +1,6 @@
 /**
- * The cross-language suggestion (N7).
+ * The cross-language suggestion (N7) — the half of it that needs an event
+ * listener.
  *
  * The rules the guide is strict about, and what each one costs if broken:
  *
@@ -11,52 +12,36 @@
  *   - It only appears when the browser's preferred language actually disagrees
  *     with the page. Showing it to everyone would train people to dismiss it.
  *
- * The destination is rendered onto the banner by the build, straight from the
- * slug map. There is no path rewriting here, so there is no way for this to
- * land the reader on the homepage.
+ * WHETHER IT APPEARS is decided by the inline script in BaseHead.astro, before
+ * first paint, and expressed as `data-lang-offer` on <html>. It has to happen
+ * there: this module runs after the first paint, and revealing the first
+ * element in the body at that point moves the entire document down — 0.105 CLS
+ * against a 0.05 budget, measured on /fr/solutions/plateforme-dsi before the
+ * decision moved into the head.
+ *
+ * So what is left here is the dismissal, which is a click and therefore cannot
+ * be anywhere else. The destination was rendered onto the banner by the build,
+ * straight from the slug map: there is no path rewriting here, so there is no
+ * way for this to land the reader on the homepage.
  */
 const DISMISS_KEY = "praxis.lang-banner-dismissed";
-
-function prefersOtherLanguage(pageLang: string, otherLang: string): boolean {
-  const preferred = navigator.languages?.length
-    ? navigator.languages
-    : [navigator.language].filter(Boolean);
-
-  for (const tag of preferred) {
-    const base = tag.toLowerCase().split("-")[0];
-    if (base === pageLang) return false;
-    if (base === otherLang) return true;
-  }
-  return false;
-}
+const OFFER_ATTRIBUTE = "data-lang-offer";
 
 export function mountLanguageBanner(root: ParentNode = document): void {
   const banner = root.querySelector<HTMLElement>("[data-lang-banner]");
   if (!banner) return;
 
-  const pageLang = document.documentElement.lang.toLowerCase().split("-")[0] ?? "en";
-  const otherLang = (banner.dataset.langBannerLang ?? "").toLowerCase().split("-")[0] ?? "";
-  if (!otherLang) return;
-
-  try {
-    if (localStorage.getItem(DISMISS_KEY) === "1") return;
-  } catch {
-    /* Storage blocked: show it once per page rather than never. The reader can
-       still dismiss it; it simply will not be remembered. */
-  }
-
-  if (!prefersOtherLanguage(pageLang, otherLang)) return;
-
-  banner.hidden = false;
-
   banner
     .querySelector<HTMLButtonElement>("[data-lang-banner-dismiss]")
     ?.addEventListener("click", () => {
-      banner.hidden = true;
+      document.documentElement.removeAttribute(OFFER_ATTRIBUTE);
       try {
         localStorage.setItem(DISMISS_KEY, "1");
       } catch {
-        /* See above. */
+        /* Storage can be blocked outright. The banner is gone for this page
+           view; it will be offered again on the next one, which is the right
+           way round — the reader can always dismiss it again, and never seeing
+           the other language tree is the worse failure. */
       }
     });
 }

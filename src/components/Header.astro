@@ -4,14 +4,22 @@
  * scrolled (guide §3.1). Five items, one sheet on mobile, and the CTA is the
  * only orange thing in it.
  *
- * "Product" and "Solutions" point at homepage sections rather than at pages,
- * because the URL map in guide §2 has no `/product` and no `/solutions` index —
- * only `/solutions/<slug>` children. Deviation logged in HANDOFF.md.
+ * "Solutions" is a menu over the five solution pages. It could not be one in
+ * the first change — the pages did not exist — and pointing it at the coverage
+ * grid was a placeholder, recorded as a deviation. It is a DISCLOSURE, not an
+ * ARIA menu: a button that shows and hides a list of ordinary links. The APG's
+ * menu/menuitem pattern is for application menus, where arrow keys replace Tab
+ * and a link stops being a link; navigation that behaves that way surprises
+ * everyone who has learned how a website works.
+ *
+ * "Product" still points at a homepage section: the URL map in guide §2 has no
+ * `/product` page to point it at. Deviation logged in HANDOFF.md.
  */
 import Mark from "./Mark.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { UI } from "~/i18n/ui";
+import { solutionNav } from "~/content/solutions";
 import { href, type Locale, type RouteKey } from "~/i18n/routes";
 
 interface Props {
@@ -23,9 +31,15 @@ const { locale, route } = Astro.props;
 const ui = UI[locale];
 const home = href("home", locale);
 
-const items = [
-  { label: ui.nav.product, href: `${home}#spine`, current: false },
-  { label: ui.nav.solutions, href: `${home}#coverage`, current: false },
+const solutions = solutionNav(locale).map((entry) => ({
+  ...entry,
+  url: href(entry.route, locale),
+  current: route === entry.route,
+}));
+const onSolution = solutions.some((entry) => entry.current);
+
+const before = [{ label: ui.nav.product, href: `${home}#spine`, current: false }];
+const after = [
   { label: ui.nav.security, href: href("security", locale), current: route === "security" },
   { label: ui.nav.pricing, href: href("pricing", locale), current: route === "pricing" },
   { label: ui.nav.about, href: href("about", locale), current: route === "about" },
@@ -41,7 +55,52 @@ const items = [
     <nav class="header__nav" aria-label={ui.nav.label}>
       <ul class="header__list">
         {
-          items.map((item) => (
+          before.map((item) => (
+            <li>
+              <a href={item.href} aria-current={item.current ? "page" : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="header__menu-holder" data-menu-root>
+          <button
+            type="button"
+            class="header__menu-button"
+            data-menu-button
+            aria-expanded="false"
+            aria-controls="solutions-menu"
+            data-current={onSolution ? "" : undefined}
+          >
+            {ui.nav.solutions}
+            <svg
+              class="header__chevron"
+              viewBox="0 0 12 12"
+              aria-hidden="true"
+              focusable="false"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.4" fill="none"
+              ></path>
+            </svg>
+          </button>
+          <div class="header__menu" id="solutions-menu" hidden data-menu>
+            <ul>
+              {
+                solutions.map((entry) => (
+                  <li>
+                    <a href={entry.url} aria-current={entry.current ? "page" : undefined}>
+                      <span class="header__menu-label">{entry.label}</span>
+                      <span class="header__menu-blurb">{entry.blurb}</span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </li>
+        {
+          after.map((item) => (
             <li>
               <a href={item.href} aria-current={item.current ? "page" : undefined}>
                 {item.label}
@@ -81,11 +140,39 @@ const items = [
     </div>
   </div>
 
-  {/* One sheet on mobile, not a nested menu system (guide §3.1). */}
+  {
+    /* ONE sheet on mobile, not a nested menu system (guide §3.1). The five
+      solution pages are listed inside it under a heading rather than behind a
+      second disclosure: a menu inside a sheet is the "dropdown on mobile" the
+      guide rules out, and it would put two Escape targets on one screen. */
+  }
   <div class="header__sheet" id="header-sheet" hidden data-nav-sheet>
     <ul class="header__sheet-list shell">
       {
-        items.map((item) => (
+        before.map((item) => (
+          <li>
+            <a href={item.href} aria-current={item.current ? "page" : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <h2 class="header__sheet-heading" id="sheet-solutions">{ui.nav.solutions}</h2>
+        <ul class="header__sheet-sub" aria-labelledby="sheet-solutions">
+          {
+            solutions.map((entry) => (
+              <li>
+                <a href={entry.url} aria-current={entry.current ? "page" : undefined}>
+                  {entry.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </li>
+      {
+        after.map((item) => (
           <li>
             <a href={item.href} aria-current={item.current ? "page" : undefined}>
               {item.label}
@@ -156,6 +243,108 @@ const items = [
 
   .header__list a[aria-current="page"] {
     color: var(--brand-ink-orange);
+  }
+
+  /* ── The Solutions menu ────────────────────────────────────────────────── */
+
+  .header__menu-holder {
+    position: relative;
+  }
+
+  .header__menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--brand-ink-muted);
+    font-family: inherit;
+    font-size: var(--step-caption);
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .header__menu-button:hover {
+    color: var(--brand-ink);
+  }
+
+  .header__menu-button[data-current] {
+    color: var(--brand-ink-orange);
+  }
+
+  .header__chevron {
+    inline-size: 12px;
+    block-size: 12px;
+    transition: transform var(--duration-fast) var(--ease);
+  }
+
+  .header__menu-button[aria-expanded="true"] .header__chevron {
+    transform: rotate(180deg);
+  }
+
+  .header__menu {
+    position: absolute;
+    inset-block-start: calc(100% + var(--space-s));
+    inset-inline-start: calc(var(--space-s) * -1);
+    inline-size: max-content;
+    max-inline-size: 22rem;
+    padding: var(--space-2xs);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-l);
+    background: var(--brand-bg);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--brand-carbon) 32%, transparent);
+  }
+
+  .header__menu ul {
+    display: grid;
+    gap: 1px;
+  }
+
+  .header__menu a {
+    display: grid;
+    gap: 1px;
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-m);
+    white-space: normal;
+  }
+
+  .header__menu a:hover {
+    background: var(--surface-raised);
+  }
+
+  .header__menu-label {
+    display: block;
+    color: var(--brand-ink);
+    font-weight: 600;
+  }
+
+  .header__menu a[aria-current="page"] .header__menu-label {
+    color: var(--brand-ink-orange);
+  }
+
+  .header__menu-blurb {
+    display: block;
+    color: var(--brand-ink-muted);
+    font-size: var(--step-eyebrow);
+    line-height: 1.4;
+  }
+
+  .header__sheet-heading {
+    font-size: var(--step-eyebrow);
+    font-family: var(--brand-font-display);
+    letter-spacing: var(--brand-tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--brand-ink-slate);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .header__sheet-sub {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-inline-start: var(--space-s);
+    border-inline-start: 1px solid var(--brand-line);
   }
 
   .header__tools {

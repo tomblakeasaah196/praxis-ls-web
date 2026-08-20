@@ -10,10 +10,13 @@
  * runner is noise, and a budget enforced against noise is a budget people learn
  * to re-run until it passes.
  *
- * The URLs are the two homepages plus the heaviest supporting page in each
- * language. The homepage carries the control tower, the role tabs and the hero
- * image; if the budgets hold there they hold everywhere, and the contact page
- * is included because it is the only one with a form island.
+ * The URLs are the two homepages, the heaviest solution page in each language,
+ * and the two contact pages. The homepage carries the control tower, the role
+ * tabs and the hero image; the solution pages are the heaviest documents on the
+ * site now that each carries two theme-aware screenshots, and they are the
+ * pages search traffic lands on (guide §5); the contact page is the only one
+ * with a form island. Six URLs at three runs each is about as much as a CI job
+ * should spend before people start skipping it.
  */
 module.exports = {
   ci: {
@@ -22,6 +25,8 @@ module.exports = {
       url: [
         "http://localhost/en/index.html",
         "http://localhost/fr/index.html",
+        "http://localhost/en/solutions/platform-it/index.html",
+        "http://localhost/fr/solutions/plateforme-dsi/index.html",
         "http://localhost/en/contact/index.html",
         "http://localhost/fr/contact/index.html",
       ],

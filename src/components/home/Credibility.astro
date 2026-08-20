@@ -4,22 +4,31 @@
  * brand's §6 is explicit that padding this strip is the fastest way to look
  * small to the buyer you want. Smart Logistics consented to be named with
  * sanitisation; nothing here goes past what §3.3 writes down.
+ *
+ * The customer's name links to their page, which carries the same sentence and
+ * says what else will never be published. The words are untouched — the link
+ * wraps the emphasised span the copy deck already stores separately, so its
+ * accessible name is exactly the text a reader can see.
  */
 import type { HomeCopy } from "~/content/types";
+import { href, type Locale } from "~/i18n/routes";
 
 interface Props {
   copy: HomeCopy;
+  locale: Locale;
 }
 
-const { copy } = Astro.props;
+const { copy, locale } = Astro.props;
 ---
 
 <section class="credibility section--surface" aria-label={copy.credibility.lead.strong}>
   <div class="shell credibility__inner">
     <p class="credibility__lead">
-      {copy.credibility.lead.before}<strong>{copy.credibility.lead.strong}</strong>{
-        copy.credibility.lead.after
-      }
+      {copy.credibility.lead.before}<a
+        class="credibility__customer"
+        href={href("customers/smart-logistics", locale)}
+        ><strong>{copy.credibility.lead.strong}</strong></a
+      >{copy.credibility.lead.after}
     </p>
     <ul class="credibility__facts">
       {copy.credibility.facts.map((fact) => <li class="num">{fact}</li>)}
@@ -50,6 +59,16 @@ const { copy } = Astro.props;
   .credibility__lead strong {
     color: var(--brand-ink);
     font-weight: 600;
+  }
+
+  .credibility__customer {
+    color: inherit;
+    text-decoration-color: var(--orange-edge);
+    text-underline-offset: 0.2em;
+  }
+
+  .credibility__customer:hover strong {
+    color: var(--brand-ink-orange);
   }
 
   .credibility__facts {

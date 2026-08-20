@@ -1,0 +1,16 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import SolutionPage from "~/components/pages/SolutionPage.astro";
+import { solutions } from "~/content/solutions.en";
+
+const copy = solutions.finance;
+---
+
+<BaseLayout
+  locale="en"
+  route="solutions/finance-ohada"
+  title={copy.meta.title}
+  description={copy.meta.description}
+>
+  <SolutionPage copy={copy} id="finance" locale="en" />
+</BaseLayout>

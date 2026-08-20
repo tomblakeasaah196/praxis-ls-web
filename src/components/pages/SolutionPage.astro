@@ -1,0 +1,204 @@
+---
+/**
+ * One of the five solution pages (guide §2, brief §4).
+ *
+ * The shape is the same on all five and is the argument the site makes,
+ * narrowed to one part of the business: here is what this area covers, here is
+ * what it posts, here is the surface it posts through, here is where to go
+ * next. DRAFT COPY — every string comes from solutions.{en,fr}.ts and is listed
+ * in HANDOFF.md § Draft copy.
+ *
+ * The related-pages block is generated from the solution table rather than
+ * written per page: five pages each listing the other four by hand is twenty
+ * links to keep correct, and the first one to go stale is the one nobody reads.
+ */
+import PageIntro from "~/components/PageIntro.astro";
+import NodeChain from "~/components/NodeChain.astro";
+import Screenshot from "~/components/Screenshot.astro";
+import type { SolutionPage } from "~/content/page-types";
+import { solutionNav, type SolutionId } from "~/content/solutions";
+import { href, type Locale } from "~/i18n/routes";
+import { UI } from "~/i18n/ui";
+
+interface Props {
+  copy: SolutionPage;
+  id: SolutionId;
+  locale: Locale;
+}
+
+const { copy, id, locale } = Astro.props;
+const ui = UI[locale];
+const related = solutionNav(locale).filter((entry) => entry.id !== id);
+---
+
+<PageIntro eyebrow={copy.eyebrow} heading={copy.heading} intro={copy.intro} />
+
+<section class="section" aria-labelledby="covers-heading">
+  <div class="shell">
+    <h2 id="covers-heading" class="section-label">{copy.coversHeading}</h2>
+    <ul class="covers">
+      {
+        copy.covers.map((item) => (
+          <li class="covers__item">
+            <h3 class="covers__name">{item.name}</h3>
+            <p class="covers__line">{item.line}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="section section--surface" aria-labelledby="posting-heading">
+  <div class="shell posting">
+    <div class="posting__text">
+      <h2 id="posting-heading">{copy.postingHeading}</h2>
+      <p class="lede measure">{copy.postingBody}</p>
+      {
+        copy.outLink && (
+          <p>
+            <a class="link-out" href={href(copy.outLink.route, locale)}>
+              {copy.outLink.label}
+            </a>
+          </p>
+        )
+      }
+    </div>
+    <NodeChain items={copy.chain} label={copy.chainLabel} />
+  </div>
+</section>
+
+{
+  copy.screenshot && (
+    <section class="section" aria-label={copy.screenshot.alt}>
+      <div class="shell">
+        <Screenshot
+          screen={copy.screenshot.screen}
+          locale={locale}
+          alt={copy.screenshot.alt}
+          themeAware
+        />
+      </div>
+    </section>
+  )
+}
+
+<section class="section" aria-labelledby="related-heading">
+  <div class="shell">
+    <h2 id="related-heading" class="section-label">{copy.relatedHeading}</h2>
+    <ul class="related">
+      {
+        related.map((entry) => (
+          <li>
+            <a class="related__link card" href={href(entry.route, locale)}>
+              <span class="related__label">{entry.label}</span>
+              <span class="related__blurb">{entry.blurb}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="close-heading">
+  <div class="shell close">
+    <h2 id="close-heading">{copy.closeHeading}</h2>
+    <p class="lede measure">{copy.closeLine}</p>
+    <p>
+      <a class="btn btn--primary" href={href("contact", locale)}>{ui.cta.bookDemo}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  /* Rules on the cells, not a 1px grid gap over a coloured background: the
+     lists are five to eight items long, so the last row is usually short, and
+     the gap technique paints the empty tail of that row as though a cell were
+     there. */
+  .covers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    column-gap: var(--space-l);
+  }
+
+  .covers__item {
+    padding-block: var(--space-m);
+    border-block-start: 1px solid var(--brand-line);
+    display: grid;
+    gap: var(--space-3xs);
+    align-content: start;
+  }
+
+  .covers {
+    border-block-end: 1px solid var(--brand-line);
+  }
+
+  .covers__name {
+    font-size: var(--step-body);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  .covers__line {
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+    color: var(--brand-ink-muted);
+  }
+
+  .posting {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .posting__text {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .posting h2 {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+    max-width: 24ch;
+  }
+
+  .related {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: var(--space-s);
+  }
+
+  .related__link {
+    display: grid;
+    gap: var(--space-3xs);
+    text-decoration: none;
+    color: inherit;
+    block-size: 100%;
+  }
+
+  .related__link:hover {
+    border-color: var(--line-strong);
+  }
+
+  .related__label {
+    font-weight: 600;
+    color: var(--brand-ink);
+  }
+
+  .related__blurb {
+    font-size: var(--step-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .close {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+  }
+
+  .close h2 {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+    max-width: 20ch;
+  }
+</style>

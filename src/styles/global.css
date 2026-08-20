@@ -104,10 +104,33 @@
     --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 
     color-scheme: dark;
+
+    /* Which of a theme-aware screenshot's two captures is displayed. It lives
+       here rather than in Screenshot.astro because only :root knows the theme,
+       and a component's <style> cannot scope a rule that targets :root — that
+       rule would arrive unlayered on every page of the site (check:css, and
+       the bug in HANDOFF.md §4 that it exists to prevent). */
+    --shot-dark: block;
+    --shot-light: none;
+
+    /* The cross-language banner is display: none until the head script decides
+       the reader is being offered the other language — before first paint, the
+       same way the theme is decided. Revealing it from the island instead cost
+       0.105 CLS on the pages where the island ran after the first paint: the
+       banner is the first element in the body, so appearing pushes the entire
+       document down. Measured on /fr/solutions/plateforme-dsi. */
+    --lang-banner-display: none;
+  }
+
+  :root[data-lang-offer] {
+    --lang-banner-display: block;
   }
 
   :root[data-theme="light"] {
     color-scheme: light;
+
+    --shot-dark: none;
+    --shot-light: block;
   }
 
   html {

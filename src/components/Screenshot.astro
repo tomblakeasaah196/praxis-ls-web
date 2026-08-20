@@ -27,6 +27,24 @@ interface Props {
   screen: "operation-file" | "control-tower" | "general-ledger";
   /** The guide fixes the hero at dark (§3.2); other slots may ask for light. */
   theme?: "dark" | "light";
+  /**
+   * Ship BOTH captures for this locale and show the one that matches the
+   * reader's theme.
+   *
+   * Guide §8 wants all twelve images used — "a French page showing an English
+   * UI undoes every other thing this guide asks for", and the same argument
+   * applies to a light-theme reader looking at a dark screenshot of software
+   * they are about to be shown in light. The hero does not do this (D6): it is
+   * on the critical path, where a second image is a second request in front of
+   * the LCP element. Below the fold it costs nothing — both images are lazy,
+   * and the one that is `display: none` has no layout box, so it never
+   * intersects the viewport and is never fetched.
+   *
+   * The swap is CSS reading a custom property that global.css sets per theme,
+   * NOT a rule targeting `html[data-theme]` from inside a component: Astro
+   * cannot scope such a selector and it would leak to every page (check:css).
+   */
+  themeAware?: boolean;
   locale: Locale;
   alt: string;
   /** Above the fold: eager rather than lazy. NOT fetchpriority=high — on a
@@ -43,24 +61,38 @@ const {
   locale,
   alt,
   priority = false,
+  themeAware = false,
   class: className,
 }: Props = Astro.props;
-const file = `${screen}--${theme}--${locale}.png`;
 const copy = UI[locale].placeholder;
+const themes = themeAware ? (["dark", "light"] as const) : ([theme] as const);
 ---
 
 <figure class:list={["shot", className]} data-placeholder>
-  <img
-    src={`/screens/${file}`}
-    alt={alt}
-    width="1600"
-    height="1000"
-    decoding="async"
-    loading={priority ? "eager" : "lazy"}
-  />
+  {
+    themes.map((each) => (
+      <img
+        class:list={["shot__img", themeAware && `shot__img--${each}`]}
+        src={`/screens/${screen}--${each}--${locale}.png`}
+        alt={alt}
+        width="1600"
+        height="1000"
+        decoding="async"
+        loading={priority ? "eager" : "lazy"}
+      />
+    ))
+  }
   <figcaption class="shot__badge">
     <span class="shot__badge-label">{copy.badge}</span>
-    <code class="shot__badge-file num">{file}</code>
+    {
+      /* The badge names the file the reader is actually looking at, which in
+         theme-aware mode is whichever of the two the theme selected. */
+      themes.map((each) => (
+        <code class:list={["shot__badge-file", "num", themeAware && `shot__img--${each}`]}>
+          {`${screen}--${each}--${locale}.png`}
+        </code>
+      ))
+    }
   </figcaption>
   <p class="visually-hidden">{copy.note}</p>
 </figure>
@@ -78,6 +110,17 @@ const copy = UI[locale].placeholder;
   .shot img {
     inline-size: 100%;
     block-size: auto;
+  }
+
+  /* --shot-dark and --shot-light are `block` / `none` and swap with the theme;
+     they are declared in global.css, inside a layer, because :root is the only
+     place they can be declared and a component cannot scope :root. */
+  .shot__img--dark {
+    display: var(--shot-dark);
+  }
+
+  .shot__img--light {
+    display: var(--shot-light);
   }
 
   .shot__badge {

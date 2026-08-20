@@ -22,7 +22,16 @@
  * top and no code changes at all.
  *
  * ── The Open Graph cards ────────────────────────────────────────────────────
- * One per language (guide §5: "a French preview card on a French page"), 1200×630.
+ * One per language (guide §5: "a French preview card on a French page"), 1200×630,
+ * plus one per language for each page that earns its own — the five solution
+ * pages and the case study (src/lib/og.ts says which and names the files).
+ *
+ * A per-page card is rendered FROM THE BUILT PAGE: the script reads the
+ * eyebrow and the H1 out of dist/ rather than keeping a second copy of the
+ * words here. A card that says something the page does not is the sort of thing
+ * nobody notices until it is on somebody's timeline, and the only way to be
+ * sure is to have one source. Consequence: run `npm run build` before
+ * `npm run assets`. The script says so rather than rendering a stale card.
  *
  * ── How ─────────────────────────────────────────────────────────────────────
  * Headless Chromium renders an HTML document to PNG. That keeps the repository
@@ -129,6 +138,9 @@ const SUBTITLE = {
   fr: "Ce n’est pas le produit. À remplacer par la capture du même nom.",
 };
 
+/* The site-wide card is the hero's eyebrow and H1 — the only card whose words
+   are not read out of a page, because the homepage's own H1 is longer than the
+   card can hold at a readable size. Both lines are guide §3.2, verbatim. */
 const OG = {
   en: {
     eyebrow: "OHADA-NATIVE ERP FOR LOGISTICS OPERATORS",
@@ -197,9 +209,75 @@ function placeholderHtml({ screen, theme, lang }) {
   </body></html>`;
 }
 
-function ogHtml(lang) {
+/**
+ * The six pages that carry their own card, and where their built HTML is.
+ * Kept in step with src/lib/og.ts and src/i18n/routes.ts by
+ * scripts/check-links.mjs, which fails when a page names a card that is not in
+ * dist/og.
+ */
+const PAGE_CARDS = [
+  {
+    file: "solutions-freight-forwarding-customs",
+    en: "en/solutions/freight-forwarding-customs",
+    fr: "fr/solutions/transit-douane",
+  },
+  { file: "solutions-warehouse", en: "en/solutions/warehouse", fr: "fr/solutions/entrepot" },
+  { file: "solutions-fleet", en: "en/solutions/fleet", fr: "fr/solutions/flotte" },
+  {
+    file: "solutions-finance-ohada",
+    en: "en/solutions/finance-ohada",
+    fr: "fr/solutions/comptabilite-ohada",
+  },
+  {
+    file: "solutions-platform-it",
+    en: "en/solutions/platform-it",
+    fr: "fr/solutions/plateforme-dsi",
+  },
+  {
+    file: "customers-smart-logistics",
+    en: "en/customers/smart-logistics",
+    fr: "fr/references/smart-logistics",
+  },
+];
+
+const decode = (text) =>
+  text
+    .replace(/<[^>]+>/g, "")
+    .replace(/&#39;/g, "\u2019")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\s+/g, " ")
+    .trim();
+
+/** The eyebrow and the H1 of a built page — the card's words, from the page. */
+function readPage(relative) {
+  const file = path.join(ROOT, "dist", relative, "index.html");
+  if (!existsSync(file)) {
+    console.error(
+      `render-assets: dist/${relative}/index.html is missing.\n` +
+        "  The per-page Open Graph cards are rendered from the built pages.\n" +
+        "  Run `npm run build` first, then `npm run assets`.",
+    );
+    process.exit(1);
+  }
+  const html = readFileSync(file, "utf8");
+  const eyebrow = /<p class="eyebrow[^"]*"[^>]*>([\s\S]*?)<\/p>/.exec(html)?.[1];
+  const h1 = /<h1[^>]*>([\s\S]*?)<\/h1>/.exec(html)?.[1];
+  if (!eyebrow || !h1) throw new Error(`${relative}: no eyebrow or no <h1> to build a card from`);
+  return { eyebrow: decode(eyebrow).toUpperCase(), line: decode(h1) };
+}
+
+function ogHtml(lang, copy) {
   const t = PALETTE.dark;
-  const copy = OG[lang];
+  /* One size, with a floor under the longest line rather than a scale that
+     moves every card. The block between the eyebrow and the footer holds six
+     lines at 42px; the longest H1 on the site is the homepage's at five, and no
+     solution page reaches four even in French. A line past that is a copy
+     problem, not a layout problem, so it steps down once and the card still
+     renders rather than cropping. */
+  const size = copy.line.length > 130 ? 34 : 42;
   return `<!doctype html><html><head><meta charset="utf-8"><style>
     *{margin:0;padding:0;box-sizing:border-box}
     /* Absolute placement rather than flexbox: the card is a fixed 1200x630
@@ -214,7 +292,7 @@ function ogHtml(lang) {
     .top{display:flex;align-items:center;gap:16px}
     .word{font-size:26px;font-weight:600;letter-spacing:.14em;color:${t.ink}}
     .eyebrow{font-size:18px;letter-spacing:.12em;color:${PALETTE.slate};margin-bottom:20px}
-    .line{font-size:42px;line-height:1.14;letter-spacing:-.015em;font-weight:600;max-width:26ch}
+    .line{font-size:${size}px;line-height:1.14;letter-spacing:-.015em;font-weight:600;max-width:26ch}
     .rule{height:3px;background:${PALETTE.orange};width:110px;margin-top:26px}
     .foot{font-size:20px;color:${PALETTE.slate};font-family:ui-monospace,monospace}
   </style></head><body>
@@ -293,9 +371,26 @@ for (const screen of SCREENS) {
 }
 
 for (const lang of LANGS) {
-  await shoot(work, ogHtml(lang), path.join(ogDir, `praxis-ls--${lang}.png`), 1200, 630);
+  await shoot(work, ogHtml(lang, OG[lang]), path.join(ogDir, `praxis-ls--${lang}.png`), 1200, 630);
   count += 1;
 }
 
+let cards = 0;
+for (const card of PAGE_CARDS) {
+  for (const lang of LANGS) {
+    await shoot(
+      work,
+      ogHtml(lang, readPage(card[lang])),
+      path.join(ogDir, `${card.file}--${lang}.png`),
+      1200,
+      630,
+    );
+    count += 1;
+    cards += 1;
+  }
+}
+
 await rm(work, { recursive: true, force: true });
-console.log(`render-assets: ${count} images written (12 placeholders, 2 Open Graph cards)`);
+console.log(
+  `render-assets: ${count} images written (12 placeholders, 2 site cards, ${cards} page cards)`,
+);
