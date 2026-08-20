@@ -1,0 +1,315 @@
+---
+import { type Locale, useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+// Milestone labels
+const milestones = locale === 'en' 
+  ? ['Quotation', 'Transit order', 'Customs', 'Haulage', 'Warehouse', 'Delivery', 'Invoice', 'Settlement']
+  : ['Devis', 'Ordre de transit', 'Dédouanement', 'Camionnage', 'Entrepôt', 'Livraison', 'Facture', 'Règlement'];
+---
+
+<div class="control-tower" data-control-tower>
+  <div class="control-tower__visual" aria-hidden="true">
+    <svg 
+      class="control-tower__svg" 
+      viewBox="0 0 800 400" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Control tower visualization"
+    >
+      <!-- Grid lines (subtle background) -->
+      <g class="control-tower__grid" opacity="0.1">
+        <line x1="0" y1="100" x2="800" y2="100" stroke="var(--brand-ink-slate)" stroke-width="1"/>
+        <line x1="0" y1="200" x2="800" y2="200" stroke="var(--brand-ink-slate)" stroke-width="1"/>
+        <line x1="0" y1="300" x2="800" y2="300" stroke="var(--brand-ink-slate)" stroke-width="1"/>
+      </g>
+
+      <!-- Main timeline connector -->
+      <line 
+        class="control-tower__timeline" 
+        x1="50" y1="200" 
+        x2="750" y2="200" 
+        stroke="var(--brand-ink-orange)" 
+        stroke-width="2"
+        stroke-dasharray="1000"
+        stroke-dashoffset="1000"
+      />
+
+      <!-- Milestone nodes -->
+      {milestones.map((milestone, i) => {
+        const x = 100 + (i * 90);
+        const y = 200;
+        const isActive = false;
+        const isComplete = i < 3;
+        
+        return (
+          <g 
+            class={`control-tower__node ${isComplete ? 'complete' : ''} ${isActive ? 'active' : ''}`}
+            data-node={i}
+            transform={`translate(${x}, ${y})`}
+          >
+            {/* Node circle */}
+            <circle 
+              r="16" 
+              fill={isComplete ? 'var(--brand-ink-orange)' : 'var(--brand-surface)'}
+              stroke="var(--brand-ink-orange)"
+              stroke-width="2"
+            />
+            
+            {/* Checkmark for completed */}
+            {isComplete && (
+              <path 
+                d="M-6 0L-2 4L6-4" 
+                stroke="var(--brand-bg)" 
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            )}
+            
+            {/* Connector to next node */}
+            {i < milestones.length - 1 && (
+              <line 
+                x1="16" 
+                y1="0" 
+                x2="74" 
+                y2="0" 
+                stroke="var(--brand-ink-orange)" 
+                stroke-width="1"
+                opacity={isComplete ? 1 : 0.3}
+              />
+            )}
+          </g>
+        );
+      })}
+
+      <!-- Active milestone highlight -->
+      <g class="control-tower__active" data-active-node>
+        <circle r="24" fill="var(--brand-ink-orange)" opacity="0.2"/>
+        <circle r="20" fill="var(--brand-ink-orange)" opacity="0.3"/>
+        <circle r="16" fill="var(--brand-ink-orange)"/>
+        <text 
+          y="50" 
+          text-anchor="middle" 
+          fill="var(--brand-ink)"
+          font-family="var(--brand-font-body)"
+          font-size="12"
+        >
+          {locale === 'en' ? 'Processing' : 'En cours'}
+        </text>
+      </g>
+
+      <!-- Ledger panel (right side) -->
+      <g class="control-tower__ledger" transform="translate(600, 50)">
+        <rect 
+          x="0" y="0" 
+          width="180" height="120" 
+          rx="8" 
+          fill="var(--brand-surface)"
+          stroke="var(--brand-line)"
+          stroke-width="1"
+        />
+        
+        <!-- Ledger lines -->
+        <g class="ledger-lines">
+          {[0, 1, 2].map(i => (
+            <rect 
+              x="12" 
+              y={16 + (i * 28)} 
+              width={60 + (i * 20)} 
+              height="8" 
+              rx="4" 
+              fill="var(--brand-ink-orange)"
+              opacity={0.3 + (i * 0.2)}
+            />
+          ))}
+          <rect x="12" y="88" width="156" height="2" fill="var(--brand-line)"/>
+        </g>
+        
+        <text 
+          x="90" y="-8" 
+          text-anchor="middle" 
+          fill="var(--brand-ink-slate)"
+          font-family="var(--brand-font-body)"
+          font-size="10"
+          text-transform="uppercase"
+        >
+          {locale === 'en' ? 'Ledger' : 'Grand livre'}
+        </text>
+      </g>
+
+      <!-- Arrow connecting timeline to ledger -->
+      <g class="control-tower__connector">
+        <path 
+          d="M 480 200 Q 520 200 540 140 L 600 140" 
+          stroke="var(--brand-ink-orange)" 
+          stroke-width="1"
+          fill="none"
+          stroke-dasharray="4 4"
+          opacity="0.5"
+        />
+        <circle cx="600" cy="140" r="4" fill="var(--brand-ink-orange)" opacity="0.5"/>
+      </g>
+    </svg>
+  </div>
+
+  <p class="control-tower__hint">
+    {locale === 'en' 
+      ? 'Scroll to advance through milestones'
+      : 'Faites défiler pour parcourir les jalons'
+    }
+  </p>
+</div>
+
+<style>
+  .control-tower {
+    position: relative;
+    width: 100%;
+    padding: var(--space-8) 0;
+  }
+
+  .control-tower__visual {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .control-tower__svg {
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+  }
+
+  .control-tower__hint {
+    text-align: center;
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+    margin-top: var(--space-4);
+  }
+
+  /* Node animations */
+  .control-tower__node {
+    opacity: 0;
+    transform: translate(var(--node-x), 200px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .control-tower__node.complete {
+    opacity: 1;
+  }
+
+  .control-tower__timeline {
+    transition: stroke-dashoffset 2s ease;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .control-tower__node,
+    .control-tower__timeline {
+      transition: none;
+    }
+
+    .control-tower__node {
+      opacity: 1;
+    }
+
+    .control-tower__timeline {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>
+
+<script>
+  // Control tower scroll animation
+  function initControlTower(): void {
+    const tower = document.querySelector('[data-control-tower]');
+    if (!tower) return;
+
+    const nodes = tower.querySelectorAll('[data-node]');
+    const timeline = tower.querySelector('.control-tower__timeline') as SVGLineElement | null;
+    const activeNode = tower.querySelector('[data-active-node]') as SVGGElement | null;
+    
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (prefersReducedMotion) {
+      // Show all nodes as complete in reduced motion mode
+      nodes.forEach(node => node.classList.add('complete'));
+      if (timeline) {
+        timeline.style.strokeDashoffset = '0';
+      }
+      return;
+    }
+
+    // Intersection Observer for initial reveal
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            tower.classList.add('visible');
+            animateTimeline();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(tower);
+
+    // Scroll-driven animation
+    let currentNode = 0;
+    
+    function animateTimeline(): void {
+      if (currentNode >= nodes.length) return;
+
+      const node = nodes[currentNode];
+      node.classList.add('complete');
+      
+      if (timeline) {
+        const totalLength = 1000;
+        const progress = ((currentNode + 1) / nodes.length);
+        timeline.style.strokeDashoffset = String(totalLength * (1 - progress));
+      }
+
+      // Move active indicator
+      if (activeNode && node) {
+        const nodeX = parseFloat(node.getAttribute('transform')?.match(/translate\((\d+)/)?.[1] || '0');
+        activeNode.setAttribute('transform', `translate(${nodeX}, 200)`);
+      }
+
+      currentNode++;
+      
+      setTimeout(animateTimeline, 400);
+    }
+
+    // Scroll listener for continuous animation on scroll
+    let lastScrollY = window.scrollY;
+    
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const delta = scrollY - lastScrollY;
+      
+      if (delta > 0 && currentNode < nodes.length) {
+        // Only advance on scroll down
+      }
+      
+      lastScrollY = scrollY;
+    }, { passive: true });
+  }
+
+  // Initialize
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initControlTower);
+  } else {
+    initControlTower();
+  }
+</script>

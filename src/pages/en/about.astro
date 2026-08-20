@@ -1,0 +1,130 @@
+---
+import { useTranslations } from '../../i18n/ui';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoForm from '../../components/DemoForm.astro';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="About — Praxis LS"
+  description="Praxis LS is built by a team that has operated freight forwarding companies in Central Africa."
+>
+  <section class="about-hero">
+    <div class="container container--narrow">
+      <p class="eyebrow">About</p>
+      <h1>{t['about.title']}</h1>
+      <p class="about-hero__intro">{t['about.intro']}</p>
+    </div>
+  </section>
+
+  <section class="about-mission section">
+    <div class="container container--narrow">
+      <h2>Why we built this</h2>
+      <p>We operated freight forwarding companies in Central Africa for a decade. Every month, we spent days reconstructing the accounts from exported spreadsheets and WhatsApp threads. The DSF was assembled by hand, with margins that nobody could explain.</p>
+      <p>We looked for a tool that could run the operation and the accounting in one system — one that spoke OHADA natively, where every invoice posted itself to the ledger, where month-end was a re-reading rather than a reconstruction. It didn't exist.</p>
+      <p>So we built it.</p>
+    </div>
+  </section>
+
+  <section class="about-values section">
+    <div class="container">
+      <h2>What we believe</h2>
+      <div class="values-grid">
+        <div class="value-card">
+          <h3>The ledger is the spine</h3>
+          <p>Every operation — every transit file, every warehouse receipt, every fleet trip — should post to the same ledger. Not at month-end. At the moment it happens.</p>
+        </div>
+        <div class="value-card">
+          <h3>OHADA first</h3>
+          <p>The OHADA zone is seventeen states with a common accounting framework. Building for it properly — SYSCOHADA classes, DSF, liasse fiscale — is a moat that no global vendor will cross.</p>
+        </div>
+        <div class="value-card">
+          <h3>Your data, your exit</h3>
+          <p>One database per customer. Your credentials. Your data residency. If you ever need to leave, the export is clean and complete.</p>
+        </div>
+        <div class="value-card">
+          <h3>Honest marketing</h3>
+          <p>We publish what is live today and what we are building. A stale row on the standards table costs more than the page earns.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .about-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .about-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .about-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+    margin-inline: auto;
+  }
+
+  .about-mission {
+    background-color: var(--brand-bg);
+  }
+
+  .about-mission h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-6);
+  }
+
+  .about-mission p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .about-mission p:last-child {
+    color: var(--brand-ink);
+    font-weight: 500;
+  }
+
+  .about-values {
+    background-color: var(--brand-surface);
+  }
+
+  .about-values h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-8);
+    text-align: center;
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .value-card {
+    padding: var(--space-6);
+    background-color: var(--brand-bg);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-lg);
+  }
+
+  .value-card h3 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-3);
+  }
+
+  .value-card p {
+    font-size: var(--text-body);
+    color: var(--brand-ink-muted);
+  }
+</style>

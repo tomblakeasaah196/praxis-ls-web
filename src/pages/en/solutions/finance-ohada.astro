@@ -1,0 +1,175 @@
+---
+import { useTranslations } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DemoForm from '../../../components/DemoForm.astro';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Finance & OHADA — Praxis LS"
+  description="The ledger is the spine. Every operation file posts to it. Month-end is a re-reading, not a reconstruction."
+>
+  <section class="solution-hero">
+    <div class="container">
+      <p class="eyebrow">Solutions</p>
+      <h1>{t['solutions.finance.title']}</h1>
+      <p class="solution-hero__intro">{t['solutions.finance.intro']}</p>
+    </div>
+  </section>
+
+  <section class="solution-content section">
+    <div class="container">
+      <h2>What you get</h2>
+      <ul class="feature-list">
+        <li>
+          <strong>Chart of accounts</strong> — SYSCOHADA class 1-8, fully configured for logistics
+        </li>
+        <li>
+          <strong>General ledger</strong> — immutable entries, full audit trail, drill-down to source
+        </li>
+        <li>
+          <strong>Accounts payable</strong> — supplier invoices, payment scheduling, three-way matching
+        </li>
+        <li>
+          <strong>Accounts receivable</strong> — customer invoices, payment tracking, ageing analysis
+        </li>
+        <li>
+          <strong>Tax engine</strong> — TVA calculations, withholding taxes, regulatory declarations
+        </li>
+        <li>
+          <strong>Financial statements</strong> — balance sheet, income statement, DSF, liasse fiscale
+        </li>
+      </ul>
+
+      <h2>The spine of the operation</h2>
+      <p>Every operation file — every transit dossier, every warehouse receipt, every fleet trip — posts to this ledger. The chart of accounts, the tax engine, the journals and the statements are one system with the operation.</p>
+
+      <div class="solution-diagram">
+        <svg viewBox="0 0 600 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g>
+            <circle cx="50" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="50" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="9">Transit files</text>
+          </g>
+          <g>
+            <circle cx="150" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="150" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="9">Warehouse</text>
+          </g>
+          <g>
+            <circle cx="250" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="250" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="9">Fleet</text>
+          </g>
+          <g>
+            <circle cx="350" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="350" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="9">Invoicing</text>
+          </g>
+          <g>
+            <circle cx="450" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="450" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="9">Journal</text>
+          </g>
+          <g>
+            <circle cx="550" cy="30" r="10" fill="var(--brand-ink-orange)"/>
+            <text x="550" y="55" text-anchor="middle" fill="var(--brand-ink)" font-size="10" font-weight="600">Ledger</text>
+          </g>
+          <line x1="58" y1="30" x2="142" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <line x1="158" y1="30" x2="242" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <line x1="258" y1="30" x2="342" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <line x1="358" y1="30" x2="442" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <line x1="458" y1="30" x2="540" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="solution-cta section--full">
+    <div class="container container--narrow">
+      <h2>See the ledger behind your operation</h2>
+      <p>Thirty minutes, your files, your questions. We'll show you the ledger behind them.</p>
+      <a href="/en/contact" class="btn btn--primary btn--lg">Book a demo</a>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .solution-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .solution-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .solution-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+  }
+
+  .solution-content {
+    background-color: var(--brand-bg);
+  }
+
+  .solution-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-5);
+    margin-top: var(--space-10);
+  }
+
+  .solution-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .solution-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .feature-list li {
+    padding: var(--space-4);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--brand-ink-orange);
+  }
+
+  .solution-diagram {
+    margin-block: var(--space-10);
+    overflow-x: auto;
+  }
+
+  .solution-cta {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .solution-cta h2 {
+    font-size: var(--text-display-l);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .solution-cta p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    margin-inline: auto;
+  }
+</style>

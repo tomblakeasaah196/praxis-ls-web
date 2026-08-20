@@ -1,0 +1,136 @@
+---
+import { useTranslations } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DemoForm from '../../../components/DemoForm.astro';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Platform & IT — Praxis LS"
+  description="One PostgreSQL database per customer. Your data, your credentials, your exit. White-label in your colours and fonts."
+>
+  <section class="solution-hero">
+    <div class="container">
+      <p class="eyebrow">Solutions</p>
+      <h1>{t['solutions.platform.title']}</h1>
+      <p class="solution-hero__intro">{t['solutions.platform.intro']}</p>
+    </div>
+  </section>
+
+  <section class="solution-content section">
+    <div class="container">
+      <h2>What you get</h2>
+      <ul class="feature-list">
+        <li>
+          <strong>Dedicated PostgreSQL database</strong> — one database per customer, not a shared table with a tenant column
+        </li>
+        <li>
+          <strong>Customer-held credentials</strong> — your database, your credentials, your exit clause
+        </li>
+        <li>
+          <strong>White-label deployment</strong> — your subdomain, your colours, your fonts, your logo on every document
+        </li>
+        <li>
+          <strong>Multi-environment</strong> — production and test environments, test purged on schedule
+        </li>
+        <li>
+          <strong>REST API</strong> — integrations with your existing systems, webhooks for events
+        </li>
+        <li>
+          <strong>Data residency</strong> — your data stays where you need it to stay
+        </li>
+      </ul>
+
+      <h2>Your data, your control</h2>
+      <p>We run the code. You hold the data. Your database credentials are yours. If you ever need to leave, the export is clean and complete.</p>
+    </div>
+  </section>
+
+  <section class="solution-cta section--full">
+    <div class="container container--narrow">
+      <h2>See the platform architecture</h2>
+      <p>Thirty minutes, your files, your questions. We'll show you the ledger behind them.</p>
+      <a href="/en/contact" class="btn btn--primary btn--lg">Book a demo</a>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .solution-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .solution-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .solution-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+  }
+
+  .solution-content {
+    background-color: var(--brand-bg);
+  }
+
+  .solution-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-5);
+    margin-top: var(--space-10);
+  }
+
+  .solution-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .solution-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .feature-list li {
+    padding: var(--space-4);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--brand-ink-orange);
+  }
+
+  .solution-cta {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .solution-cta h2 {
+    font-size: var(--text-display-l);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .solution-cta p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    margin-inline: auto;
+  }
+</style>

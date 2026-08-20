@@ -1,0 +1,161 @@
+---
+import { type Locale, useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<footer class="footer">
+  <div class="footer__inner container">
+    <div class="footer__grid">
+      <div class="footer__col">
+        <h3 class="footer__heading">{t['footer.product']}</h3>
+        <ul class="footer__list">
+          <li><a href={locale === 'en' ? '/en/solutions/freight-forwarding-customs' : '/fr/solutions/transit-douane'}>{t['solutions.freight.title']}</a></li>
+          <li><a href={locale === 'en' ? '/en/solutions/warehouse' : '/fr/solutions/entrepot'}>{t['solutions.warehouse.title']}</a></li>
+          <li><a href={locale === 'en' ? '/en/solutions/fleet' : '/fr/solutions/flotte'}>{t['solutions.fleet.title']}</a></li>
+          <li><a href={locale === 'en' ? '/en/solutions/finance-ohada' : '/fr/solutions/comptabilite-ohada'}>{t['solutions.finance.title']}</a></li>
+          <li><a href={locale === 'en' ? '/en/solutions/platform-it' : '/fr/solutions/plateforme-dsi'}>{t['solutions.platform.title']}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3 class="footer__heading">{t['footer.company']}</h3>
+        <ul class="footer__list">
+          <li><a href={locale === 'en' ? '/en/about' : '/fr/a-propos'}>{t['nav.about']}</a></li>
+          <li><a href={locale === 'en' ? '/en/customers/smart-logistics' : '/fr/references/smart-logistics'}>Smart Logistics</a></li>
+          <li><a href={locale === 'en' ? '/en/standards' : '/fr/normes'}>{t['nav.security']}</a></li>
+          <li><a href={locale === 'en' ? '/en/pricing' : '/fr/tarifs'}>{t['nav.pricing']}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3 class="footer__heading">{t['footer.legal']}</h3>
+        <ul class="footer__list">
+          <li><a href={locale === 'en' ? '/en/legal/privacy' : '/fr/mentions-legales/confidentialite'}>Privacy</a></li>
+          <li><a href={locale === 'en' ? '/en/legal/terms' : '/fr/mentions-legales/conditions'}>Terms</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3 class="footer__heading">{t['footer.contact']}</h3>
+        <ul class="footer__list">
+          <li><a href={locale === 'en' ? '/en/contact' : '/fr/contact'}>{t['contact.title']}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__baseline">
+      <a href={locale === 'en' ? '/en/' : '/fr/'} class="footer__mark" aria-label="Praxis LS">
+        <svg width="16" height="16" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="16" cy="16" r="4" fill="var(--brand-ink-orange)"/>
+          <circle cx="6" cy="10" r="2.5" fill="var(--brand-ink-orange)"/>
+          <circle cx="26" cy="10" r="2.5" fill="var(--brand-ink-orange)"/>
+          <circle cx="6" cy="22" r="2.5" fill="var(--brand-ink-orange)"/>
+          <circle cx="26" cy="22" r="2.5" fill="var(--brand-ink-orange)"/>
+          <line x1="16" y1="16" x2="6" y2="10" stroke="var(--brand-ink-orange)" stroke-width="1.5"/>
+          <line x1="16" y1="16" x2="26" y2="10" stroke="var(--brand-ink-orange)" stroke-width="1.5"/>
+          <line x1="16" y1="16" x2="6" y2="22" stroke="var(--brand-ink-orange)" stroke-width="1.5"/>
+          <line x1="16" y1="16" x2="26" y2="22" stroke="var(--brand-ink-orange)" stroke-width="1.5"/>
+        </svg>
+      </a>
+      <span class="footer__copyright">{t['footer.copyright']}</span>
+      <span class="footer__separator" aria-hidden="true">·</span>
+      <a href={locale === 'en' ? '/en/' : '/fr/'} class="footer__lang">{locale === 'en' ? 'FR' : 'EN'}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--brand-surface);
+    border-top: 1px solid var(--brand-line);
+    padding-block: var(--space-16);
+    margin-top: auto;
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
+  }
+
+  .footer__heading {
+    font-family: var(--brand-font-display);
+    font-size: var(--text-caption);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--brand-tracking-eyebrow);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .footer__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footer__list a {
+    font-size: var(--text-body);
+    color: var(--brand-ink-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer__list a:hover {
+    color: var(--brand-ink-orange);
+  }
+
+  .footer__baseline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--brand-line);
+  }
+
+  .footer__mark {
+    display: flex;
+    color: var(--brand-ink-slate);
+  }
+
+  .footer__copyright {
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .footer__separator {
+    color: var(--brand-ink-muted);
+  }
+
+  .footer__lang {
+    font-family: var(--brand-font-mono);
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer__lang:hover {
+    color: var(--brand-ink-orange);
+  }
+
+  @media (max-width: 768px) {
+    .footer__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

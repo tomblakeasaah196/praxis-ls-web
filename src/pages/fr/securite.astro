@@ -1,0 +1,190 @@
+---
+import { useTranslations } from '../../i18n/ui';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoForm from '../../components/DemoForm.astro';
+
+const locale = 'fr';
+const t = useTranslations(locale);
+
+const controls = [
+  {
+    title: 'Dedicated database per customer',
+    description: 'A dedicated PostgreSQL database per customer — not a shared table with a tenant column. Your data is never in the same database as another customer\'s.',
+    icon: 'database'
+  },
+  {
+    title: 'Immutable ledger',
+    description: 'Entries are reversed, never edited. Every change creates a new entry with a timestamp and user reference. The audit trail is the record.',
+    icon: 'lock'
+  },
+  {
+    title: 'Encrypted backups',
+    description: 'Encrypted daily backups of every database. Backups are stored in a separate region and tested quarterly.',
+    icon: 'cloud'
+  },
+  {
+    title: 'Restore drills',
+    description: 'Restore drills that are run and recorded, not assumed. We test the backups quarterly and document the results.',
+    icon: 'refresh'
+  },
+  {
+    title: 'Central policy engine',
+    description: 'Permissions enforced server-side, not just hidden in the UI. A central policy engine means no client-side bypass is possible.',
+    icon: 'shield'
+  },
+  {
+    title: 'Document retention',
+    description: 'Ten-year document retention, with QR verification on issued documents. Every document you issue carries a verifiable QR code.',
+    icon: 'file'
+  }
+];
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Security — Praxis LS"
+  description="Controls we operate. These are the security controls that are live today in Praxis LS."
+>
+  <section class="security-hero">
+    <div class="container container--narrow">
+      <p class="eyebrow">Security</p>
+      <h1>{t['security.title']}</h1>
+      <p class="security-hero__intro">{t['security.intro']}</p>
+    </div>
+  </section>
+
+  <section class="security-controls section">
+    <div class="container">
+      <div class="controls-grid">
+        {controls.map((control) => (
+          <div class="control-card">
+            <div class="control-card__icon">
+              {control.icon === 'database' && (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                  <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                  <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </svg>
+              )}
+              {control.icon === 'lock' && (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              )}
+              {control.icon === 'cloud' && (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+                </svg>
+              )}
+              {control.icon === 'refresh' && (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <polyline points="1 4 1 10 7 10"/>
+                  <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                </svg>
+              )}
+              {control.icon === 'shield' && (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              )}
+              {control.icon === 'file' && (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              )}
+            </div>
+            <h3 class="control-card__title">{control.title}</h3>
+            <p class="control-card__desc">{control.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="certification section">
+    <div class="container container--narrow">
+      <h2>Certification roadmap</h2>
+      <p>{t['security.certification']}</p>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .security-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .security-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .security-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+    margin-inline: auto;
+  }
+
+  .security-controls {
+    background-color: var(--brand-bg);
+  }
+
+  .controls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .control-card {
+    padding: var(--space-6);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-lg);
+  }
+
+  .control-card__icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--brand-ink-orange) 10%, transparent);
+    border-radius: var(--radius-md);
+    color: var(--brand-ink-orange);
+    margin-bottom: var(--space-4);
+  }
+
+  .control-card__title {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-3);
+  }
+
+  .control-card__desc {
+    font-size: var(--text-body);
+    color: var(--brand-ink-muted);
+  }
+
+  .certification {
+    background-color: var(--brand-surface);
+    text-align: center;
+  }
+
+  .certification h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-4);
+  }
+
+  .certification p {
+    color: var(--brand-ink-muted);
+  }
+</style>

@@ -1,0 +1,329 @@
+---
+import { useTranslations } from '../../i18n/ui';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoForm from '../../components/DemoForm.astro';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Pricing — Praxis LS"
+  description="Three tiers by scale and commitment — not by module. Price on request, quoted in XAF and EUR."
+>
+  <section class="pricing-hero">
+    <div class="container container--narrow">
+      <p class="eyebrow">Pricing</p>
+      <h1>{t['pricing.title']}</h1>
+      <p class="pricing-hero__intro">{t['pricing.subtitle']}</p>
+    </div>
+  </section>
+
+  <section class="pricing-tiers section">
+    <div class="container">
+      <div class="tiers-grid">
+        <div class="tier-card">
+          <h2 class="tier-card__name">{t['pricing.core']}</h2>
+          <p class="tier-card__desc">{t['pricing.coreDesc']}</p>
+          <ul class="tier-card__features">
+            <li>General ledger (SYSCOHADA)</li>
+            <li>Operation files</li>
+            <li>Master data management</li>
+            <li>Invoicing</li>
+            <li>Procurement</li>
+            <li>Basic AI assistant</li>
+          </ul>
+        </div>
+
+        <div class="tier-card tier-card--featured">
+          <span class="tier-card__badge">Most popular</span>
+          <h2 class="tier-card__name">{t['pricing.operations']}</h2>
+          <p class="tier-card__desc">{t['pricing.operationsDesc']}</p>
+          <ul class="tier-card__features">
+            <li>Everything in Core</li>
+            <li>Warehouse management</li>
+            <li>Fleet management</li>
+            <li>Costing and pricing</li>
+            <li>Customer and supplier portals</li>
+            <li>Enhanced AI assistant</li>
+          </ul>
+        </div>
+
+        <div class="tier-card">
+          <h2 class="tier-card__name">{t['pricing.enterprise']}</h2>
+          <p class="tier-card__desc">{t['pricing.enterpriseDesc']}</p>
+          <ul class="tier-card__features">
+            <li>Everything in Operations</li>
+            <li>Multi-entity consolidation</li>
+            <li>Customer-held database</li>
+            <li>Dedicated SLA</li>
+            <li>Migration support</li>
+            <li>Full AI suite</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing-addons section">
+    <div class="container container--narrow">
+      <h2>{t['pricing.addOns']}</h2>
+      <p>{t['pricing.addOnsDesc']}</p>
+
+      <div class="addon-list">
+        <div class="addon-item">
+          <span class="addon-item__icon">+</span>
+          <div>
+            <strong>Customer-held database credentials</strong>
+            <p>Your own database access with full export rights</p>
+          </div>
+        </div>
+        <div class="addon-item">
+          <span class="addon-item__icon">+</span>
+          <div>
+            <strong>Data migration</strong>
+            <p>Migration from your existing system with validation</p>
+          </div>
+        </div>
+        <div class="addon-item">
+          <span class="addon-item__icon">+</span>
+          <div>
+            <strong>Extra environments</strong>
+            <p>Additional test or training environments</p>
+          </div>
+        </div>
+        <div class="addon-item">
+          <span class="addon-item__icon">+</span>
+          <div>
+            <strong>Training</strong>
+            <p>On-site or remote training for your team</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing-ai section">
+    <div class="container container--narrow">
+      <div class="ai-note">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4"/>
+          <path d="M12 8h.01"/>
+        </svg>
+        <div>
+          <strong>{t['pricing.ai']}</strong>
+          <p>Baseline AI is available in every tier. Metered per organisation, visible in your dashboard. No AI features are gated behind Enterprise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing-contact section section--full">
+    <div class="container container--narrow">
+      <h2>Get a quote</h2>
+      <p>{t['pricing.currency']}</p>
+      <a href="/en/contact" class="btn btn--primary btn--lg">{t['pricing.cta']}</a>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .pricing-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .pricing-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .pricing-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+  }
+
+  .pricing-tiers {
+    background-color: var(--brand-bg);
+  }
+
+  .tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .tier-card {
+    padding: var(--space-8);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-lg);
+    position: relative;
+  }
+
+  .tier-card--featured {
+    border-color: var(--brand-ink-orange);
+    box-shadow: 0 0 0 1px var(--brand-ink-orange);
+  }
+
+  .tier-card__badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: var(--space-1) var(--space-4);
+    background-color: var(--brand-ink-orange);
+    color: var(--brand-on-orange);
+    font-size: var(--text-caption);
+    font-weight: 500;
+    border-radius: var(--radius-xl);
+  }
+
+  .tier-card__name {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-3);
+    text-align: center;
+  }
+
+  .tier-card__desc {
+    font-size: var(--text-body);
+    color: var(--brand-ink-muted);
+    text-align: center;
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--brand-line);
+  }
+
+  .tier-card__features {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .tier-card__features li {
+    font-size: var(--text-body);
+    color: var(--brand-ink);
+    padding-left: var(--space-6);
+    position: relative;
+  }
+
+  .tier-card__features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--brand-ink-orange);
+  }
+
+  .pricing-addons {
+    background-color: var(--brand-surface);
+  }
+
+  .pricing-addons h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-3);
+  }
+
+  .pricing-addons > .container > p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .addon-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .addon-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background-color: var(--brand-bg);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-md);
+  }
+
+  .addon-item__icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--brand-surface);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-display-m);
+    color: var(--brand-ink-orange);
+    flex-shrink: 0;
+  }
+
+  .addon-item strong {
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+
+  .addon-item p {
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .pricing-ai {
+    background-color: var(--brand-bg);
+  }
+
+  .ai-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-lg);
+  }
+
+  .ai-note svg {
+    flex-shrink: 0;
+    color: var(--brand-ink-orange);
+  }
+
+  .ai-note strong {
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+
+  .ai-note p {
+    font-size: var(--text-body);
+    color: var(--brand-ink-muted);
+  }
+
+  .pricing-contact {
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .pricing-contact h2 {
+    font-size: var(--text-display-l);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .pricing-contact p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  @media (max-width: 900px) {
+    .tiers-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

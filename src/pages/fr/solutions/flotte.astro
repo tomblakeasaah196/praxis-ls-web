@@ -1,0 +1,136 @@
+---
+import { useTranslations } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DemoForm from '../../../components/DemoForm.astro';
+
+const locale = 'fr';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Flotte — Praxis LS"
+  description="Gestion des véhicules, planification des chauffeurs, suivi du carburant et de l'entretien. Les coûts transitent vers le dossier d'exploitation qui les a générés."
+>
+  <section class="solution-hero">
+    <div class="container">
+      <p class="eyebrow">Solutions</p>
+      <h1>{t['solutions.fleet.title']}</h1>
+      <p class="solution-hero__intro">{t['solutions.fleet.intro']}</p>
+    </div>
+  </section>
+
+  <section class="solution-content section">
+    <div class="container">
+      <h2>Ce que vous obtenez</h2>
+      <ul class="feature-list">
+        <li>
+          <strong>Registre des véhicules</strong> — suivi des actifs, immatriculation, assurance, amortissement
+        </li>
+        <li>
+          <strong>Gestion des chauffeurs</strong> — permis, certifications, affectations, suivi des heures
+        </li>
+        <li>
+          <strong>Gestion du carburant</strong> — achats, analyse de consommation, coût au kilomètre
+        </li>
+        <li>
+          <strong>Planification de l'entretien</strong> — préventif, curatif, suivi des coûts
+        </li>
+        <li>
+          <strong>Planification des tournées</strong> — optimisation multi-arrêts, plages horaires, utilisation des capacités
+        </li>
+        <li>
+          <strong>Imputation des coûts</strong> — chaque trajet, chaque chargement, chaque centre de coût
+        </li>
+      </ul>
+
+      <h2>Comment ça s'impute au grand livre</h2>
+      <p>Achats de carburant, coûts de maintenance, amortissements — chacun s'impute au centre de coût flotte, puis au dossier d'exploitation qui a généré le trajet. La flotte n'est jamais une boîte noire.</p>
+    </div>
+  </section>
+
+  <section class="solution-cta section--full">
+    <div class="container container--narrow">
+      <h2>Voyez votre flotte dans le grand livre</h2>
+      <p>Trente minutes, vos dossiers, vos questions. Nous vous montrons le grand livre qui se trouve derrière.</p>
+      <a href="/fr/contact" class="btn btn--primary btn--lg">Demander une démo</a>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .solution-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .solution-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .solution-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+  }
+
+  .solution-content {
+    background-color: var(--brand-bg);
+  }
+
+  .solution-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-5);
+    margin-top: var(--space-10);
+  }
+
+  .solution-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .solution-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .feature-list li {
+    padding: var(--space-4);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--brand-ink-orange);
+  }
+
+  .solution-cta {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .solution-cta h2 {
+    font-size: var(--text-display-l);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .solution-cta p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    margin-inline: auto;
+  }
+</style>
