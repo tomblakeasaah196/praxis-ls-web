@@ -1,0 +1,89 @@
+---
+/**
+ * The FAQ blocks the guide asks for on /pricing and /security (§5).
+ *
+ * <details>/<summary> rather than a scripted accordion: it is keyboard-complete
+ * and screen-reader-correct with no JavaScript at all, and the content is in
+ * the document for a crawler whether or not it is open. The matching FAQPage
+ * structured data is emitted from the same array by the page, so the markup and
+ * the JSON-LD cannot disagree.
+ */
+import type { FaqEntry } from "~/content/page-types";
+
+interface Props {
+  heading: string;
+  entries: readonly FaqEntry[];
+  id?: string;
+}
+
+const { heading, entries, id = "faq" } = Astro.props;
+---
+
+<section class="section faq" id={id} aria-labelledby={`${id}-heading`}>
+  <div class="shell">
+    <h2 id={`${id}-heading`} class="faq__heading">{heading}</h2>
+    <div class="faq__list">
+      {
+        entries.map((entry) => (
+          <details class="faq__item">
+            <summary>{entry.question}</summary>
+            <p>{entry.answer}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq__heading {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+  }
+
+  .faq__list {
+    margin-block-start: var(--space-l);
+    max-width: var(--measure);
+  }
+
+  .faq__item {
+    border-block-start: 1px solid var(--brand-line);
+    padding-block: var(--space-s);
+  }
+
+  .faq__item:last-child {
+    border-block-end: 1px solid var(--brand-line);
+  }
+
+  .faq__item summary {
+    cursor: pointer;
+    font-weight: 550;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item summary::after {
+    content: "+";
+    color: var(--brand-ink-orange);
+    font-family: var(--brand-font-mono);
+    flex: none;
+  }
+
+  .faq__item[open] summary::after {
+    content: "−";
+  }
+
+  .faq__item p {
+    margin-block-start: var(--space-2xs);
+    color: var(--brand-ink-muted);
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+    max-width: 62ch;
+  }
+</style>

@@ -1,0 +1,122 @@
+---
+/**
+ * The node network, as a chain. BRAND_GUIDELINES.md §2's reusable graphic
+ * language: orange nodes, orange 1px connectors, slate structure.
+ *
+ * DEVIATION, logged in HANDOFF.md. The stack section of the brief asks for
+ * hand-authored SVG, theme-aware, never two exported bitmaps — and that is what
+ * the nodes and connectors are. The LABELS, however, are HTML rather than
+ * <text> inside the same SVG. An SVG viewBox scales its text with the drawing,
+ * so at 320px the seven French labels of the posting chain — "Dossier
+ * d'exploitation" is 23 characters against the English 14 — render at around
+ * 5px or overflow the box. HTML labels reflow, stay selectable, stay in the
+ * page's own type ramp, and are read in order by a screen reader. The graphic
+ * language is unchanged; only the text got out of the coordinate system.
+ */
+interface Props {
+  items: readonly string[];
+  label: string;
+  /** `flow` draws the arrowed posting chain; `plain` draws an unordered set. */
+  variant?: "flow";
+}
+
+const { items, label, variant = "flow" } = Astro.props;
+---
+
+<ol class="chain" aria-label={label} data-variant={variant}>
+  {
+    items.map((item, index) => (
+      <li class="chain__item">
+        <span class="chain__node" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg">
+            {/* Slate structure behind, orange node in front — the two-part
+                system at the smallest scale it is used. */}
+            <circle class="chain__ring" cx="12" cy="12" r="9" />
+            <circle class="chain__dot" cx="12" cy="12" r="3.5" />
+          </svg>
+        </span>
+        <span class="chain__label">{item}</span>
+        {index < items.length - 1 && <span class="chain__link" aria-hidden="true" />}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .chain {
+    display: grid;
+    gap: var(--space-s);
+    counter-reset: chain;
+  }
+
+  .chain__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-xs);
+    padding-block-end: var(--space-s);
+  }
+
+  .chain__item:last-child {
+    padding-block-end: 0;
+  }
+
+  .chain__node svg {
+    inline-size: 24px;
+    block-size: 24px;
+  }
+
+  .chain__ring {
+    fill: none;
+    stroke: var(--brand-slate);
+    stroke-width: 1;
+    opacity: 0.55;
+  }
+
+  .chain__dot {
+    fill: var(--brand-orange);
+  }
+
+  .chain__label {
+    font-size: var(--step-caption);
+    color: var(--brand-ink);
+  }
+
+  /* The 1px connector. Vertical while the chain is stacked. */
+  .chain__link {
+    position: absolute;
+    inset-inline-start: 11.5px;
+    inset-block-start: 24px;
+    inline-size: 1px;
+    block-size: calc(100% - 24px);
+    background: var(--orange-edge);
+  }
+
+  @media (width >= 48rem) {
+    .chain {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .chain__item {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: start;
+      gap: var(--space-2xs);
+      padding-block-end: 0;
+      padding-inline-end: var(--space-xs);
+    }
+
+    .chain__link {
+      inset-block-start: 11.5px;
+      inset-inline-start: 24px;
+      inline-size: calc(100% - 24px);
+      block-size: 1px;
+    }
+
+    .chain__label {
+      text-wrap: balance;
+    }
+  }
+</style>

@@ -1,0 +1,157 @@
+---
+/**
+ * Everything in <head>, in the order it matters.
+ *
+ * Four things here are load-bearing and easy to break:
+ *
+ *  1. THE THEME SCRIPT runs before first paint (N6). It is inline for a reason —
+ *     a <script src> would be a round trip in front of the paint, and that is
+ *     precisely the flash it exists to prevent. `data-theme="dark"` is also
+ *     written into the server-rendered <html>, so a reader with JavaScript off
+ *     still gets the primary expression rather than the light one tokens.css
+ *     declares on :root.
+ *
+ *  2. hreflang IS EMITTED FROM THE SLUG MAP (N7) — `fr`, `en` and `x-default`
+ *     pointing at English, on every page, alongside a self-referencing
+ *     canonical. It reads src/i18n/routes.ts, so a page that exists in one
+ *     language and not the other cannot silently ship a half-map.
+ *
+ *  3. ONLY THE DISPLAY FACE IS PRELOADED. It paints the H1, which is the LCP
+ *     element on every page here.
+ *
+ *  4. STRUCTURED DATA carries only facts that are in the source documents (N12).
+ *     No employee count, no founding date, no address, no aggregate rating —
+ *     those are OPEN in HANDOFF.md, and a JSON-LD blob is the easiest place in
+ *     a site to smuggle an invented number past review.
+ */
+import { brand } from "~/lib/brand-tokens";
+import {
+  DEFAULT_LOCALE,
+  HTML_LANG,
+  LOCALES,
+  absoluteHref,
+  type Locale,
+  type RouteKey,
+} from "~/i18n/routes";
+
+interface Props {
+  locale: Locale;
+  route: RouteKey;
+  title: string;
+  description: string;
+  /** Set on the homepage only — it carries the site-wide structured data. */
+  structuredData?: boolean;
+  /** Extra JSON-LD for pages the guide asks to carry it (FAQPage, §5). */
+  extraJsonLd?: Record<string, unknown> | undefined;
+}
+
+const {
+  locale,
+  route,
+  title,
+  description,
+  structuredData = false,
+  extraJsonLd = undefined,
+} = Astro.props;
+const site = Astro.site ?? new URL("https://praxisls.com");
+
+const canonical = absoluteHref(route, locale, site);
+const ogImage = new URL(`/og/praxis-ls--${locale}.png`, site).toString();
+
+/* The alternates come from the map, not from string surgery on the current
+   path: `/en/pricing` and `/fr/tarifs` share no substring. */
+const alternates = LOCALES.map((other) => ({
+  hreflang: HTML_LANG[other],
+  url: absoluteHref(route, other, site),
+}));
+
+const organization = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "JBS Praxis LLC",
+  url: site.origin,
+  brand: { "@type": "Brand", name: "Praxis LS" },
+};
+
+const software = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Praxis LS",
+  applicationCategory: "BusinessApplication",
+  applicationSubCategory: "Enterprise Resource Planning",
+  operatingSystem: "Web",
+  url: absoluteHref("home", locale, site),
+  inLanguage: LOCALES.map((l) => HTML_LANG[l]),
+  publisher: { "@type": "Organization", name: "JBS Praxis LLC" },
+  /* No `offers`. Price is on request (guide §13) and a zero would be read as
+     free by every consumer of this blob. */
+};
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+
+<link rel="canonical" href={canonical} />
+{alternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.url} />)}
+<link rel="alternate" hreflang="x-default" href={absoluteHref(route, DEFAULT_LOCALE, site)} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Praxis LS" />
+<meta property="og:locale" content={locale === "fr" ? "fr_FR" : "en_GB"} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<meta name="theme-color" content={brand.carbon} media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content={brand.light.bg} media="(prefers-color-scheme: light)" />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="sitemap" href="/sitemap.xml" />
+
+{
+  /* Only the display face is preloaded. It paints the headings, and preloading
+    the body face alongside it would put another 48 KB in front of them. */
+}
+<link
+  rel="preload"
+  href="/fonts/ibm-plex-sans-latin-wght-normal.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin="anonymous"
+/>
+
+<script is:inline>
+  /* Theme, before first paint (N6).
+     Two states, never three: the toggle writes "dark" or "light" and nothing
+     else, and once written it is never overridden — not by the OS, not on a
+     later visit. A first visit with nothing stored is dark, which is what the
+     server already rendered, so this only ever has work to do for a reader who
+     has chosen light. */
+  (function () {
+    try {
+      var stored = localStorage.getItem("praxis.theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.dataset.theme = stored;
+      }
+    } catch (error) {
+      /* Storage can be blocked outright (private browsing, a locked-down
+         corporate profile). The document already carries data-theme="dark", so
+         the reader gets the primary expression and the toggle still works for
+         the length of the visit. */
+    }
+  })();
+</script>
+
+{structuredData && <script type="application/ld+json" set:html={JSON.stringify(organization)} />}
+{structuredData && <script type="application/ld+json" set:html={JSON.stringify(software)} />}
+{extraJsonLd && <script type="application/ld+json" set:html={JSON.stringify(extraJsonLd)} />}

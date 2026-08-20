@@ -1,0 +1,8 @@
+# praxisls.com
+#
+# Both language trees are crawlable and neither is a duplicate of the other:
+# every page carries a self-referencing canonical and fr/en/x-default hreflang.
+User-agent: *
+Allow: /
+
+Sitemap: https://praxisls.com/sitemap.xml

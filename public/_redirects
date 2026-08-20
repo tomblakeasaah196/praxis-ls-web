@@ -1,0 +1,18 @@
+# THE ONLY REDIRECT IN THE SYSTEM (WEB_BUILD_BRIEF N7 · LANDING_PAGE_GUIDE §2).
+#
+# The bare root, 302, on Accept-Language, defaulting to English when the header
+# is absent or ambiguous. Nothing else redirects — `praxisls.com/en/pricing`
+# serves English to a French browser, always, because a deep link that gets
+# rewritten is a deep link that cannot be shared or crawled.
+#
+# This file is Netlify / Cloudflare Pages syntax. A static build cannot read a
+# request header, so the redirect has to be host configuration; the equivalent
+# for another host is in HANDOFF.md § "The root redirect", along with what to do
+# about the apex, which is NOT idle — see LANDING_PAGE_GUIDE.md §7 on the mail
+# OAuth callback before repointing anything.
+#
+# The `!` forces the rule ahead of the static /index.html that also ships. That
+# file is the fallback for a host which ignores this one: it offers both
+# languages and redirects nobody.
+/  /fr/  302!  Language=fr
+/  /en/  302!

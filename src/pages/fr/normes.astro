@@ -1,0 +1,16 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import StandardsPage from "~/components/pages/StandardsPage.astro";
+import { pages } from "~/content/pages.fr";
+
+const copy = pages.standards;
+---
+
+<BaseLayout
+  locale="fr"
+  route="standards"
+  title={copy.meta.title}
+  description={copy.meta.description}
+>
+  <StandardsPage copy={copy} locale="fr" />
+</BaseLayout>

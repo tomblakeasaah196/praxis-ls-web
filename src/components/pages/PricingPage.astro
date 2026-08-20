@@ -1,0 +1,151 @@
+---
+/**
+ * /pricing · /fr/tarifs — guide §13. The shape, never the number.
+ *
+ * Two things on this page are load-bearing arguments rather than layout:
+ *
+ *  - The tiers are by SCALE, not by module. The guide's reasoning is worth
+ *    keeping in view while editing this: an operator with four trucks needs
+ *    Fleet and is small; a 200-person forwarder needs none of it and is the
+ *    largest deal. Module-gating charges the wrong people.
+ *  - Baseline AI is in EVERY tier and metered. If it were an Enterprise gate,
+ *    everything the homepage says about intelligence would be false for every
+ *    Core customer — and this is the page where a buyer checks.
+ *
+ * No figure appears anywhere on it. Every pricing number is OPEN (brief §6).
+ */
+import PageIntro from "~/components/PageIntro.astro";
+import Faq from "~/components/Faq.astro";
+import type { PricingPage } from "~/content/page-types";
+import { href, type Locale } from "~/i18n/routes";
+
+interface Props {
+  copy: PricingPage;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+---
+
+<PageIntro heading={copy.heading} intro={copy.intro} />
+
+<section class="section" aria-labelledby="tiers-heading">
+  <div class="shell">
+    <h2 id="tiers-heading" class="visually-hidden">{copy.heading}</h2>
+    <ul class="tiers">
+      {
+        copy.tiers.map((tier) => (
+          <li class="tiers__tier card">
+            <h3>{tier.name}</h3>
+            <p>{tier.covers}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="addons-heading">
+  <div class="shell pricing-detail">
+    <div>
+      <h2 id="addons-heading">{copy.addOnsHeading}</h2>
+      <ul class="addons">
+        {copy.addOns.map((addOn) => <li>{addOn}</li>)}
+      </ul>
+    </div>
+    <div class="pricing-detail__notes">
+      <h2>{copy.aiHeading}</h2>
+      <p>{copy.aiLine}</p>
+      <h2>{copy.quoteHeading}</h2>
+      <p>{copy.quoteLine}</p>
+      <p>
+        <a class="btn btn--primary" href={href("contact", locale)}>{copy.cta}</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<Faq heading={copy.faqHeading} entries={copy.faq} id="pricing-faq" />
+
+<style>
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-m);
+  }
+
+  .tiers__tier {
+    display: grid;
+    gap: var(--space-2xs);
+    align-content: start;
+  }
+
+  .tiers__tier h3 {
+    font-size: var(--step-body-l);
+    line-height: 1.3;
+  }
+
+  .tiers__tier p {
+    font-size: var(--step-caption);
+    color: var(--brand-ink-muted);
+    line-height: var(--leading-body);
+  }
+
+  .pricing-detail {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .pricing-detail h2 {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+  }
+
+  .addons {
+    margin-block-start: var(--space-m);
+    display: grid;
+    gap: var(--space-2xs);
+    font-size: var(--step-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .addons li {
+    position: relative;
+    padding-inline-start: var(--space-s);
+  }
+
+  .addons li::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0.55em;
+    inset-inline-start: 0;
+    inline-size: 5px;
+    block-size: 5px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+  }
+
+  .pricing-detail__notes {
+    display: grid;
+    gap: var(--space-s);
+    max-width: var(--measure);
+  }
+
+  .pricing-detail__notes p {
+    color: var(--brand-ink-muted);
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+  }
+
+  .pricing-detail__notes h2 + p {
+    margin-block-start: calc(var(--space-2xs) * -1);
+  }
+
+  @media (width >= 60rem) {
+    .pricing-detail {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: var(--space-2xl);
+    }
+  }
+</style>

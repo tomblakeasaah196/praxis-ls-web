@@ -1,0 +1,112 @@
+---
+/**
+ * Guide §3.7. Four tabs in the order the room actually works — Direction,
+ * Operations, Finance, IT. BRAND_GUIDELINES.md §1 is specific about that order
+ * and about why: the DG signs, but the Operations Manager is heard before the
+ * DAF, and the DAF closes the deal on the ledger.
+ *
+ * Rendered with every panel in the document and the first one shown, so the
+ * section reads completely with no script; src/islands/role-tabs.ts adds the
+ * switching and the arrow-key behaviour.
+ */
+import type { HomeCopy } from "~/content/types";
+
+interface Props {
+  copy: HomeCopy;
+}
+
+const { copy } = Astro.props;
+---
+
+<section class="section roles" id="roles" aria-labelledby="roles-heading">
+  <div class="shell">
+    <h2 id="roles-heading" class="visually-hidden">{copy.roles.heading}</h2>
+    <div class="roles__group" data-role-tabs>
+      <div class="roles__tablist" role="tablist" aria-labelledby="roles-heading">
+        {
+          copy.roles.tabs.map((tab, index) => (
+            <button
+              type="button"
+              role="tab"
+              id={`role-tab-${tab.id}`}
+              aria-controls={`role-panel-${tab.id}`}
+              aria-selected={index === 0 ? "true" : "false"}
+              tabindex={index === 0 ? 0 : -1}
+              class="roles__tab"
+            >
+              {tab.label}
+            </button>
+          ))
+        }
+      </div>
+      {
+        copy.roles.tabs.map((tab, index) => (
+          <div
+            role="tabpanel"
+            id={`role-panel-${tab.id}`}
+            aria-labelledby={`role-tab-${tab.id}`}
+            tabindex="0"
+            class="roles__panel"
+            hidden={index !== 0}
+          >
+            <p>{tab.line}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .roles__group {
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+  }
+
+  .roles__tablist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs);
+    padding: var(--space-2xs);
+    background: var(--brand-surface);
+    border-block-end: 1px solid var(--brand-line);
+  }
+
+  .roles__tab {
+    flex: 1 1 8rem;
+    padding: var(--space-2xs) var(--space-s);
+    border: 1px solid transparent;
+    border-radius: var(--radius-m);
+    background: transparent;
+    color: var(--brand-ink-muted);
+    font-family: var(--brand-font-display);
+    font-size: var(--step-caption);
+    font-weight: 550;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .roles__tab:hover {
+    color: var(--brand-ink);
+  }
+
+  .roles__tab[aria-selected="true"] {
+    color: var(--brand-ink-orange);
+    border-color: var(--orange-edge);
+    background: var(--orange-wash);
+  }
+
+  .roles__panel {
+    padding: clamp(1.5rem, 1rem + 3vw, 3rem);
+  }
+
+  .roles__panel p {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+    font-family: var(--brand-font-display);
+    letter-spacing: var(--brand-tracking-display);
+    max-width: 28ch;
+  }
+</style>

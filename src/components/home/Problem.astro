@@ -1,0 +1,40 @@
+---
+/**
+ * Guide §3.4. Centred, 60ch, large type, generous space. Their words, not ours —
+ * which is why nothing here is dressed up with an illustration.
+ */
+import type { HomeCopy } from "~/content/types";
+
+interface Props {
+  copy: HomeCopy;
+}
+
+const { copy } = Astro.props;
+---
+
+<section class="problem section" id="problem" aria-labelledby="problem-heading">
+  <div class="shell problem__inner">
+    <h2 id="problem-heading" class="problem__heading">{copy.problem.heading}</h2>
+    <p class="problem__body">{copy.problem.body}</p>
+  </div>
+</section>
+
+<style>
+  .problem__inner {
+    max-width: var(--measure-narrow);
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .problem__heading {
+    font-size: var(--step-display-l);
+    line-height: var(--leading-display-l);
+  }
+
+  .problem__body {
+    margin-block-start: var(--space-l);
+    font-size: var(--step-body-l);
+    line-height: var(--leading-body-l);
+    color: var(--brand-ink-muted);
+  }
+</style>

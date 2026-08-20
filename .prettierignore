@@ -1,0 +1,9 @@
+dist/
+node_modules/
+.astro/
+public/fonts/
+# Vendored, byte-identical to upstream and digest-pinned. Formatting them is
+# exactly the drift the pins exist to catch.
+vendor/brand/tokens.css
+vendor/copy/landing-page-guide-copy.md
+lighthouse/

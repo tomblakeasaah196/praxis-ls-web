@@ -1,0 +1,91 @@
+---
+/**
+ * The standards table, shared by the homepage §12 and /standards.
+ *
+ * "It must be trivial to update" is a requirement, not a nicety — the guide
+ * says a stale row here costs more than the page earns. So the rows live in the
+ * copy deck as data (src/content/home.{en,fr}.ts → standards.rows), both
+ * languages side by side, and this component renders whatever is there. Adding
+ * IFRS as live is a one-line edit in each language and nothing else moves.
+ *
+ * `state` drives only the treatment. Orange is reserved for the row that is
+ * actually live: the 5% rule (BRAND_GUIDELINES §3) and, more to the point, the
+ * whole argument of the page is that we mark what is shipped differently from
+ * what is promised.
+ */
+import type { StandardRow } from "~/content/types";
+
+interface Props {
+  rows: readonly StandardRow[];
+  columnStandard: string;
+  columnStatus: string;
+  caption?: string | undefined;
+}
+
+const { rows, columnStandard, columnStatus, caption = undefined } = Astro.props;
+---
+
+<table class="standards">
+  {caption && <caption class="visually-hidden">{caption}</caption>}
+  <thead>
+    <tr>
+      <th scope="col">{columnStandard}</th>
+      <th scope="col">{columnStatus}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      rows.map((row) => (
+        <tr data-state={row.state}>
+          <th scope="row">{row.standard}</th>
+          <td>{row.status}</td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .standards {
+    font-size: var(--step-caption);
+    text-align: start;
+  }
+
+  .standards th,
+  .standards td {
+    padding: var(--space-s) var(--space-m) var(--space-s) 0;
+    border-block-end: 1px solid var(--brand-line);
+    vertical-align: baseline;
+    text-align: start;
+  }
+
+  .standards thead th {
+    font-family: var(--brand-font-display);
+    font-size: var(--step-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--brand-tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--brand-ink-slate);
+    padding-block: var(--space-2xs);
+  }
+
+  .standards tbody th {
+    font-weight: 600;
+    color: var(--brand-ink);
+    white-space: nowrap;
+  }
+
+  .standards td {
+    color: var(--brand-ink-muted);
+  }
+
+  .standards tr[data-state="live"] td {
+    color: var(--brand-ink-orange);
+    font-weight: 550;
+  }
+
+  .standards tbody tr:last-child th,
+  .standards tbody tr:last-child td {
+    border-block-end: 0;
+  }
+</style>

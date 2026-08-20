@@ -1,0 +1,289 @@
+---
+/**
+ * Guide §3.6 — the demo. One file advances through its milestones and the
+ * ledger panel fills as it goes.
+ *
+ * HOW THE ANIMATION IS BUILT, and why it is built this way:
+ *
+ *  - The whole thing is driven by ONE custom property, `--tower-progress`,
+ *    which runs 0 → 1 as the section crosses the viewport. Everything else —
+ *    the connector drawing itself in, each node lighting, each ledger line
+ *    arriving — is CSS reading that number. No animation library, no timeline,
+ *    no per-element JavaScript (brief §5).
+ *
+ *  - The track is a hand-authored inline SVG with `pathLength="1"`, so the
+ *    connector's dash offset is literally `1 - progress` and needs no measured
+ *    path length. Two tracks exist, horizontal and vertical, because a
+ *    viewBox cannot reflow; each is a dozen lines.
+ *
+ *  - Each node's fill opacity is `clamp(0, (progress - threshold) * k, 1)`.
+ *    That is how a stylesheet does a conditional, and it keeps the reveal
+ *    smooth rather than stepped.
+ *
+ *  - Labels and ledger lines are HTML, not <text>. Same reason as NodeChain:
+ *    French labels 25% longer than English do not survive being scaled by a
+ *    viewBox at 320px.
+ *
+ *  - `prefers-reduced-motion` does not slow the animation down; it removes it.
+ *    The section renders complete — every node lit, every ledger line present —
+ *    and says so in a line of text (N10).
+ *
+ * NO FIGURES appear in the ledger panel. SYSCOHADA account codes and amounts
+ * are not in the source documents, and the section arguing that the ledger can
+ * be trusted is the worst place in the site to invent one (N12).
+ */
+import type { HomeCopy } from "~/content/types";
+
+interface Props {
+  copy: HomeCopy;
+}
+
+const { copy } = Astro.props;
+const steps = copy.tower.steps;
+const count = steps.length;
+
+/* Node centres, in the two viewBoxes. Eight equal columns of 100 units put the
+   centres at 50, 150 … 750, which is exactly where an 8-column CSS grid centres
+   its labels — so the drawing and the words line up without a magic number in
+   either. */
+const H_SPAN = 100;
+const nodes = steps.map((_, index) => H_SPAN / 2 + index * H_SPAN);
+const first = nodes[0] ?? 0;
+const last = nodes[count - 1] ?? 0;
+---
+
+<section class="tower section" id="control-tower" aria-labelledby="tower-heading" data-tower>
+  <div class="shell">
+    <div class="tower__words">
+      <h2 id="tower-heading">{copy.tower.heading}</h2>
+      <p class="lede measure">{copy.tower.body}</p>
+    </div>
+
+    <p class="tower__static-notice" data-tower-notice hidden>{copy.tower.staticNotice}</p>
+
+    <div class="tower__stage">
+      <div class="tower__track" role="img" aria-label={copy.tower.diagramLabel}>
+        <svg
+          class="tower__svg tower__svg--h"
+          viewBox={`0 0 ${count * H_SPAN} 44`}
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+          focusable="false"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line class="tower__rail" x1={first} y1="22" x2={last} y2="22"></line>
+          <line class="tower__progress" x1={first} y1="22" x2={last} y2="22" pathLength="1"></line>
+          {
+            nodes.map((cx, index) => (
+              <g style={`--t:${count === 1 ? 0 : index / (count - 1)}`}>
+                <circle class="tower__ring" cx={cx} cy="22" r="9" />
+                <circle class="tower__dot" cx={cx} cy="22" r="4.5" />
+              </g>
+            ))
+          }
+        </svg>
+
+        <svg
+          class="tower__svg tower__svg--v"
+          viewBox={`0 0 44 ${count * 56}`}
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+          focusable="false"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line class="tower__rail" x1="22" y1="28" x2="22" y2={count * 56 - 28}></line>
+          <line class="tower__progress" x1="22" y1="28" x2="22" y2={count * 56 - 28} pathLength="1"
+          ></line>
+          {
+            steps.map((_, index) => (
+              <g style={`--t:${count === 1 ? 0 : index / (count - 1)}`}>
+                <circle class="tower__ring" cx="22" cy={28 + index * 56} r="9" />
+                <circle class="tower__dot" cx="22" cy={28 + index * 56} r="4.5" />
+              </g>
+            ))
+          }
+        </svg>
+
+        <ol class="tower__labels">
+          {
+            steps.map((step, index) => (
+              <li style={`--t:${count === 1 ? 0 : index / (count - 1)}`}>{step.label}</li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <div class="tower__ledger card">
+        <h3 class="tower__ledger-heading">{copy.tower.ledgerHeading}</h3>
+        <ul class="tower__ledger-rows">
+          {
+            steps.map((step, index) => (
+              <li style={`--t:${count === 1 ? 0 : index / (count - 1)}`}>
+                <span>{step.ledger}</span>
+                <span class="num tower__ledger-amount">{copy.tower.ledgerAmount}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tower {
+    /* The one number everything below reads. The island writes it; with no
+       script, or with reduced motion, it stays at 1 and the section renders
+       complete. */
+    --tower-progress: 1;
+  }
+
+  .tower__words {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .tower__static-notice {
+    margin-block-start: var(--space-m);
+    font-size: var(--step-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .tower__stage {
+    margin-block-start: var(--space-xl);
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .tower__track {
+    display: grid;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-l);
+    background: var(--brand-surface);
+  }
+
+  .tower__svg {
+    inline-size: 100%;
+  }
+
+  .tower__svg--h {
+    display: none;
+  }
+
+  .tower__svg--v {
+    block-size: auto;
+    max-block-size: 26rem;
+  }
+
+  /* Slate structure. */
+  .tower__rail {
+    stroke: var(--brand-slate);
+    stroke-width: 1;
+    opacity: 0.4;
+  }
+
+  /* The orange 1px connector, drawn in as progress advances. pathLength="1"
+     turns the dash maths into plain arithmetic on the progress value. */
+  .tower__progress {
+    stroke: var(--brand-orange);
+    stroke-width: 1.5;
+    stroke-dasharray: 1;
+    stroke-dashoffset: calc(1 - var(--tower-progress));
+    transition: stroke-dashoffset var(--duration-fast) linear;
+  }
+
+  .tower__ring {
+    fill: var(--brand-surface);
+    stroke: var(--brand-slate);
+    stroke-width: 1;
+  }
+
+  /* A stylesheet's version of "if progress has passed this node". */
+  .tower__dot {
+    fill: var(--brand-orange);
+    opacity: clamp(0, (var(--tower-progress) - var(--t)) * 12, 1);
+  }
+
+  .tower__labels {
+    display: grid;
+    grid-auto-rows: 56px;
+    align-items: center;
+    font-size: var(--step-caption);
+  }
+
+  /* A label that has not been reached yet is DIMMER, never fainter.
+     Fading with opacity took the muted ink down to about 3:1 against the
+     surface, which fails AA at 13px — and it failed in the resting state, not
+     mid-animation, so every reader saw it. Both ends of this mix clear AA on
+     their own, so every value between them does too. */
+  .tower__labels li {
+    --reached: clamp(0, (var(--tower-progress) - var(--t)) * 12, 1);
+    color: color-mix(in srgb, var(--brand-ink) calc(var(--reached) * 100%), var(--brand-ink-muted));
+  }
+
+  .tower__ledger-heading {
+    font-size: var(--step-caption);
+    font-weight: 600;
+    letter-spacing: var(--brand-tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--brand-ink-slate);
+    margin-block-end: var(--space-s);
+  }
+
+  .tower__ledger-rows {
+    display: grid;
+  }
+
+  .tower__ledger-rows li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-block: var(--space-2xs);
+    border-block-end: 1px solid var(--brand-line);
+    font-size: var(--step-caption);
+    opacity: clamp(0, (var(--tower-progress) - var(--t)) * 12, 1);
+    transform: translateY(calc((1 - clamp(0, (var(--tower-progress) - var(--t)) * 12, 1)) * 4px));
+    transition:
+      opacity var(--duration-fast) var(--ease),
+      transform var(--duration-fast) var(--ease);
+  }
+
+  .tower__ledger-rows li:last-child {
+    border-block-end: 0;
+  }
+
+  .tower__ledger-amount {
+    color: var(--brand-ink-slate);
+  }
+
+  @media (width >= 48rem) {
+    .tower__svg--h {
+      display: block;
+    }
+
+    .tower__svg--v {
+      display: none;
+    }
+
+    .tower__track {
+      grid-template-rows: auto auto;
+    }
+
+    .tower__labels {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      grid-auto-rows: auto;
+      text-align: center;
+      gap: var(--space-2xs);
+    }
+  }
+
+  @media (width >= 64rem) {
+    .tower__stage {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+</style>

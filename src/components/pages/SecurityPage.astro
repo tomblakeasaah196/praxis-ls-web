@@ -1,0 +1,93 @@
+---
+/**
+ * /security · /fr/securite — guide §3.10.
+ *
+ * The heading is "Controls we operate", never "Certifications". That is the
+ * guide's instruction and it is also the whole argument of the page: honesty
+ * here is a differentiator, because no regional competitor can publish this
+ * page at all. The six controls are imported from the homepage copy deck rather
+ * than retyped, so the two lists cannot drift apart.
+ */
+import PageIntro from "~/components/PageIntro.astro";
+import Faq from "~/components/Faq.astro";
+import type { SecurityPage } from "~/content/page-types";
+import { href, type Locale } from "~/i18n/routes";
+import { UI } from "~/i18n/ui";
+
+interface Props {
+  copy: SecurityPage;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+---
+
+<PageIntro heading={copy.heading} intro={copy.intro} />
+
+<section class="section" aria-labelledby="controls-heading">
+  <div class="shell">
+    <h2 id="controls-heading" class="section-label">{copy.controlsHeading}</h2>
+    <ol class="controls">
+      {
+        copy.controls.map((control, index) => (
+          <li class="controls__item">
+            <span class="num controls__index">{String(index + 1).padStart(2, "0")}</span>
+            <span>{control}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="certification-heading">
+  <div class="shell certification">
+    <h2 id="certification-heading">{copy.certificationHeading}</h2>
+    <p class="lede measure">{copy.certificationLine}</p>
+  </div>
+</section>
+
+<Faq heading={copy.faqHeading} entries={copy.faq} id="security-faq" />
+
+<section class="section" aria-label={UI[locale].cta.bookDemo}>
+  <div class="shell">
+    <a class="btn btn--primary" href={href("contact", locale)}>{UI[locale].cta.bookDemo}</a>
+  </div>
+</section>
+
+<style>
+  .controls {
+    display: grid;
+    gap: 0;
+    max-width: var(--measure);
+  }
+
+  .controls__item {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: var(--space-s);
+    align-items: start;
+    padding-block: var(--space-m);
+    border-block-end: 1px solid var(--brand-line);
+    line-height: var(--leading-body);
+  }
+
+  .controls__item:first-child {
+    border-block-start: 1px solid var(--brand-line);
+  }
+
+  .controls__index {
+    color: var(--brand-ink-orange);
+    font-size: var(--step-caption);
+  }
+
+  .certification {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .certification h2 {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+/**
+ * /standards · /fr/normes — guide §12.
+ *
+ * "It must be trivial to update." The rows are data in the copy deck, both
+ * languages beside each other, and this page renders them; so does the homepage
+ * section. Promoting IFRS to live is one line per language. The page says so
+ * out loud, because a published promise about maintenance is only worth
+ * anything if the maintenance is actually cheap.
+ */
+import PageIntro from "~/components/PageIntro.astro";
+import StandardsTable from "~/components/StandardsTable.astro";
+import type { StandardsPage } from "~/content/page-types";
+import { href, type Locale } from "~/i18n/routes";
+import { UI } from "~/i18n/ui";
+
+interface Props {
+  copy: StandardsPage;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+---
+
+<PageIntro heading={copy.heading} intro={copy.intro} />
+
+<section class="section" aria-labelledby="standards-table-heading">
+  <div class="shell standards-page">
+    <h2 id="standards-table-heading" class="visually-hidden">{copy.heading}</h2>
+    <StandardsTable
+      rows={copy.rows}
+      columnStandard={copy.columnStandard}
+      columnStatus={copy.columnStatus}
+    />
+    <p class="standards-page__note">{copy.note}</p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="standards-upkeep">
+  <div class="shell standards-page__upkeep">
+    <h2 id="standards-upkeep">{copy.updatedHeading}</h2>
+    <p class="lede measure">{copy.updatedLine}</p>
+    <p>
+      <a class="btn btn--secondary" href={href("contact", locale)}>{UI[locale].cta.bookDemo}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  /* Constrain the table, not the .shell element it sits in — see PageIntro. */
+  .standards-page :global(table) {
+    max-width: 48rem;
+  }
+
+  .standards-page__note {
+    margin-block-start: var(--space-l);
+    color: var(--brand-ink-muted);
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+    max-width: var(--measure);
+  }
+
+  .standards-page__upkeep {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+  }
+
+  .standards-page__upkeep h2 {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+  }
+</style>

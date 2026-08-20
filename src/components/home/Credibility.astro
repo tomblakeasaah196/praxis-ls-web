@@ -1,0 +1,86 @@
+---
+/**
+ * Guide §3.3. One row on --brand-surface. Facts only, and NO LOGO WALL — the
+ * brand's §6 is explicit that padding this strip is the fastest way to look
+ * small to the buyer you want. Smart Logistics consented to be named with
+ * sanitisation; nothing here goes past what §3.3 writes down.
+ */
+import type { HomeCopy } from "~/content/types";
+
+interface Props {
+  copy: HomeCopy;
+}
+
+const { copy } = Astro.props;
+---
+
+<section class="credibility section--surface" aria-label={copy.credibility.lead.strong}>
+  <div class="shell credibility__inner">
+    <p class="credibility__lead">
+      {copy.credibility.lead.before}<strong>{copy.credibility.lead.strong}</strong>{
+        copy.credibility.lead.after
+      }
+    </p>
+    <ul class="credibility__facts">
+      {copy.credibility.facts.map((fact) => <li class="num">{fact}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .credibility {
+    border-block: 1px solid var(--brand-line);
+    background: var(--brand-surface);
+  }
+
+  .credibility__inner {
+    display: grid;
+    gap: var(--space-m);
+    padding-block: var(--space-l);
+    align-items: center;
+  }
+
+  .credibility__lead {
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+    color: var(--brand-ink-muted);
+    max-width: 58ch;
+  }
+
+  .credibility__lead strong {
+    color: var(--brand-ink);
+    font-weight: 600;
+  }
+
+  .credibility__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-l);
+    font-size: var(--step-caption);
+    color: var(--brand-ink);
+  }
+
+  .credibility__facts li {
+    position: relative;
+    padding-inline-start: var(--space-s);
+  }
+
+  /* One orange dot per fact — the 5% rule's share of this strip. */
+  .credibility__facts li::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0.5em;
+    inset-inline-start: 0;
+    inline-size: 5px;
+    block-size: 5px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+  }
+
+  @media (width >= 60rem) {
+    .credibility__inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-2xl);
+    }
+  }
+</style>

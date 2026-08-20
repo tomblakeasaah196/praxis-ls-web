@@ -1,0 +1,64 @@
+---
+/**
+ * Guide §3.12. The three-row table and the promise underneath it.
+ *
+ * "It is updated when the code is, not when the marketing is." That sentence is
+ * the reason this section exists, and it is also a commitment the repository
+ * has to make keepable — see StandardsTable.astro.
+ */
+import StandardsTable from "~/components/StandardsTable.astro";
+import type { HomeCopy } from "~/content/types";
+import { href, type Locale } from "~/i18n/routes";
+
+interface Props {
+  copy: HomeCopy;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+---
+
+<section class="section standards-section" id="standards" aria-labelledby="standards-heading">
+  <div class="shell standards-section__inner">
+    <div>
+      <h2 id="standards-heading">{copy.standards.heading}</h2>
+      <p class="standards-section__note">{copy.standards.note}</p>
+      <p class="standards-section__out">
+        <a class="link-out" href={href("standards", locale)}>{copy.standards.link}</a>
+      </p>
+    </div>
+    <StandardsTable
+      rows={copy.standards.rows}
+      columnStandard={copy.standards.columnStandard}
+      columnStatus={copy.standards.columnStatus}
+      caption={copy.standards.heading}
+    />
+  </div>
+</section>
+
+<style>
+  .standards-section__inner {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .standards-section__note {
+    margin-block-start: var(--space-m);
+    max-width: 48ch;
+    color: var(--brand-ink-muted);
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+  }
+
+  .standards-section__out {
+    margin-block-start: var(--space-m);
+  }
+
+  @media (width >= 60rem) {
+    .standards-section__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-2xl);
+    }
+  }
+</style>

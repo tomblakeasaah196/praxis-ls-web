@@ -1,0 +1,137 @@
+---
+/**
+ * Four columns, then a baseline row (guide §3.15). The mark sits in the
+ * baseline row at glyph size.
+ *
+ * The status-page link the guide asks for is NOT here: no URL for it appears in
+ * any source document, and guessing one would be the kind of invention N12
+ * exists to stop. Logged in HANDOFF.md § OPEN. Same for a contact address — the
+ * Contact column links to the contact page rather than publishing details
+ * nobody has given us.
+ */
+import Mark from "./Mark.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { UI } from "~/i18n/ui";
+import { href, isBuilt, type Locale, type RouteKey } from "~/i18n/routes";
+
+interface Props {
+  locale: Locale;
+  route: RouteKey;
+}
+
+const { locale, route } = Astro.props;
+const ui = UI[locale].footer;
+const cta = UI[locale].cta;
+
+const columns = [
+  {
+    heading: ui.product,
+    links: [
+      { label: ui.security, key: "security" as RouteKey },
+      { label: ui.standards, key: "standards" as RouteKey },
+      { label: ui.pricing, key: "pricing" as RouteKey },
+    ],
+  },
+  {
+    heading: ui.company,
+    links: [
+      { label: ui.about, key: "about" as RouteKey },
+      { label: ui.contactUs, key: "contact" as RouteKey },
+    ],
+  },
+  {
+    heading: ui.legal,
+    links: [
+      { label: ui.privacy, key: "legal/privacy" as RouteKey },
+      { label: ui.terms, key: "legal/terms" as RouteKey },
+    ],
+  },
+].map((column) => ({ ...column, links: column.links.filter((link) => isBuilt(link.key)) }));
+---
+
+<footer class="footer" aria-label={ui.label}>
+  <div class="shell">
+    <div class="footer__columns">
+      {
+        columns.map((column) => (
+          <nav class="footer__column" aria-label={column.heading}>
+            <h2 class="footer__heading">{column.heading}</h2>
+            <ul>
+              {column.links.map((link) => (
+                <li>
+                  <a href={href(link.key, locale)}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+      <div class="footer__column">
+        <h2 class="footer__heading">{ui.contact}</h2>
+        <a class="btn btn--secondary btn--small" href={href("contact", locale)}>{cta.bookDemo}</a>
+      </div>
+    </div>
+
+    <div class="footer__baseline">
+      <Mark variant="glyph" />
+      <p class="footer__rights">{ui.rights}</p>
+      <LanguageSwitcher locale={locale} route={route} />
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-block-start: 1px solid var(--brand-line);
+    background: var(--brand-surface);
+    padding-block: var(--space-2xl) var(--space-l);
+    margin-block-start: var(--space-3xl);
+  }
+
+  .footer__columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: var(--space-l);
+  }
+
+  .footer__heading {
+    font-family: var(--brand-font-display);
+    font-size: var(--step-eyebrow);
+    line-height: 1.33;
+    letter-spacing: var(--brand-tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--brand-ink-slate);
+    margin: 0 0 var(--space-s);
+  }
+
+  .footer__column ul {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .footer__column a:not(.btn) {
+    color: var(--brand-ink-muted);
+    text-decoration: none;
+    font-size: var(--step-caption);
+  }
+
+  .footer__column a:not(.btn):hover {
+    color: var(--brand-ink);
+  }
+
+  .footer__baseline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s);
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-m);
+    border-block-start: 1px solid var(--brand-line);
+  }
+
+  .footer__rights {
+    font-size: var(--step-caption);
+    color: var(--brand-ink-muted);
+    margin-inline-end: auto;
+  }
+</style>

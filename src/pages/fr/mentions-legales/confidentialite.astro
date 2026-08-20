@@ -1,0 +1,16 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import LegalPage from "~/components/pages/LegalPage.astro";
+import { pages } from "~/content/pages.fr";
+
+const copy = pages.privacy;
+---
+
+<BaseLayout
+  locale="fr"
+  route="legal/privacy"
+  title={copy.meta.title}
+  description={copy.meta.description}
+>
+  <LegalPage copy={copy} />
+</BaseLayout>

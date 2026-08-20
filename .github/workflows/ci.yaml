@@ -1,0 +1,116 @@
+# praxisls.com — CI.
+#
+# This repository is separate from praxis-ls for one reason (LANDING_PAGE_GUIDE
+# §7): that repository's CI runs on every PR to main with no path filter, and
+# its deploy workflow SSH-deploys the production ERP when CI passes on main. A
+# marketing copy fix merged there would roll production. Nothing in this file
+# may ever deploy anything — building and proving is the whole job.
+#
+# The checks are ordered cheapest-first so a contributor sees the fast, obvious
+# failure before waiting on Lighthouse.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Build and verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # N2 — the vendored brand tokens are byte-identical to packages/brand in
+      # praxis-ls at the pinned ref. BRAND_UPSTREAM_TOKEN is a token that can
+      # READ that private repository; without it the step still verifies the
+      # local digests and reports the upstream diff as skipped, so a fork or a
+      # contributor without the secret gets a green, honest run.
+      - name: Brand tokens match upstream (N2)
+        env:
+          BRAND_UPSTREAM_TOKEN: ${{ secrets.BRAND_UPSTREAM_TOKEN }}
+        run: npm run check:brand
+
+      - name: No raw hex outside the token file (N3)
+        run: npm run check:hex
+
+      - name: Only the three permitted font families (N5)
+        run: npm run check:fonts
+
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: Formatting
+        run: npm run format:check
+
+      - name: Build
+        run: npm run build
+
+      - name: No unlayered root-element CSS
+        run: npm run check:css
+
+      # N1 — the homepage copy is diffed against §3 of the guide, vendored and
+      # digest-pinned in vendor/copy/. "Diff it, don't eyeball it."
+      - name: Homepage copy matches the guide (N1)
+        run: npm run check:copy
+
+      - name: Links, headings, canonical and hreflang (N7, N10)
+        run: npm run check:links
+
+      - name: French typography (N8)
+        run: npm run check:french
+
+      - name: Payload budgets (N9)
+        run: npm run check:budget
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  lighthouse:
+    name: Lighthouse (mobile, both languages)
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      # Chrome is preinstalled on ubuntu-latest runners. Asserting the four
+      # category scores and LCP/CLS here is what keeps N9 a budget rather than
+      # an aspiration — the numbers in HANDOFF.md come from this job.
+      - name: Lighthouse CI
+        run: npx lhci autorun --config=lighthouserc.cjs
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          path: lighthouse
+          retention-days: 7

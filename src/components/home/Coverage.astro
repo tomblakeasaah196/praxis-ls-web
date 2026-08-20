@@ -1,0 +1,118 @@
+---
+/**
+ * Guide §3.8. Thirteen module groups as one scannable grid — not seventy tiles.
+ * The number 70 appears as a FIGURE, not as a list, which is the guide's
+ * instruction and also the only version of this section that a reader finishes.
+ *
+ * DRAFT COPY. The group names and one-liners are drafted from the module map in
+ * praxis-ls README §4; the guide specifies the structure of this section and
+ * not its words. Flagged in HANDOFF.md § Draft copy.
+ *
+ * Each group is meant to link to the relevant solution page. Those five pages
+ * are the second change, so the grid ships without links rather than with links
+ * that 404 — noted in HANDOFF.md.
+ */
+import type { HomeCopy } from "~/content/types";
+
+interface Props {
+  copy: HomeCopy;
+}
+
+const { copy } = Astro.props;
+---
+
+<section class="section section--surface coverage" id="coverage" aria-labelledby="coverage-heading">
+  <div class="shell">
+    <div class="coverage__head">
+      <div>
+        <h2 id="coverage-heading">{copy.coverage.heading}</h2>
+        <p class="lede measure">{copy.coverage.intro}</p>
+      </div>
+      <p class="coverage__figure">
+        <span class="num coverage__figure-value">{copy.coverage.figure}</span>
+        <span class="coverage__figure-label">{copy.coverage.figureLabel}</span>
+      </p>
+    </div>
+
+    <ul class="coverage__grid">
+      {
+        copy.coverage.groups.map((group) => (
+          <li class="coverage__cell">
+            <span class="num coverage__numeral">{group.numeral}</span>
+            <h3 class="coverage__name">{group.name}</h3>
+            <p class="coverage__line">{group.line}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .coverage__head {
+    display: grid;
+    gap: var(--space-m);
+    align-items: end;
+  }
+
+  .coverage__figure {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2xs);
+  }
+
+  .coverage__figure-value {
+    font-size: var(--step-display-l);
+    line-height: 1;
+    color: var(--brand-ink-orange);
+    font-weight: 600;
+  }
+
+  .coverage__figure-label {
+    font-size: var(--step-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .coverage__grid {
+    margin-block-start: var(--space-xl);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1px;
+    background: var(--brand-line);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+  }
+
+  .coverage__cell {
+    background: var(--brand-bg);
+    padding: var(--space-m);
+    display: grid;
+    gap: var(--space-3xs);
+    align-content: start;
+  }
+
+  .coverage__numeral {
+    font-size: var(--step-eyebrow);
+    color: var(--brand-ink-slate);
+    letter-spacing: 0.08em;
+  }
+
+  .coverage__name {
+    font-size: var(--step-body);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  .coverage__line {
+    font-size: var(--step-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  @media (width >= 48rem) {
+    .coverage__head {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-2xl);
+    }
+  }
+</style>

@@ -1,0 +1,18 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import SecurityPage from "~/components/pages/SecurityPage.astro";
+import { pages } from "~/content/pages.en";
+import { faqPageJsonLd } from "~/lib/structured-data";
+
+const copy = pages.security;
+---
+
+<BaseLayout
+  locale="en"
+  route="security"
+  title={copy.meta.title}
+  description={copy.meta.description}
+  extraJsonLd={faqPageJsonLd(copy.faq)}
+>
+  <SecurityPage copy={copy} locale="en" />
+</BaseLayout>

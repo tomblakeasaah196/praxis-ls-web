@@ -1,0 +1,87 @@
+---
+/**
+ * "Cette page est disponible en français" — a suggestion, never a redirect (N7).
+ *
+ * Written in the language being OFFERED, not the language of the page: a French
+ * reader who lands on the English tree is addressed in French, which is the
+ * only version of this banner that does any work. It renders hidden and is
+ * revealed by src/islands/language-banner.ts only when the browser's languages
+ * actually disagree with the page.
+ */
+import { UI } from "~/i18n/ui";
+import { HTML_LANG, alternateOf, otherLocale, type Locale, type RouteKey } from "~/i18n/routes";
+
+interface Props {
+  locale: Locale;
+  route: RouteKey;
+}
+
+const { locale, route } = Astro.props;
+const copy = UI[locale].language;
+const other = otherLocale(locale);
+/* The equivalent page, resolved from the slug map at build time. It rides on
+   this element rather than on a <link rel="alternate"> in the head: the head
+   already carries the three REAL hreflang links with absolute URLs, and a
+   fourth one with a relative href is an invalid hreflang as far as a crawler —
+   and Lighthouse — is concerned. */
+const alternate = alternateOf(route, other);
+---
+
+<aside
+  class="lang-banner"
+  data-lang-banner
+  data-lang-banner-href={alternate}
+  data-lang-banner-lang={HTML_LANG[other]}
+  hidden
+  lang={HTML_LANG[other]}
+>
+  <div class="shell lang-banner__inner">
+    <p class="lang-banner__text">{copy.bannerText}</p>
+    <a class="lang-banner__link" href={alternate} data-lang-banner-link>
+      {copy.bannerAction}
+    </a>
+    <button type="button" class="lang-banner__dismiss" data-lang-banner-dismiss>
+      {copy.bannerDismiss}
+    </button>
+  </div>
+</aside>
+
+<style>
+  .lang-banner {
+    background: var(--brand-surface);
+    border-block-end: 1px solid var(--brand-line);
+    font-size: var(--step-caption);
+  }
+
+  .lang-banner__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s);
+    padding-block: var(--space-2xs);
+  }
+
+  .lang-banner__text {
+    color: var(--brand-ink-muted);
+  }
+
+  .lang-banner__link {
+    color: var(--brand-ink-orange);
+    font-weight: 550;
+  }
+
+  .lang-banner__dismiss {
+    margin-inline-start: auto;
+    border: 0;
+    background: transparent;
+    color: var(--brand-ink-muted);
+    font: inherit;
+    cursor: pointer;
+    padding: var(--space-3xs) var(--space-2xs);
+    border-radius: var(--radius-s);
+  }
+
+  .lang-banner__dismiss:hover {
+    color: var(--brand-ink);
+  }
+</style>

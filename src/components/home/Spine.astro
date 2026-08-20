@@ -1,0 +1,52 @@
+---
+/**
+ * Guide §3.5 — "the most important section on the site". The moat.
+ *
+ * The chain is the argument, so it sits above the prose rather than beside it:
+ * a reader who reads nothing else on this page should still leave knowing that
+ * an operation file ends at the DSF without anyone retyping it.
+ */
+import NodeChain from "~/components/NodeChain.astro";
+import type { HomeCopy } from "~/content/types";
+
+interface Props {
+  copy: HomeCopy;
+}
+
+const { copy } = Astro.props;
+---
+
+<section class="section spine" id="spine" aria-labelledby="spine-heading">
+  <div class="shell">
+    <div class="spine__chain">
+      <NodeChain items={copy.spine.chain} label={copy.spine.diagramLabel} />
+    </div>
+    <div class="spine__words">
+      <h2 id="spine-heading">{copy.spine.heading}</h2>
+      <p class="lede measure">{copy.spine.body}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .spine__chain {
+    padding: var(--space-m);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-l);
+    background: var(--brand-surface);
+  }
+
+  .spine__words {
+    margin-block-start: var(--space-xl);
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  @media (width >= 60rem) {
+    .spine__words {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+</style>

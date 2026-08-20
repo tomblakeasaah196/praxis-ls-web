@@ -1,0 +1,72 @@
+---
+/**
+ * The page shell. One <h1> lives in the page, not here; this owns the
+ * landmarks, the language attribute and the theme's pre-paint default.
+ *
+ * `data-theme="dark"` is server-rendered rather than left to script (N6). The
+ * vendored tokens declare LIGHT on :root — that is right for the platform
+ * console and for an emailed preview, and wrong here, where dark is the primary
+ * expression. Writing the attribute in the markup means a reader with
+ * JavaScript disabled still opens dark, and there is nothing for the inline
+ * script to correct on a first visit.
+ */
+import BaseHead from "~/components/BaseHead.astro";
+import Header from "~/components/Header.astro";
+import Footer from "~/components/Footer.astro";
+import LanguageBanner from "~/components/LanguageBanner.astro";
+import { HTML_LANG, type Locale, type RouteKey } from "~/i18n/routes";
+import { UI } from "~/i18n/ui";
+import "~/styles/global.css";
+
+interface Props {
+  locale: Locale;
+  route: RouteKey;
+  title: string;
+  description: string;
+  structuredData?: boolean;
+  extraJsonLd?: Record<string, unknown> | undefined;
+}
+
+const {
+  locale,
+  route,
+  title,
+  description,
+  structuredData = false,
+  extraJsonLd = undefined,
+} = Astro.props;
+const ui = UI[locale];
+---
+
+<!doctype html>
+<html lang={HTML_LANG[locale]} data-theme="dark">
+  <head>
+    <BaseHead
+      locale={locale}
+      route={route}
+      title={title}
+      description={description}
+      structuredData={structuredData}
+      extraJsonLd={extraJsonLd}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{ui.skipToContent}</a>
+    <LanguageBanner locale={locale} route={route} />
+    <Header locale={locale} route={route} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} route={route} />
+
+    <script>
+      import { mountThemeToggle } from "~/islands/theme";
+      import { mountHeader } from "~/islands/chrome";
+      import { mountLanguageBanner } from "~/islands/language-banner";
+
+      mountThemeToggle();
+      mountHeader();
+      mountLanguageBanner();
+    </script>
+  </body>
+</html>

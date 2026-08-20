@@ -1,0 +1,8 @@
+{
+  "repository": "tomblakeasaah196/praxis-ls",
+  "ref": "807fc1adffe70e535fb744f2e90380ddbc73b3be",
+  "path": "doc/LANDING_PAGE_GUIDE.md",
+  "extract": "from '## 3. The homepage, section by section' up to '## 5. SEO'",
+  "sha256": "a38797b138ee99ee0e8663f0f2809b688642ff0d3983281befea21c692c51968",
+  "note": "The digest covers the EXTRACT only, not the header comment above it."
+}

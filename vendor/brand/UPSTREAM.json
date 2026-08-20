@@ -1,0 +1,8 @@
+{
+  "repository": "tomblakeasaah196/praxis-ls",
+  "ref": "807fc1adffe70e535fb744f2e90380ddbc73b3be",
+  "path": "packages/brand/tokens.css",
+  "blob": "24eb281498653ffd59011b9b281fbbfc00d6e738",
+  "sha256": "bd3226e04181146a0d917ae08e1cda7aed587aa35e1d53abc933e9b375e2dbb4",
+  "note": "Pinned by scripts/check-brand-tokens.mjs. Bump the ref and the digests in the same commit as the file, never separately."
+}

@@ -1,0 +1,223 @@
+---
+/**
+ * Sticky, 64px, --brand-bg at 88% behind a blur, a 1px rule once the page has
+ * scrolled (guide §3.1). Five items, one sheet on mobile, and the CTA is the
+ * only orange thing in it.
+ *
+ * "Product" and "Solutions" point at homepage sections rather than at pages,
+ * because the URL map in guide §2 has no `/product` and no `/solutions` index —
+ * only `/solutions/<slug>` children. Deviation logged in HANDOFF.md.
+ */
+import Mark from "./Mark.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { UI } from "~/i18n/ui";
+import { href, type Locale, type RouteKey } from "~/i18n/routes";
+
+interface Props {
+  locale: Locale;
+  route: RouteKey;
+}
+
+const { locale, route } = Astro.props;
+const ui = UI[locale];
+const home = href("home", locale);
+
+const items = [
+  { label: ui.nav.product, href: `${home}#spine`, current: false },
+  { label: ui.nav.solutions, href: `${home}#coverage`, current: false },
+  { label: ui.nav.security, href: href("security", locale), current: route === "security" },
+  { label: ui.nav.pricing, href: href("pricing", locale), current: route === "pricing" },
+  { label: ui.nav.about, href: href("about", locale), current: route === "about" },
+];
+---
+
+<header class="header" data-header>
+  <div class="header__inner shell">
+    <a class="header__brand" href={home}>
+      <Mark />
+    </a>
+
+    <nav class="header__nav" aria-label={ui.nav.label}>
+      <ul class="header__list">
+        {
+          items.map((item) => (
+            <li>
+              <a href={item.href} aria-current={item.current ? "page" : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header__tools">
+      <LanguageSwitcher locale={locale} route={route} />
+      <ThemeToggle locale={locale} />
+      <a class="btn btn--primary btn--small header__cta" href={href("contact", locale)}>
+        {ui.cta.bookDemo}
+      </a>
+      <button
+        type="button"
+        class="header__burger"
+        data-nav-toggle
+        aria-expanded="false"
+        aria-controls="header-sheet"
+        aria-label={ui.nav.openMenu}
+        data-open-label={ui.nav.openMenu}
+        data-close-label={ui.nav.closeMenu}
+      >
+        <svg
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+          focusable="false"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.5" fill="none"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  {/* One sheet on mobile, not a nested menu system (guide §3.1). */}
+  <div class="header__sheet" id="header-sheet" hidden data-nav-sheet>
+    <ul class="header__sheet-list shell">
+      {
+        items.map((item) => (
+          <li>
+            <a href={item.href} aria-current={item.current ? "page" : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a class="btn btn--primary header__sheet-cta" href={href("contact", locale)}>
+          {ui.cta.bookDemo}
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+    background: var(--header-veil);
+    backdrop-filter: blur(12px);
+    border-block-end: 1px solid transparent;
+    transition: border-color var(--duration-fast) var(--ease);
+  }
+
+  .header[data-scrolled] {
+    border-block-end-color: var(--brand-line);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    block-size: var(--header-height);
+  }
+
+  .header__brand {
+    text-decoration: none;
+    flex: none;
+  }
+
+  .header__nav {
+    margin-inline-start: var(--space-l);
+    flex: 1;
+  }
+
+  .header__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+  }
+
+  .header__list a,
+  .header__sheet-list a {
+    color: var(--brand-ink-muted);
+    text-decoration: none;
+    font-size: var(--step-caption);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .header__list a:hover,
+  .header__sheet-list a:hover {
+    color: var(--brand-ink);
+  }
+
+  .header__list a[aria-current="page"] {
+    color: var(--brand-ink-orange);
+  }
+
+  .header__tools {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-inline-start: auto;
+  }
+
+  .header__burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: 36px;
+    block-size: 36px;
+    padding: 0;
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-m);
+    background: transparent;
+    color: var(--brand-ink-muted);
+    cursor: pointer;
+  }
+
+  .header__burger svg {
+    inline-size: 18px;
+    block-size: 18px;
+  }
+
+  .header__sheet {
+    border-block-start: 1px solid var(--brand-line);
+    background: var(--brand-bg);
+    padding-block: var(--space-s) var(--space-m);
+  }
+
+  .header__sheet-list {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .header__sheet-list a {
+    font-size: var(--step-body);
+    display: inline-block;
+    padding-block: var(--space-3xs);
+  }
+
+  .header__sheet-cta {
+    inline-size: 100%;
+  }
+
+  /* The nav collapses before the FR labels do — "Sécurité · Tarifs · À propos"
+     runs wider than its English peer (glossary §5.12). */
+  @media (width < 62rem) {
+    .header__nav {
+      display: none;
+    }
+
+    .header__burger {
+      display: inline-flex;
+    }
+
+    .header__cta {
+      display: none;
+    }
+  }
+</style>
