@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const locale = 'en';
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Privacy Policy — Praxis LS"
+  description="Privacy policy for praxisls.com"
+>
+  <section class="legal-hero">
+    <div class="container container--narrow">
+      <h1>Privacy Policy</h1>
+      <p class="legal-meta">Last updated: 20 August 2026</p>
+    </div>
+  </section>
+
+  <section class="legal-content section">
+    <div class="container container--narrow">
+      <h2>Information we collect</h2>
+      <p>We collect information you provide directly to us, such as when you fill out our demo request form, subscribe to our newsletter, or contact us for support.</p>
+      
+      <h2>How we use your information</h2>
+      <p>We use the information we collect to respond to your inquiries, provide customer support, and send you relevant updates about our products and services.</p>
+      
+      <h2>Data retention</h2>
+      <p>We retain your personal information for as long as necessary to fulfill the purposes outlined in this policy, unless a longer retention period is required by law.</p>
+      
+      <h2>Your rights</h2>
+      <p>You have the right to access, correct, or delete your personal information. To exercise these rights, please contact us at privacy@praxisls.com.</p>
+      
+      <h2>Contact</h2>
+      <p>For questions about this privacy policy, please contact us at privacy@praxisls.com.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .legal-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-bottom: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .legal-meta {
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .legal-content {
+    background-color: var(--brand-bg);
+  }
+
+  .legal-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-4);
+    margin-top: var(--space-10);
+  }
+
+  .legal-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .legal-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+</style>

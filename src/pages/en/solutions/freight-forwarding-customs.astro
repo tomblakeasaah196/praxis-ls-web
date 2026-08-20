@@ -1,0 +1,185 @@
+---
+import { useTranslations } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DemoForm from '../../../components/DemoForm.astro';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Freight forwarding & customs — Praxis LS"
+  description="One dossier per shipment, from quotation through customs clearance to final settlement. Every document, every cost, every posting — in the same file."
+>
+  <section class="solution-hero">
+    <div class="container">
+      <p class="eyebrow">Solutions</p>
+      <h1>{t['solutions.freight.title']}</h1>
+      <p class="solution-hero__intro">{t['solutions.freight.intro']}</p>
+    </div>
+  </section>
+
+  <section class="solution-content section">
+    <div class="container">
+      <h2>What you get</h2>
+      <ul class="feature-list">
+        <li>
+          <strong>Transit dossier</strong> — one file per shipment, carrying quotation, order, documents, costs and postings
+        </li>
+        <li>
+          <strong>Customs declarations</strong> — Coure use, shore duty calculations, preference certificates
+        </li>
+        <li>
+          <strong>Disbursement tracking</strong> — every advance, every receipt, reconciled automatically
+        </li>
+        <li>
+          <strong>Connaissement (B/L) management</strong> — issue, surrender, release against surrender
+        </li>
+        <li>
+          <strong>Multi-carrier routing</strong> — road, sea, air — each posting to the same ledger
+        </li>
+        <li>
+          <strong>Document repository</strong> — every certificate, every correspondence, attached to the dossier
+        </li>
+      </ul>
+
+      <h2>How it posts to the ledger</h2>
+      <p>Every customs duty, every disbursement, every freight charge posts itself at the moment it occurs. The DSF is built from the ledger, not assembled from spreadsheets at month-end.</p>
+
+      <div class="solution-diagram">
+        <svg viewBox="0 0 600 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g>
+            <circle cx="40" cy="40" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="40" y="70" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Quotation</text>
+          </g>
+          <line x1="48" y1="40" x2="92" y2="40" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <g>
+            <circle cx="100" cy="40" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="100" y="70" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Transit order</text>
+          </g>
+          <line x1="108" y1="40" x2="152" y2="40" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <g>
+            <circle cx="160" cy="40" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="160" y="70" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Customs</text>
+          </g>
+          <line x1="168" y1="40" x2="212" y2="40" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <g>
+            <circle cx="220" cy="40" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="220" y="70" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Delivery</text>
+          </g>
+          <line x1="228" y1="40" x2="272" y2="40" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <g>
+            <circle cx="280" cy="40" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="280" y="70" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Invoice</text>
+          </g>
+          <line x1="288" y1="40" x2="332" y2="40" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <g>
+            <circle cx="340" cy="40" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="340" y="70" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Journal entry</text>
+          </g>
+          <line x1="348" y1="40" x2="392" y2="40" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <g>
+            <circle cx="400" cy="40" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="400" y="70" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">General ledger</text>
+          </g>
+          <line x1="408" y1="40" x2="452" y2="40" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          <g>
+            <circle cx="460" cy="40" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="460" y="70" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">DSF</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="solution-cta section--full">
+    <div class="container container--narrow">
+      <h2>See it with your files</h2>
+      <p>Thirty minutes, your files, your questions. We'll show you the ledger behind them.</p>
+      <a href="/en/contact" class="btn btn--primary btn--lg">Book a demo</a>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .solution-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .solution-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .solution-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+  }
+
+  .solution-content {
+    background-color: var(--brand-bg);
+  }
+
+  .solution-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-5);
+    margin-top: var(--space-10);
+  }
+
+  .solution-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .solution-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .feature-list li {
+    padding: var(--space-4);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--brand-ink-orange);
+  }
+
+  .solution-diagram {
+    margin-block: var(--space-10);
+    overflow-x: auto;
+  }
+
+  .solution-cta {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .solution-cta h2 {
+    font-size: var(--text-display-l);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .solution-cta p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    margin-inline: auto;
+  }
+</style>

@@ -1,0 +1,171 @@
+---
+import { useTranslations } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DemoForm from '../../../components/DemoForm.astro';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Smart Logistics case study — Praxis LS"
+  description="How Smart Logistics replaced an 84-table legacy system with Praxis LS, end to end, accounting included."
+>
+  <section class="case-hero">
+    <div class="container container--narrow">
+      <p class="eyebrow">Customer</p>
+      <h1>Smart Logistics</h1>
+      <p class="case-hero__location">Cameroon</p>
+      <p class="case-hero__intro">An 84-table legacy system replaced end to end, accounting included.</p>
+    </div>
+  </section>
+
+  <section class="case-content section">
+    <div class="container container--narrow">
+      <h2>The challenge</h2>
+      <p>Smart Logistics ran their freight forwarding operation on a custom-built system that had accumulated over twelve years. It handled the basics — operation files, invoicing — but the accounting was a separate spreadsheet empire. Every month, a team spent a week reconstructing the accounts for the DSF.</p>
+
+      <h2>The migration</h2>
+      <p>Praxis LS replaced the legacy system end to end, including the accounting. All 84 tables were mapped to the new schema. Every historical invoice was preserved and accessible. The migration ran over a long weekend, with parallel operation for two weeks to validate the cutover.</p>
+
+      <h2>The result</h2>
+      <p>Month-end closed in two days instead of a week. The DSF is now built from the ledger in real time. The DG sees the whole company on one screen. The operations team manages every file on one board.</p>
+
+      <blockquote class="case-quote">
+        <p>« Nous avons remplacé un système de 12 ans en un week-end. La comptabilité est maintenant dans le même système que l'exploitation. La clôture mensuelle est une relecture, pas une reconstruction. »</p>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="case-stats section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-card__value">84</span>
+          <span class="stat-card__label">Tables migrated</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value">1</span>
+          <span class="stat-card__label">Weekend cutover</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value">2</span>
+          <span class="stat-card__label">Days to month-end</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value">1</span>
+          <span class="stat-card__label">System for operation and accounting</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .case-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .case-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .case-hero__location {
+    font-family: var(--brand-font-mono);
+    font-size: var(--text-caption);
+    color: var(--brand-ink-orange);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-4);
+  }
+
+  .case-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+  }
+
+  .case-content {
+    background-color: var(--brand-bg);
+  }
+
+  .case-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-4);
+    margin-top: var(--space-10);
+  }
+
+  .case-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .case-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .case-quote {
+    margin-block: var(--space-10);
+    padding: var(--space-6);
+    background-color: var(--brand-surface);
+    border-left: 4px solid var(--brand-ink-orange);
+    border-radius: var(--radius-md);
+  }
+
+  .case-quote p {
+    font-size: var(--text-body-l);
+    font-style: italic;
+    color: var(--brand-ink);
+    margin: 0;
+  }
+
+  .case-stats {
+    background-color: var(--brand-surface);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+  }
+
+  .stat-card {
+    text-align: center;
+    padding: var(--space-6);
+    background-color: var(--brand-bg);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-lg);
+  }
+
+  .stat-card__value {
+    display: block;
+    font-family: var(--brand-font-mono);
+    font-size: var(--text-display-xl);
+    font-weight: 600;
+    color: var(--brand-ink-orange);
+    margin-bottom: var(--space-2);
+  }
+
+  .stat-card__label {
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,692 @@
+---
+import { useTranslations } from '../../i18n/ui';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoForm from '../../components/DemoForm.astro';
+import RoleTabs from '../../components/RoleTabs.astro';
+import ControlTower from '../../components/ControlTower.astro';
+import ScreenshotPlaceholder from '../../components/ScreenshotPlaceholder.astro';
+
+const locale = 'fr';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Praxis LS — l'ERP natif OHADA pour les opérateurs logistiques"
+  description="Un seul système pour vos dossiers d'exploitation, vos entrepôts, votre flotte — et la comptabilité où tout s'impute."
+>
+  <!-- Section 1: Hero -->
+  <section class="hero">
+    <div class="hero__inner container">
+      <div class="hero__content">
+        <p class="eyebrow hero__eyebrow">{t['hero.eyebrow']}</p>
+        <h1 class="hero__title">{t['hero.title']}</h1>
+        <p class="hero__subtitle">{t['hero.subtitle']}</p>
+        <div class="hero__actions">
+          <a href="/fr/contact" class="btn btn--primary btn--lg">{t['hero.ctaPrimary']}</a>
+          <a href="#control-tower" class="btn btn--secondary btn--lg">{t['hero.ctaSecondary']}</a>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <ScreenshotPlaceholder 
+          id="operation-file--dark--fr"
+          label="operation-file--dark--fr.png"
+          hint="Remplacer par la capture d'écran réelle du produit"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Credibility Strip -->
+  <section class="credibility">
+    <div class="container">
+      <p class="credibility__case-study">{t['credibility.caseStudy']}</p>
+      <div class="credibility__stats">
+        <div class="credibility__stat">
+          <span class="credibility__stat-label">{t['credibility.ohada']}</span>
+          <span class="credibility__stat-value">{t['credibility.memberStates']}</span>
+        </div>
+        <div class="credibility__divider" aria-hidden="true"></div>
+        <div class="credibility__stat">
+          <span class="credibility__stat-value">{t['credibility.modules']}</span>
+        </div>
+        <div class="credibility__divider" aria-hidden="true"></div>
+        <div class="credibility__stat">
+          <span class="credibility__stat-value">{t['credibility.database']}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Problem -->
+  <section class="problem section section--full">
+    <div class="container container--narrow">
+      <h2 class="problem__title">{t['problem.title']}</h2>
+      <p class="problem__text">{t['problem.text']}</p>
+    </div>
+  </section>
+
+  <!-- Section 4: The Spine -->
+  <section class="spine section section--full">
+    <div class="container container--narrow">
+      <div class="spine__diagram">
+        <svg viewBox="0 0 700 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Node network diagram: Operation file → ledger -->
+          <g>
+            <circle cx="30" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="30" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Operation file</text>
+          </g>
+          <line x1="38" y1="30" x2="85" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          
+          <g>
+            <circle cx="95" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="95" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Milestone</text>
+          </g>
+          <line x1="103" y1="30" x2="150" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          
+          <g>
+            <circle cx="160" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="160" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Costing</text>
+          </g>
+          <line x1="168" y1="30" x2="215" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          
+          <g>
+            <circle cx="225" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="225" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Invoice</text>
+          </g>
+          <line x1="233" y1="30" x2="280" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          
+          <g>
+            <circle cx="290" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="290" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">Journal entry</text>
+          </g>
+          <line x1="298" y1="30" x2="345" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          
+          <g>
+            <circle cx="355" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="355" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">General ledger</text>
+          </g>
+          <line x1="363" y1="30" x2="410" y2="30" stroke="var(--brand-ink-orange)" stroke-width="1"/>
+          
+          <g>
+            <circle cx="420" cy="30" r="8" fill="var(--brand-ink-orange)"/>
+            <text x="420" y="55" text-anchor="middle" fill="var(--brand-ink-muted)" font-size="10">DSF</text>
+          </g>
+        </svg>
+      </div>
+      <h2 class="spine__title">{t['spine.title']}</h2>
+      <p class="spine__text">{t['spine.text']}</p>
+    </div>
+  </section>
+
+  <!-- Section 5: Control Tower -->
+  <section id="control-tower" class="tower section section--full">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">{t['tower.title']}</h2>
+        <p class="section__subtitle">{t['tower.text']}</p>
+      </div>
+      <ControlTower locale={locale} />
+      <div class="tower__screenshots">
+        <ScreenshotPlaceholder 
+          id="control-tower--dark--fr"
+          label="control-tower--dark--fr.png"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: By Role -->
+  <section class="roles section">
+    <div class="container container--narrow">
+      <div class="section__header">
+        <h2 class="section__title">Built for every role</h2>
+        <p class="section__subtitle">The DG sees the whole company. Operations sees every file. Finance sees the ledger. IT sees the database.</p>
+      </div>
+      <RoleTabs locale={locale} />
+    </div>
+  </section>
+
+  <!-- Section 7: Coverage -->
+  <section class="coverage section">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">{t['coverage.title']}</h2>
+        <p class="section__subtitle">{t['coverage.subtitle']}</p>
+      </div>
+      <div class="coverage__grid">
+        <a href="/fr/solutions/transit-douane" class="card coverage__card">
+          <h3 class="card__title">{t['solutions.freight.title']}</h3>
+          <p class="card__text">Transit orders, customs declarations, B/L management, disbursements.</p>
+        </a>
+        <a href="/fr/solutions/entrepot" class="card coverage__card">
+          <h3 class="card__title">{t['solutions.warehouse.title']}</h3>
+          <p class="card__text">Receiving, storage, picking, packing, dispatch, cycle counting.</p>
+        </a>
+        <a href="/fr/solutions/flotte" class="card coverage__card">
+          <h3 class="card__title">{t['solutions.fleet.title']}</h3>
+          <p class="card__text">Vehicles, drivers, fuel, maintenance, routes, cost allocation.</p>
+        </a>
+        <a href="/fr/solutions/comptabilite-ohada" class="card coverage__card">
+          <h3 class="card__title">{t['solutions.finance.title']}</h3>
+          <p class="card__text">General ledger, accounts payable/receivable, DSF, liasse fiscale.</p>
+        </a>
+        <a href="/fr/solutions/plateforme-dsi" class="card coverage__card">
+          <h3 class="card__title">{t['solutions.platform.title']}</h3>
+          <p class="card__text">White-label, multi-environment, API, integrations, database.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: Intelligence -->
+  <section class="intelligence section section--full">
+    <div class="container container--narrow">
+      <h2 class="intelligence__title">{t['intelligence.title']}</h2>
+      <p class="intelligence__text">{t['intelligence.text']}</p>
+    </div>
+  </section>
+
+  <!-- Section 9: Trust -->
+  <section class="trust section">
+    <div class="container">
+      <div class="trust__header">
+        <h2 class="trust__title">{t['trust.title']}</h2>
+      </div>
+      <div class="trust__controls">
+        <div class="trust__control">
+          <div class="trust__control-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+          </div>
+          <p>A dedicated PostgreSQL database per customer — not a shared table with a tenant column</p>
+        </div>
+        <div class="trust__control">
+          <div class="trust__control-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <p>An immutable ledger: entries are reversed, never edited</p>
+        </div>
+        <div class="trust__control">
+          <div class="trust__control-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <p>Encrypted daily backups of every database</p>
+        </div>
+        <div class="trust__control">
+          <div class="trust__control-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polyline points="1 4 1 10 7 10"/>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+          </div>
+          <p>Restore drills that are run and recorded, not assumed</p>
+        </div>
+        <div class="trust__control">
+          <div class="trust__control-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <p>A central policy engine — permissions enforced server-side, not just hidden in the UI</p>
+        </div>
+        <div class="trust__control">
+          <div class="trust__control-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <rect x="7" y="7" width="3" height="3"/>
+              <rect x="14" y="7" width="3" height="3"/>
+              <rect x="7" y="14" width="3" height="3"/>
+              <rect x="14" y="14" width="3" height="3"/>
+            </svg>
+          </div>
+          <p>Ten-year document retention, with QR verification on issued documents</p>
+        </div>
+      </div>
+      <div class="trust__cta">
+        <a href="/fr/securite" class="btn btn--secondary">{t['trust.cta']}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 10: Deployment -->
+  <section class="deployment section section--full">
+    <div class="container container--narrow">
+      <h2 class="deployment__title">{t['deployment.title']}</h2>
+      <p class="deployment__text">{t['deployment.text']}</p>
+    </div>
+  </section>
+
+  <!-- Section 11: Standards -->
+  <section class="standards section">
+    <div class="container container--narrow">
+      <div class="section__header">
+        <h2 class="section__title">{t['standards.title']}</h2>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Standard</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>OHADA / SYSCOHADA</td>
+              <td><span class="badge badge--live">Live — 17 member states, DSF, liasse fiscale</span></td>
+            </tr>
+            <tr>
+              <td>IFRS</td>
+              <td><span class="badge badge--development">In development</span></td>
+            </tr>
+            <tr>
+              <td>US GAAP</td>
+              <td><span class="badge badge--planned">Planned</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="standards__note">{t['standards.note']}</p>
+    </div>
+  </section>
+
+  <!-- Section 12: Pricing -->
+  <section class="pricing section">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">{t['pricing.title']}</h2>
+        <p class="section__subtitle">{t['pricing.subtitle']}</p>
+      </div>
+      <div class="pricing__grid">
+        <div class="pricing__tier">
+          <h3 class="pricing__tier-name">{t['pricing.core']}</h3>
+          <p class="pricing__tier-desc">{t['pricing.coreDesc']}</p>
+        </div>
+        <div class="pricing__tier">
+          <h3 class="pricing__tier-name">{t['pricing.operations']}</h3>
+          <p class="pricing__tier-desc">{t['pricing.operationsDesc']}</p>
+        </div>
+        <div class="pricing__tier">
+          <h3 class="pricing__tier-name">{t['pricing.enterprise']}</h3>
+          <p class="pricing__tier-desc">{t['pricing.enterpriseDesc']}</p>
+        </div>
+      </div>
+      <p class="pricing__ai">{t['pricing.ai']}</p>
+      <p class="pricing__currency">{t['pricing.currency']}</p>
+    </div>
+  </section>
+
+  <!-- Section 13: Close -->
+  <section class="close section section--full">
+    <div class="container container--narrow">
+      <h2 class="close__title">{t['close.title']}</h2>
+      <p class="close__text">{t['close.text']}</p>
+      <a href="/fr/contact" class="btn btn--primary btn--lg">{t['close.cta']}</a>
+    </div>
+  </section>
+
+  <!-- Section 14: Demo Form -->
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    color: var(--brand-ink);
+  }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+  }
+
+  .hero__eyebrow {
+    margin-bottom: var(--space-4);
+  }
+
+  .hero__title {
+    font-size: var(--text-display-xl);
+    margin-bottom: var(--space-6);
+    color: var(--brand-ink);
+  }
+
+  .hero__subtitle {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    max-width: 50ch;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .btn--lg {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--text-body-l);
+  }
+
+  .hero__visual {
+    position: relative;
+  }
+
+  /* Credibility */
+  .credibility {
+    padding-block: var(--space-10);
+    background-color: var(--brand-surface);
+    border-bottom: 1px solid var(--brand-line);
+  }
+
+  .credibility__case-study {
+    text-align: center;
+    font-size: var(--text-body);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-6);
+    max-width: var(--measure);
+    margin-inline: auto;
+  }
+
+  .credibility__stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .credibility__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .credibility__stat-label {
+    font-family: var(--brand-font-display);
+    font-size: var(--text-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: var(--brand-tracking-eyebrow);
+    color: var(--brand-ink-orange);
+  }
+
+  .credibility__stat-value {
+    font-size: var(--text-body);
+    color: var(--brand-ink-muted);
+  }
+
+  .credibility__divider {
+    width: 1px;
+    height: 32px;
+    background-color: var(--brand-line);
+  }
+
+  /* Problem */
+  .problem {
+    background-color: var(--brand-bg);
+    text-align: center;
+  }
+
+  .problem__title {
+    font-size: var(--text-display-l);
+    margin-bottom: var(--space-6);
+    color: var(--brand-ink);
+  }
+
+  .problem__text {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    margin-inline: auto;
+  }
+
+  /* Spine */
+  .spine {
+    background-color: var(--brand-bg);
+  }
+
+  .spine__diagram {
+    margin-bottom: var(--space-10);
+    overflow-x: auto;
+    padding-bottom: var(--space-4);
+  }
+
+  .spine__title {
+    font-size: var(--text-display-l);
+    margin-bottom: var(--space-6);
+    text-align: center;
+  }
+
+  .spine__text {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    margin-inline: auto;
+  }
+
+  /* Tower */
+  .tower {
+    background-color: var(--brand-surface);
+  }
+
+  .tower__screenshots {
+    max-width: 900px;
+    margin: var(--space-12) auto 0;
+  }
+
+  /* Roles */
+  .roles {
+    background-color: var(--brand-bg);
+  }
+
+  /* Coverage */
+  .coverage {
+    background-color: var(--brand-bg);
+  }
+
+  .coverage__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .coverage__card {
+    text-decoration: none;
+  }
+
+  .coverage__card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Intelligence */
+  .intelligence {
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .intelligence__title {
+    font-size: var(--text-display-l);
+    margin-bottom: var(--space-6);
+    color: var(--brand-ink);
+  }
+
+  .intelligence__text {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    margin-inline: auto;
+  }
+
+  /* Trust */
+  .trust {
+    background-color: var(--brand-bg);
+  }
+
+  .trust__header {
+    text-align: center;
+    margin-bottom: var(--space-12);
+  }
+
+  .trust__title {
+    font-size: var(--text-display-l);
+  }
+
+  .trust__controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+    margin-bottom: var(--space-10);
+  }
+
+  .trust__control {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-lg);
+  }
+
+  .trust__control p {
+    font-size: var(--text-body);
+    color: var(--brand-ink);
+    max-width: none;
+  }
+
+  .trust__control-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--brand-ink-orange) 10%, transparent);
+    border-radius: var(--radius-md);
+    color: var(--brand-ink-orange);
+  }
+
+  .trust__cta {
+    text-align: center;
+  }
+
+  /* Deployment */
+  .deployment {
+    background-color: var(--brand-bg);
+    text-align: center;
+  }
+
+  .deployment__title {
+    font-size: var(--text-display-l);
+    margin-bottom: var(--space-6);
+  }
+
+  .deployment__text {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    margin-inline: auto;
+  }
+
+  /* Standards */
+  .standards {
+    background-color: var(--brand-surface);
+  }
+
+  .standards__note {
+    margin-top: var(--space-6);
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* Pricing */
+  .pricing {
+    background-color: var(--brand-bg);
+  }
+
+  .pricing__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+  }
+
+  .pricing__tier {
+    padding: var(--space-6);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+
+  .pricing__tier-name {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-3);
+  }
+
+  .pricing__tier-desc {
+    font-size: var(--text-body);
+    color: var(--brand-ink-muted);
+  }
+
+  .pricing__ai,
+  .pricing__currency {
+    text-align: center;
+    font-size: var(--text-body);
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  /* Close */
+  .close {
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .close__title {
+    font-size: var(--text-display-l);
+    margin-bottom: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .close__text {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    margin-inline: auto;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__visual {
+      order: -1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .pricing__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .credibility__divider {
+      display: none;
+    }
+  }
+</style>

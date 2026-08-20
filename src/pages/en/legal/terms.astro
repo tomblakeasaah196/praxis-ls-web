@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const locale = 'en';
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Terms of Service — Praxis LS"
+  description="Terms of service for praxisls.com"
+>
+  <section class="legal-hero">
+    <div class="container container--narrow">
+      <h1>Terms of Service</h1>
+      <p class="legal-meta">Last updated: 20 August 2026</p>
+    </div>
+  </section>
+
+  <section class="legal-content section">
+    <div class="container container--narrow">
+      <h2>Acceptance of terms</h2>
+      <p>By accessing and using this website, you accept and agree to be bound by the terms and conditions of this agreement.</p>
+      
+      <h2>Use of the website</h2>
+      <p>This website is provided for informational purposes only. The content on this website is subject to change without notice.</p>
+      
+      <h2>Intellectual property</h2>
+      <p>All content, trademarks, and other intellectual property on this website are owned by or licensed to JBS Praxis LLC.</p>
+      
+      <h2>Limitation of liability</h2>
+      <p>JBS Praxis LLC shall not be liable for any direct, indirect, incidental, special, or consequential damages arising out of the use of this website.</p>
+      
+      <h2>Contact</h2>
+      <p>For questions about these terms, please contact us at legal@praxisls.com.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .legal-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-bottom: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .legal-meta {
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .legal-content {
+    background-color: var(--brand-bg);
+  }
+
+  .legal-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-4);
+    margin-top: var(--space-10);
+  }
+
+  .legal-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .legal-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+</style>

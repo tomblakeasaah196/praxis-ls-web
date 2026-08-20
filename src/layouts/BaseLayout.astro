@@ -1,0 +1,124 @@
+---
+import { type Locale } from '../i18n/ui';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+}
+
+const { 
+  locale, 
+  title, 
+  description = locale === 'en' 
+    ? 'One system for your operation files, your warehouses, your fleet — and the accounting they all post to.'
+    : 'Un seul système pour vos dossiers d\'exploitation, vos entrepôts, votre flotte — et la comptabilité où tout s\'impute.',
+  canonical,
+  ogImage
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+const siteUrl = 'https://praxisls.com';
+
+// Determine other locale
+const otherLocale = locale === 'en' ? 'fr' : 'en';
+const otherPath = currentPath.replace(/^\/(en|fr)/, `/${otherLocale}`);
+
+// Hreflang URLs
+const enUrl = locale === 'en' ? currentPath : currentPath.replace(/^\/fr/, '/en');
+const frUrl = locale === 'en' ? currentPath.replace(/^\/en/, '/fr') : currentPath;
+---
+
+<!DOCTYPE html>
+<html lang={locale} data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Theme initialization - must run before first paint -->
+    <script is:inline>
+      (function() {
+        const stored = localStorage.getItem('praxis-theme');
+        const theme = stored || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+
+    <!-- Canonical and Hreflang -->
+    <link rel="canonical" href={`${siteUrl}${canonical || currentPath}`} />
+    <link rel="alternate" hreflang="en" href={`${siteUrl}${enUrl}`} />
+    <link rel="alternate" hreflang="fr" href={`${siteUrl}${frUrl}`} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${enUrl}`} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={`${siteUrl}${currentPath}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {ogImage && <meta property="og:image" content={`${siteUrl}${ogImage}`} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={`${siteUrl}${ogImage}`} />}
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Praxis LS",
+      "description": description,
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "on request"
+      }
+    })} />
+  </head>
+  <body>
+    <Header locale={locale} />
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <Footer locale={locale} />
+
+    <!-- Theme toggle script -->
+    <script>
+      import '../components/ThemeToggle.ts';
+    </script>
+
+    <!-- Language switcher script -->
+    <script>
+      import '../components/LanguageSwitcher.ts';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  #main-content {
+    flex: 1;
+  }
+</style>

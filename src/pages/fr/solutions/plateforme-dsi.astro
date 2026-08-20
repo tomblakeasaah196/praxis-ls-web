@@ -1,0 +1,136 @@
+---
+import { useTranslations } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DemoForm from '../../../components/DemoForm.astro';
+
+const locale = 'fr';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Plateforme & DSI — Praxis LS"
+  description="Une base de données PostgreSQL par client. Vos données, vos accès, votre porte de sortie. Marque blanche à vos couleurs et polices."
+>
+  <section class="solution-hero">
+    <div class="container">
+      <p class="eyebrow">Solutions</p>
+      <h1>{t['solutions.platform.title']}</h1>
+      <p class="solution-hero__intro">{t['solutions.platform.intro']}</p>
+    </div>
+  </section>
+
+  <section class="solution-content section">
+    <div class="container">
+      <h2>Ce que vous obtenez</h2>
+      <ul class="feature-list">
+        <li>
+          <strong>Base de données PostgreSQL dédiée</strong> — une base par client, pas une table partagée avec une colonne client
+        </li>
+        <li>
+          <strong>Identifiants détenus par le client</strong> — votre base, vos accès, votre clause de sortie
+        </li>
+        <li>
+          <strong>Déploiement en marque blanche</strong> — votre sous-domaine, vos couleurs, vos polices, votre logo sur chaque document
+        </li>
+        <li>
+          <strong>Multi-environnement</strong> — environnements de production et de test, test purgé selon planning
+        </li>
+        <li>
+          <strong>API REST</strong> — intégrations avec vos systèmes existants, webhooks pour les événements
+        </li>
+        <li>
+          <strong>Localisation des données</strong> — vos données restent là où vous en avez besoin
+        </li>
+      </ul>
+
+      <h2>Vos données, votre contrôle</h2>
+      <p>Nous detenons le code. Vous détenez vos données. Vos identifiants de base de données vous appartiennent. Si vous devez un jour partir, l'export est propre et complet.</p>
+    </div>
+  </section>
+
+  <section class="solution-cta section--full">
+    <div class="container container--narrow">
+      <h2>Voyez l'architecture de la plateforme</h2>
+      <p>Trente minutes, vos dossiers, vos questions. Nous vous montrons le grand livre qui se trouve derrière.</p>
+      <a href="/fr/contact" class="btn btn--primary btn--lg">Demander une démo</a>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .solution-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .solution-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .solution-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+  }
+
+  .solution-content {
+    background-color: var(--brand-bg);
+  }
+
+  .solution-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-5);
+    margin-top: var(--space-10);
+  }
+
+  .solution-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .solution-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .feature-list li {
+    padding: var(--space-4);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--brand-ink-orange);
+  }
+
+  .solution-cta {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .solution-cta h2 {
+    font-size: var(--text-display-l);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .solution-cta p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    margin-inline: auto;
+  }
+</style>

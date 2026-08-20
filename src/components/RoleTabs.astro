@@ -1,0 +1,166 @@
+---
+import { type Locale, useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const roles = [
+  { id: 'direction', label: t['role.direction'], desc: t['role.directionDesc'] },
+  { id: 'operations', label: t['role.operations'], desc: t['role.operationsDesc'] },
+  { id: 'finance', label: t['role.finance'], desc: t['role.financeDesc'] },
+  { id: 'it', label: t['role.it'], desc: t['role.itDesc'] },
+];
+---
+
+<div class="role-tabs" data-role-tabs>
+  <div class="tabs" role="tablist" aria-label="Roles">
+    {roles.map((role, index) => (
+      <button
+        type="button"
+        role="tab"
+        id={`tab-${role.id}`}
+        aria-controls={`panel-${role.id}`}
+        aria-selected={index === 0 ? 'true' : 'false'}
+        class="tab"
+        tabindex={index === 0 ? 0 : -1}
+      >
+        {role.label}
+      </button>
+    ))}
+  </div>
+
+  {roles.map((role, index) => (
+    <div
+      role="tabpanel"
+      id={`panel-${role.id}`}
+      aria-labelledby={`tab-${role.id}`}
+      aria-hidden={index !== 0 ? 'true' : 'false'}
+      class="tab-panel"
+      tabindex={index === 0 ? 0 : -1}
+    >
+      <div class="role-content">
+        <div class="role-content__icon">
+          {role.id === 'direction' && (
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          )}
+          {role.id === 'operations' && (
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          )}
+          {role.id === 'finance' && (
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          )}
+          {role.id === 'it' && (
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          )}
+        </div>
+        <p class="role-content__desc">{role.desc}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .role-content {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-lg);
+  }
+
+  .role-content__icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--brand-ink-orange) 10%, transparent);
+    border-radius: var(--radius-md);
+    color: var(--brand-ink-orange);
+  }
+
+  .role-content__desc {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink);
+    max-width: none;
+    line-height: var(--leading-body);
+  }
+</style>
+
+<script>
+  // Role tabs - vanilla TypeScript island
+  function initRoleTabs(): void {
+    const tabsContainer = document.querySelector('[data-role-tabs]');
+    if (!tabsContainer) return;
+
+    const tabs = Array.from(tabsContainer.querySelectorAll('[role="tab"]')) as HTMLButtonElement[];
+    const panels = Array.from(tabsContainer.querySelectorAll('[role="tabpanel"]')) as HTMLElement[];
+
+    function selectTab(index: number): void {
+      tabs.forEach((tab, i) => {
+        const isSelected = i === index;
+        tab.setAttribute('aria-selected', String(isSelected));
+        tab.setAttribute('tabindex', isSelected ? '0' : '-1');
+      });
+
+      panels.forEach((panel, i) => {
+        panel.setAttribute('aria-hidden', String(i !== index));
+      });
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectTab(index));
+
+      tab.addEventListener('keydown', (e) => {
+        const keyboardEvent = e as KeyboardEvent;
+        let newIndex = index;
+
+        if (keyboardEvent.key === 'ArrowRight') {
+          newIndex = (index + 1) % tabs.length;
+        } else if (keyboardEvent.key === 'ArrowLeft') {
+          newIndex = (index - 1 + tabs.length) % tabs.length;
+        } else if (keyboardEvent.key === 'Home') {
+          newIndex = 0;
+        } else if (keyboardEvent.key === 'End') {
+          newIndex = tabs.length - 1;
+        } else {
+          return;
+        }
+
+        e.preventDefault();
+        tabs[newIndex].focus();
+        selectTab(newIndex);
+      });
+    });
+  }
+
+  // Initialize
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRoleTabs);
+  } else {
+    initRoleTabs();
+  }
+</script>

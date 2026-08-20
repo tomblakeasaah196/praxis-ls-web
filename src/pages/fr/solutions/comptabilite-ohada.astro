@@ -1,0 +1,136 @@
+---
+import { useTranslations } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DemoForm from '../../../components/DemoForm.astro';
+
+const locale = 'fr';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Comptabilité & OHADA — Praxis LS"
+  description="Le grand livre est la colonne vertébrale. Chaque dossier d'exploitation s'y impute. La clôture mensuelle est une relecture, pas une reconstitution."
+>
+  <section class="solution-hero">
+    <div class="container">
+      <p class="eyebrow">Solutions</p>
+      <h1>{t['solutions.finance.title']}</h1>
+      <p class="solution-hero__intro">{t['solutions.finance.intro']}</p>
+    </div>
+  </section>
+
+  <section class="solution-content section">
+    <div class="container">
+      <h2>Ce que vous obtenez</h2>
+      <ul class="feature-list">
+        <li>
+          <strong>Plan comptable</strong> — classes SYSCOHADA 1 à 8, entièrement configuré pour la logistique
+        </li>
+        <li>
+          <strong>Grand livre</strong> — écritures inaltérables, piste d'audit complète, forage vers la source
+        </li>
+        <li>
+          <strong> Comptabilité fournisseurs</strong> — factures fournisseurs, planification des paiements, rapprochement à trois voies
+        </li>
+        <li>
+          <strong>Comptabilité clients</strong> — factures clients, suivi des paiements, analyse des impayés
+        </li>
+        <li>
+          <strong>Moteur fiscal</strong> — calculs TVA, retenues à la source, déclarations réglementaires
+        </li>
+        <li>
+          <strong>États financiers</strong> — bilan, compte de résultat, DSF, liasse fiscale
+        </li>
+      </ul>
+
+      <h2>La colonne vertébrale de l'exploitation</h2>
+      <p>Chaque dossier d'exploitation — chaque dossier de transit, chaque réception entrepôt, chaque trajet flotte — s'impute dans ce grand livre. Plan comptable, moteur fiscal, journaux et états financiers ne font qu'un avec l'exploitation.</p>
+    </div>
+  </section>
+
+  <section class="solution-cta section--full">
+    <div class="container container--narrow">
+      <h2>Voyez le grand livre derrière votre exploitation</h2>
+      <p>Trente minutes, vos dossiers, vos questions. Nous vous montrons le grand livre qui se trouve derrière.</p>
+      <a href="/fr/contact" class="btn btn--primary btn--lg">Demander une démo</a>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .solution-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .solution-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .solution-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+  }
+
+  .solution-content {
+    background-color: var(--brand-bg);
+  }
+
+  .solution-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-5);
+    margin-top: var(--space-10);
+  }
+
+  .solution-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .solution-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .feature-list li {
+    padding: var(--space-4);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--brand-ink-orange);
+  }
+
+  .solution-cta {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .solution-cta h2 {
+    font-size: var(--text-display-l);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .solution-cta p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    margin-inline: auto;
+  }
+</style>

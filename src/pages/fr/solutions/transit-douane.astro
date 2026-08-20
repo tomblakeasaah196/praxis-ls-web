@@ -1,0 +1,136 @@
+---
+import { useTranslations } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DemoForm from '../../../components/DemoForm.astro';
+
+const locale = 'fr';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Transit & dédouanement — Praxis LS"
+  description="Un dossier par expédition, du devis au dédouanement en passant par le règlement final. Chaque document, chaque coût, chaque écriture — dans le même dossier."
+>
+  <section class="solution-hero">
+    <div class="container">
+      <p class="eyebrow">Solutions</p>
+      <h1>{t['solutions.freight.title']}</h1>
+      <p class="solution-hero__intro">{t['solutions.freight.intro']}</p>
+    </div>
+  </section>
+
+  <section class="solution-content section">
+    <div class="container">
+      <h2>Ce que vous obtenez</h2>
+      <ul class="feature-list">
+        <li>
+          <strong>Dossier de transit</strong> — un fichier par expédition, portant devis, ordre, documents, coûts et écritures
+        </li>
+        <li>
+          <strong>Déclarations en douane</strong> — use Coure, calculs des droits, certificats d'origine
+        </li>
+        <li>
+          <strong>Suivi des débours</strong> — chaque avance, chaque receipt, rapproché automatiquement
+        </li>
+        <li>
+          <strong>Gestion du connaissement (B/L)</strong> — émission, remise, libération contre remise
+        </li>
+        <li>
+          <strong>Routage multi-transporteur</strong> — route, mer, air — chaque écriture dans le même grand livre
+        </li>
+        <li>
+          <strong>Référentiel documentaire</strong> — chaque certificat, chaque correspondance, attaché au dossier
+        </li>
+      </ul>
+
+      <h2>Comment ça s'impute au grand livre</h2>
+      <p>Chaque droit de douane, chaque débours, chaque fret s'impute d'elle-même au moment où il se produit. La DSF est construite depuis le grand livre, pas assemblée depuis des tableurs en fin de mois.</p>
+    </div>
+  </section>
+
+  <section class="solution-cta section--full">
+    <div class="container container--narrow">
+      <h2>Voyez-le avec vos dossiers</h2>
+      <p>Trente minutes, vos dossiers, vos questions. Nous vous montrons le grand livre qui se trouve derrière.</p>
+      <a href="/fr/contact" class="btn btn--primary btn--lg">Demander une démo</a>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .solution-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .solution-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .solution-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+  }
+
+  .solution-content {
+    background-color: var(--brand-bg);
+  }
+
+  .solution-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-5);
+    margin-top: var(--space-10);
+  }
+
+  .solution-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .solution-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .feature-list li {
+    padding: var(--space-4);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--brand-ink-orange);
+  }
+
+  .solution-cta {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .solution-cta h2 {
+    font-size: var(--text-display-l);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .solution-cta p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    margin-inline: auto;
+  }
+</style>

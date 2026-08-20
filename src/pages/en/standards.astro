@@ -1,0 +1,145 @@
+---
+import { useTranslations } from '../../i18n/ui';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Standards — Praxis LS"
+  description="Which standard do you close in? We publish this table because you are entitled to know what we run today and what we are building."
+>
+  <section class="standards-hero">
+    <div class="container container--narrow">
+      <p class="eyebrow">Standards</p>
+      <h1>{t['standards.title']}</h1>
+    </div>
+  </section>
+
+  <section class="standards-table section">
+    <div class="container container--narrow">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Standard</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>OHADA / SYSCOHADA</td>
+              <td>
+                <span class="badge badge--live">
+                  Live — 17 member states, DSF, liasse fiscale
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td>IFRS</td>
+              <td>
+                <span class="badge badge--development">
+                  In development
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td>US GAAP</td>
+              <td>
+                <span class="badge badge--planned">
+                  Planned
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="standards-note">{t['standards.note']}</p>
+    </div>
+  </section>
+
+  <section class="standards-ohada section section--full">
+    <div class="container container--narrow">
+      <h2>OHADA member states</h2>
+      <p>The OHADA zone covers 17 states across Central and West Africa, all using the same accounting framework (SYSCOHADA) and the same legal structures.</p>
+      
+      <div class="ohada-states">
+        <span>Benin</span>
+        <span>Burkina Faso</span>
+        <span>Cameroon</span>
+        <span>Central African Republic</span>
+        <span>Chad</span>
+        <span>Comoros</span>
+        <span>Congo (Brazzaville)</span>
+        <span>Côte d'Ivoire</span>
+        <span>Democratic Republic of Congo</span>
+        <span>Gabon</span>
+        <span>Guinea</span>
+        <span>Guinea-Bissau</span>
+        <span>Mali</span>
+        <span>Niger</span>
+        <span>Senegal</span>
+        <span>Togo</span>
+        <span>Equatorial Guinea</span>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .standards-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .standards-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .standards-table {
+    background-color: var(--brand-bg);
+  }
+
+  .standards-note {
+    margin-top: var(--space-6);
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+    font-style: italic;
+    text-align: center;
+  }
+
+  .standards-ohada {
+    background-color: var(--brand-surface);
+  }
+
+  .standards-ohada h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-4);
+  }
+
+  .standards-ohada p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .ohada-states {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .ohada-states span {
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--brand-bg);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-caption);
+    color: var(--brand-ink);
+  }
+</style>

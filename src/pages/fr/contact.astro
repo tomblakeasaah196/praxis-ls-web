@@ -1,0 +1,134 @@
+---
+import { useTranslations } from '../../i18n/ui';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoForm from '../../components/DemoForm.astro';
+
+const locale = 'fr';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Contact — Praxis LS"
+  description="Start a conversation. We respond within two business days."
+>
+  <section class="contact-hero">
+    <div class="container container--narrow">
+      <p class="eyebrow">Contact</p>
+      <h1>{t['contact.title']}</h1>
+      <p class="contact-hero__intro">{t['contact.intro']}</p>
+    </div>
+  </section>
+
+  <section class="contact-info section">
+    <div class="container container--narrow">
+      <div class="contact-methods">
+        <div class="contact-method">
+          <div class="contact-method__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Email</h3>
+            <p><a href="mailto:contact@praxisls.com">contact@praxisls.com</a></p>
+          </div>
+        </div>
+
+        <div class="contact-method">
+          <div class="contact-method__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Response time</h3>
+            <p>We respond within two business days</p>
+          </div>
+        </div>
+
+        <div class="contact-method">
+          <div class="contact-method__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Operations</h3>
+            <p>Central Africa, with customers across the OHADA zone</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .contact-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .contact-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .contact-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+  }
+
+  .contact-info {
+    background-color: var(--brand-bg);
+  }
+
+  .contact-methods {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .contact-method {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-lg);
+  }
+
+  .contact-method__icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--brand-ink-orange) 10%, transparent);
+    border-radius: var(--radius-md);
+    color: var(--brand-ink-orange);
+    flex-shrink: 0;
+  }
+
+  .contact-method h3 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-1);
+  }
+
+  .contact-method p {
+    font-size: var(--text-body);
+    color: var(--brand-ink-muted);
+  }
+
+  .contact-method a {
+    color: var(--brand-ink-orange);
+  }
+</style>

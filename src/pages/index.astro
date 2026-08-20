@@ -1,0 +1,14 @@
+---
+// Root redirect based on Accept-Language header
+// The ONLY redirect in the system — all other URLs are explicit
+const acceptLanguage = Astro.request.headers.get('accept-language') || '';
+const defaultLocale = 'en';
+
+// Check if the preferred language is French
+const prefersFrench = acceptLanguage.toLowerCase().includes('fr') && 
+                      !acceptLanguage.toLowerCase().includes('en');
+
+const redirectLocale = prefersFrench ? 'fr' : defaultLocale;
+
+return Astro.redirect(`/${redirectLocale}/`, 302);
+---

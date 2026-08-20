@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const locale = 'fr';
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Politique de confidentialité — Praxis LS"
+  description="Politique de confidentialité pour praxisls.com"
+>
+  <section class="legal-hero">
+    <div class="container container--narrow">
+      <h1>Politique de confidentialité</h1>
+      <p class="legal-meta">Dernière mise à jour : 20 août 2026</p>
+    </div>
+  </section>
+
+  <section class="legal-content section">
+    <div class="container container--narrow">
+      <h2>Informations que nous collectons</h2>
+      <p>Nous collectons les informations que vous nous fournissez directement, par exemple lorsque vous remplissez notre formulaire de demande de démo, vous abonnez à notre newsletter ou nous contactez pour obtenir de l'aide.</p>
+      
+      <h2>Comment nous utilisons vos informations</h2>
+      <p>Nous utilisons les informations que nous collectons pour répondre à vos demandes, fournir une assistance client et vous envoyer des mises à jour pertinentes sur nos produits et services.</p>
+      
+      <h2>Conservation des données</h2>
+      <p>Nous conservons vos informations personnelles aussi longtemps que nécessaire pour atteindre les objectifs décrits dans cette politique, sauf si une période de conservation plus longue est requise par la loi.</p>
+      
+      <h2>Vos droits</h2>
+      <p>Vous avez le droit d'accéder à vos informations personnelles, de les corriger ou de les supprimer. Pour exercer ces droits, veuillez nous contacter à privacy@praxisls.com.</p>
+      
+      <h2>Contact</h2>
+      <p>Pour toute question concernant cette politique de confidentialité, veuillez nous contacter à privacy@praxisls.com.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .legal-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-bottom: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .legal-meta {
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .legal-content {
+    background-color: var(--brand-bg);
+  }
+
+  .legal-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-4);
+    margin-top: var(--space-10);
+  }
+
+  .legal-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .legal-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+</style>

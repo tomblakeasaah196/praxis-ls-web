@@ -1,0 +1,136 @@
+---
+import { useTranslations } from '../../../i18n/ui';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DemoForm from '../../../components/DemoForm.astro';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Warehouse — Praxis LS"
+  description="Inbound, outbound and inventory management, with costing that feeds the ledger. Stock movements and delivery notes post themselves."
+>
+  <section class="solution-hero">
+    <div class="container">
+      <p class="eyebrow">Solutions</p>
+      <h1>{t['solutions.warehouse.title']}</h1>
+      <p class="solution-hero__intro">{t['solutions.warehouse.intro']}</p>
+    </div>
+  </section>
+
+  <section class="solution-content section">
+    <div class="container">
+      <h2>What you get</h2>
+      <ul class="feature-list">
+        <li>
+          <strong>Receiving</strong> — GRN creation, quantity verification, discrepancy handling
+        </li>
+        <li>
+          <strong>Storage management</strong> — locations, zones, capacity tracking
+        </li>
+        <li>
+          <strong>Picking and packing</strong> — wave planning, route optimization, packing lists
+        </li>
+        <li>
+          <strong>Dispatch</strong> — outbound planning, vehicle loading, delivery note generation
+        </li>
+        <li>
+          <strong>Stock valuation</strong> — actual cost, standard cost, FIFO — per SYSCOHADA rules
+        </li>
+        <li>
+          <strong>Cycle counting</strong> — perpetual inventory verification, variance reporting
+        </li>
+      </ul>
+
+      <h2>How it posts to the ledger</h2>
+      <p>Every goods received note, every stock movement, every delivery note carries its own posting rules. Inventory valuation entries happen automatically at month-end.</p>
+    </div>
+  </section>
+
+  <section class="solution-cta section--full">
+    <div class="container container--narrow">
+      <h2>See it with your operation</h2>
+      <p>Thirty minutes, your files, your questions. We'll show you the ledger behind them.</p>
+      <a href="/en/contact" class="btn btn--primary btn--lg">Book a demo</a>
+    </div>
+  </section>
+
+  <DemoForm locale={locale} />
+</BaseLayout>
+
+<style>
+  .solution-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .solution-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-block: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .solution-hero__intro {
+    font-size: var(--text-body-l);
+    color: var(--brand-ink-muted);
+    max-width: 60ch;
+  }
+
+  .solution-content {
+    background-color: var(--brand-bg);
+  }
+
+  .solution-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-5);
+    margin-top: var(--space-10);
+  }
+
+  .solution-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .solution-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .feature-list li {
+    padding: var(--space-4);
+    background-color: var(--brand-surface);
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--brand-ink-orange);
+  }
+
+  .solution-cta {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+    text-align: center;
+  }
+
+  .solution-cta h2 {
+    font-size: var(--text-display-l);
+    color: var(--brand-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .solution-cta p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-8);
+    margin-inline: auto;
+  }
+</style>

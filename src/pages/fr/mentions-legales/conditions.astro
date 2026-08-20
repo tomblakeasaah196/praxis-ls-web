@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const locale = 'fr';
+---
+
+<BaseLayout 
+  locale={locale}
+  title="Conditions d'utilisation — Praxis LS"
+  description="Conditions d'utilisation pour praxisls.com"
+>
+  <section class="legal-hero">
+    <div class="container container--narrow">
+      <h1>Conditions d'utilisation</h1>
+      <p class="legal-meta">Dernière mise à jour : 20 août 2026</p>
+    </div>
+  </section>
+
+  <section class="legal-content section">
+    <div class="container container--narrow">
+      <h2>Acceptation des conditions</h2>
+      <p>En accédant et en utilisant ce site web, vous acceptez et acceptez d'être lié par les termes et conditions de cet accord.</p>
+      
+      <h2>Utilisation du site web</h2>
+      <p>Ce site web est fourni à des fins d'information uniquement. Le contenu de ce site web est susceptible d'être modifié sans préavis.</p>
+      
+      <h2>Propriété intellectuelle</h2>
+      <p>Tout le contenu, marques déposées et autres droits de propriété intellectuelle sur ce site web sont la propriété de JBS Praxis LLC ou lui sont concédés sous licence.</p>
+      
+      <h2>Limitation de responsabilité</h2>
+      <p>JBS Praxis LLC ne sera pas tenu responsable des dommages directs, indirects, accessoires, spéciaux ou consécutifs résultant de l'utilisation de ce site web.</p>
+      
+      <h2>Contact</h2>
+      <p>Pour toute question concernant ces conditions, veuillez nous contacter à legal@praxisls.com.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-hero {
+    padding-block: var(--space-20);
+    background-color: var(--brand-carbon);
+  }
+
+  .legal-hero h1 {
+    font-size: var(--text-display-xl);
+    margin-bottom: var(--space-4);
+    color: var(--brand-ink);
+  }
+
+  .legal-meta {
+    font-size: var(--text-caption);
+    color: var(--brand-ink-muted);
+  }
+
+  .legal-content {
+    background-color: var(--brand-bg);
+  }
+
+  .legal-content h2 {
+    font-size: var(--text-display-m);
+    margin-bottom: var(--space-4);
+    margin-top: var(--space-10);
+  }
+
+  .legal-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .legal-content p {
+    color: var(--brand-ink-muted);
+    margin-bottom: var(--space-4);
+  }
+</style>
