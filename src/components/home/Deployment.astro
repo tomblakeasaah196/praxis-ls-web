@@ -1,0 +1,60 @@
+---
+/**
+ * Guide §3.11. White-label, both environments, and the subdomain the tenant
+ * actually gets.
+ *
+ * The subdomain is set in mono with tabular figures because it is a literal a
+ * reader will type, and BRAND_GUIDELINES.md §4 puts every literal that has to
+ * be read exactly into JetBrains Mono.
+ */
+import type { HomeCopy } from "~/content/types";
+
+interface Props {
+  copy: HomeCopy;
+}
+
+const { copy } = Astro.props;
+const [before, after] = copy.deployment.body.split(copy.deployment.subdomainExample);
+---
+
+<section
+  class="section section--surface deployment"
+  id="deployment"
+  aria-labelledby="deployment-heading"
+>
+  <div class="shell deployment__inner">
+    <h2 id="deployment-heading">{copy.deployment.heading}</h2>
+    <p class="lede">
+      {before}<code class="num deployment__host">{copy.deployment.subdomainExample}</code>{after}
+    </p>
+  </div>
+</section>
+
+<style>
+  .deployment__inner {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .deployment__inner h2 {
+    max-width: 18ch;
+  }
+
+  .deployment__inner p {
+    max-width: var(--measure);
+  }
+
+  .deployment__host {
+    color: var(--brand-ink-orange);
+    font-size: 0.95em;
+    white-space: nowrap;
+  }
+
+  @media (width >= 60rem) {
+    .deployment__inner {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+</style>

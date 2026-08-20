@@ -1,0 +1,11 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import AboutPage from "~/components/pages/AboutPage.astro";
+import { pages } from "~/content/pages.en";
+
+const copy = pages.about;
+---
+
+<BaseLayout locale="en" route="about" title={copy.meta.title} description={copy.meta.description}>
+  <AboutPage copy={copy} locale="en" />
+</BaseLayout>

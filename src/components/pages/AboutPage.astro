@@ -1,0 +1,92 @@
+---
+/**
+ * /about · /fr/a-propos.
+ *
+ * DRAFT COPY throughout — the guide names this page and does not write it.
+ *
+ * What is deliberately NOT here: team names, biographies, photographs, the
+ * registered address, registration details. None of them appear in the source
+ * documents (brief §6), and the page says so rather than leaving a reader to
+ * wonder. Stating the absence is the honest version of a blank space.
+ */
+import PageIntro from "~/components/PageIntro.astro";
+import type { AboutPage } from "~/content/page-types";
+import { href, type Locale } from "~/i18n/routes";
+import { UI } from "~/i18n/ui";
+
+interface Props {
+  copy: AboutPage;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+---
+
+<PageIntro heading={copy.heading} intro={copy.intro} />
+
+<section class="section" aria-label={copy.heading}>
+  <div class="shell about">
+    {
+      copy.blocks.map((block) => (
+        <article class="about__block">
+          <h2>{block.heading}</h2>
+          <p>{block.body}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<section class="section" aria-labelledby="about-open">
+  <div class="shell about__open">
+    <h2 id="about-open" class="section-label">{copy.openHeading}</h2>
+    <p class="measure">{copy.openLine}</p>
+    <p>
+      <a class="btn btn--secondary" href={href("contact", locale)}>{UI[locale].cta.bookDemo}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .about__block {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block-start: var(--space-m);
+    border-block-start: 1px solid var(--brand-line);
+  }
+
+  .about__block h2 {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+  }
+
+  .about__block p {
+    color: var(--brand-ink-muted);
+    max-width: var(--measure);
+    line-height: var(--leading-body);
+  }
+
+  .about__open {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+  }
+
+  .about__open p {
+    color: var(--brand-ink-muted);
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+  }
+
+  @media (width >= 60rem) {
+    .about {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-l);
+    }
+  }
+</style>

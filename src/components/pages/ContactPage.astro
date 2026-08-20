@@ -1,0 +1,229 @@
+---
+/**
+ * /contact · /fr/contact — the demo form, guide §4.
+ *
+ * Six fields. Not seven: "every extra field costs conversions and buys a CRM
+ * column nobody reads". The most useful one is the last and it is optional.
+ *
+ * The form is a real <form> with real labels, real constraints and a real
+ * submit button, so it is complete and keyboard-operable with no script at all.
+ * src/islands/demo-form.ts adds the country prefill, the free-provider notice
+ * and the messages — and holds the single named seam where a destination gets
+ * wired (OPEN, brief §6).
+ */
+import PageIntro from "~/components/PageIntro.astro";
+import type { ContactPage } from "~/content/page-types";
+import type { Locale } from "~/i18n/routes";
+
+interface Props {
+  copy: ContactPage;
+  locale: Locale;
+}
+
+const { copy } = Astro.props;
+const f = copy.fields;
+---
+
+<PageIntro heading={copy.heading} intro={copy.intro} />
+
+<section class="section" aria-labelledby="demo-form-heading">
+  <div class="shell">
+    <form
+      class="demo"
+      data-demo-form
+      method="post"
+      data-error-required={copy.errors.required}
+      data-error-email={copy.errors.email}
+      data-error-summary={copy.errors.summary}
+      data-error-not-wired={copy.errors.notWired}
+      data-success={copy.success}
+      data-submitting={copy.submitting}
+    >
+      <h2 id="demo-form-heading" class="section-label">{copy.formHeading}</h2>
+
+      <div class="demo__field" data-field>
+        <label for="demo-name">{f.name}</label>
+        <input id="demo-name" name="name" type="text" autocomplete="name" required data-validate />
+        <p class="demo__error" data-field-error hidden></p>
+      </div>
+
+      <div class="demo__field" data-field>
+        <label for="demo-email">{f.email}</label>
+        <input
+          id="demo-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          data-validate
+          aria-describedby="demo-email-hint"
+        />
+        <p class="demo__hint" id="demo-email-hint">{f.emailHint}</p>
+        {/* Noted, never blocked (guide §4). */}
+        <p class="demo__notice" data-email-notice hidden>{copy.freeEmailNotice}</p>
+        <p class="demo__error" data-field-error hidden></p>
+      </div>
+
+      <div class="demo__field" data-field>
+        <label for="demo-company">{f.company}</label>
+        <input
+          id="demo-company"
+          name="company"
+          type="text"
+          autocomplete="organization"
+          required
+          data-validate
+        />
+        <p class="demo__error" data-field-error hidden></p>
+      </div>
+
+      <div class="demo__field" data-field>
+        <label for="demo-country">{f.country}</label>
+        <input
+          id="demo-country"
+          name="country"
+          type="text"
+          autocomplete="country-name"
+          required
+          data-validate
+          aria-describedby="demo-country-hint"
+        />
+        <p class="demo__hint" id="demo-country-hint">{f.countryHint}</p>
+        <p class="demo__error" data-field-error hidden></p>
+      </div>
+
+      <div class="demo__field" data-field>
+        <label for="demo-role">{f.role}</label>
+        <select id="demo-role" name="role" required data-validate>
+          {copy.roles.map((role) => <option value={role.value}>{role.label}</option>)}
+        </select>
+        <p class="demo__error" data-field-error hidden></p>
+      </div>
+
+      <div class="demo__field demo__field--wide" data-field>
+        <label for="demo-context">
+          {f.context}
+          <span class="demo__optional">({f.optional})</span>
+        </label>
+        <input id="demo-context" name="context" type="text" aria-describedby="demo-context-hint" />
+        <p class="demo__hint" id="demo-context-hint">{f.contextHint}</p>
+      </div>
+
+      <div class="demo__actions">
+        <button type="submit" class="btn btn--primary" data-form-submit>{copy.submit}</button>
+        {
+          /* Assertive rather than polite: the reader has just pressed submit and
+            is waiting for exactly this. */
+        }
+        <p class="demo__status" data-form-status role="status" aria-live="assertive"></p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { mountDemoForm } from "~/islands/demo-form";
+
+  mountDemoForm();
+</script>
+
+<style>
+  .demo {
+    display: grid;
+    gap: var(--space-m);
+    max-width: 44rem;
+  }
+
+  .demo__field {
+    display: grid;
+    gap: var(--space-3xs);
+    /* Without this the field's rows stretch to the tallest cell in the grid
+       row, and an input beside a field that carries a hint grows to match it. */
+    align-content: start;
+  }
+
+  .demo__field label {
+    font-size: var(--step-caption);
+    font-weight: 550;
+    color: var(--brand-ink);
+  }
+
+  .demo__optional {
+    font-weight: 400;
+    color: var(--brand-ink-muted);
+  }
+
+  .demo input,
+  .demo select {
+    inline-size: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-m);
+    background: var(--brand-bg);
+    color: var(--brand-ink);
+    font-family: var(--brand-font-body);
+    font-size: var(--step-body);
+    line-height: 1.4;
+  }
+
+  .demo input:focus-visible,
+  .demo select:focus-visible {
+    border-color: var(--brand-ink-orange);
+  }
+
+  .demo input[aria-invalid="true"] {
+    border-color: var(--brand-danger);
+  }
+
+  .demo__hint,
+  .demo__notice,
+  .demo__error {
+    font-size: var(--step-caption);
+    line-height: var(--leading-caption);
+  }
+
+  .demo__hint {
+    color: var(--brand-ink-muted);
+  }
+
+  .demo__notice {
+    color: var(--brand-ink-orange);
+  }
+
+  .demo__error {
+    color: var(--brand-danger);
+  }
+
+  .demo__actions {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+    margin-block-start: var(--space-2xs);
+  }
+
+  .demo__status {
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+    max-width: var(--measure);
+  }
+
+  .demo__status[data-state="error"] {
+    color: var(--brand-danger);
+  }
+
+  .demo__status[data-state="success"] {
+    color: var(--brand-ok);
+  }
+
+  @media (width >= 40rem) {
+    .demo {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .demo > h2,
+    .demo__field--wide,
+    .demo__actions {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

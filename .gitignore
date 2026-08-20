@@ -1,2 +1,10 @@
 node_modules/
 .cache/
+dist/
+.astro/
+public/fonts/
+lighthouse/
+.DS_Store
+.env
+.env.*
+.lighthouseci/

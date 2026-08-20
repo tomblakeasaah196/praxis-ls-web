@@ -1,0 +1,47 @@
+---
+/**
+ * The one <h1> a supporting page gets, and the line under it.
+ *
+ * Every page on this site has exactly one h1 (guide §5), and it is here rather
+ * than inside each page's body so that it cannot accidentally become two.
+ */
+interface Props {
+  heading: string;
+  intro?: string | undefined;
+  eyebrow?: string | undefined;
+}
+
+const { heading, intro = undefined, eyebrow = undefined } = Astro.props;
+---
+
+<section class="page-intro section section--flush">
+  <div class="shell page-intro__inner">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{heading}</h1>
+    {intro && <p class="lede">{intro}</p>}
+  </div>
+</section>
+
+<style>
+  .page-intro {
+    padding-block: clamp(2.5rem, 1.5rem + 5vw, 4.5rem) 0;
+  }
+
+  /* The measure goes on the CHILDREN, never on the element that also carries
+     .shell — .shell sets `margin-inline: auto`, so a max-width here centres the
+     whole block instead of constraining the line length. */
+  .page-intro__inner {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .page-intro h1 {
+    font-size: var(--step-display-l);
+    line-height: var(--leading-display-l);
+    max-width: 22ch;
+  }
+
+  .page-intro .lede {
+    max-width: var(--measure);
+  }
+</style>

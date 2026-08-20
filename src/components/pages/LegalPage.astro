@@ -1,0 +1,34 @@
+---
+/**
+ * The legal stubs (brief §4: "legal pages as stubs").
+ *
+ * They say they are stubs and state nothing else. A placeholder privacy notice
+ * is a statement about how data is handled, and placeholder terms are terms —
+ * both would be untrue the moment they shipped, which is a worse outcome than
+ * an empty page that admits it (N12).
+ */
+import PageIntro from "~/components/PageIntro.astro";
+import type { LegalPage } from "~/content/page-types";
+
+interface Props {
+  copy: LegalPage;
+}
+
+const { copy } = Astro.props;
+---
+
+<PageIntro heading={copy.heading} />
+
+<section class="section" aria-labelledby="legal-stub">
+  <div class="shell legal">
+    <h2 id="legal-stub" class="section-label">{copy.stubHeading}</h2>
+    <p class="measure">{copy.stubBody}</p>
+  </div>
+</section>
+
+<style>
+  .legal p {
+    color: var(--brand-ink-muted);
+    line-height: var(--leading-body);
+  }
+</style>

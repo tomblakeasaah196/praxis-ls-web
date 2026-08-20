@@ -1,0 +1,57 @@
+---
+/**
+ * The fourteen sections of doc/LANDING_PAGE_GUIDE.md §3, in order.
+ *
+ * One component for both languages, taking the copy deck as a prop. The
+ * alternative — a French page and an English page that each own their markup —
+ * is how a French tree quietly falls a redesign behind its English peer, which
+ * is the failure the whole bilingual argument in the guide exists to prevent.
+ *
+ * Sections 1 and 15 (header, footer) live in BaseLayout because every page has
+ * them.
+ */
+import Hero from "./Hero.astro";
+import Credibility from "./Credibility.astro";
+import Problem from "./Problem.astro";
+import Spine from "./Spine.astro";
+import ControlTower from "./ControlTower.astro";
+import Roles from "./Roles.astro";
+import Coverage from "./Coverage.astro";
+import Intelligence from "./Intelligence.astro";
+import Trust from "./Trust.astro";
+import Deployment from "./Deployment.astro";
+import Standards from "./Standards.astro";
+import Pricing from "./Pricing.astro";
+import Close from "./Close.astro";
+import type { HomeCopy } from "~/content/types";
+import type { Locale } from "~/i18n/routes";
+
+interface Props {
+  copy: HomeCopy;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+---
+
+<Hero copy={copy} locale={locale} />
+<Credibility copy={copy} />
+<Problem copy={copy} />
+<Spine copy={copy} />
+<ControlTower copy={copy} />
+<Roles copy={copy} />
+<Coverage copy={copy} />
+<Intelligence copy={copy} />
+<Trust copy={copy} locale={locale} />
+<Deployment copy={copy} />
+<Standards copy={copy} locale={locale} />
+<Pricing copy={copy} locale={locale} />
+<Close copy={copy} locale={locale} />
+
+<script>
+  import { mountRoleTabs } from "~/islands/role-tabs";
+  import { mountControlTower } from "~/islands/control-tower";
+
+  mountRoleTabs();
+  mountControlTower();
+</script>

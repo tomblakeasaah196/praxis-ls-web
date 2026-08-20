@@ -1,0 +1,79 @@
+---
+/**
+ * The switcher maps to the EQUIVALENT page, never to the homepage (N7).
+ *
+ * It is a link, not a control with JavaScript behind it: the destination is
+ * known at build time from the slug map, so `/en/pricing` renders an anchor
+ * straight to `/fr/tarifs`. That means it works with scripting off, it can be
+ * opened in a new tab, and — the part that matters for review — a route with no
+ * counterpart in the other language fails the build in alternateOf() rather
+ * than silently dropping the reader on `/fr/`.
+ */
+import { UI } from "~/i18n/ui";
+import {
+  LOCALE_LABEL,
+  HTML_LANG,
+  alternateOf,
+  otherLocale,
+  type Locale,
+  type RouteKey,
+} from "~/i18n/routes";
+
+interface Props {
+  locale: Locale;
+  route: RouteKey;
+}
+
+const { locale, route } = Astro.props;
+const other = otherLocale(locale);
+const copy = UI[locale].language;
+---
+
+<div class="lang" role="group" aria-label={copy.label}>
+  <span class="lang__current num" aria-current="true">{LOCALE_LABEL[locale]}</span>
+  <span class="lang__sep" aria-hidden="true">|</span>
+  {
+    /* The accessible name is built from the visible text plus the sentence,
+      rather than replacing it with an aria-label. Someone driving the page by
+      voice says "FR" because that is what is on screen; a name that does not
+      contain it does not match. */
+  }
+  <a
+    class="lang__other num"
+    href={alternateOf(route, other)}
+    hreflang={HTML_LANG[other]}
+    rel="alternate"
+  >
+    <span lang={HTML_LANG[other]}>{LOCALE_LABEL[other]}</span>
+    <span class="visually-hidden" lang={HTML_LANG[other]}> — {copy.switchTo}</span>
+  </a>
+</div>
+
+<style>
+  .lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: var(--step-caption);
+    letter-spacing: 0.04em;
+  }
+
+  .lang__current {
+    color: var(--brand-ink);
+    font-weight: 600;
+  }
+
+  .lang__sep {
+    color: var(--brand-ink-slate);
+  }
+
+  .lang__other {
+    color: var(--brand-ink-muted);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .lang__other:hover {
+    color: var(--brand-ink-orange);
+  }
+</style>

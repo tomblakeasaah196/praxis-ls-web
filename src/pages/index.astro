@@ -1,0 +1,98 @@
+---
+/**
+ * The bare root — a fallback, not the mechanism.
+ *
+ * The root is meant to answer with a 302 on Accept-Language (N7), and that is
+ * host configuration: see public/_redirects. This page exists for the case
+ * where the host ignores it, so the apex answers with something rather than a
+ * 404. It offers both languages and redirects nobody — a meta-refresh here
+ * would be a second redirect in a system the brief says has exactly one, and a
+ * client-side one that search engines and slow connections both handle badly.
+ *
+ * noindex, because the indexable homepages are /en/ and /fr/ and this page has
+ * no content of its own to rank.
+ */
+import { brand } from "~/lib/brand-tokens";
+import { HTML_LANG, LOCALES, absoluteHref, href } from "~/i18n/routes";
+
+const site = Astro.site ?? new URL("https://praxisls.com");
+const options = [
+  { locale: "en" as const, label: "English", path: href("home", "en") },
+  { locale: "fr" as const, label: "Français", path: href("home", "fr") },
+];
+
+/**
+ * These rules are emitted INLINE, and that is load-bearing rather than taste.
+ *
+ * An ordinary <style> block joins the site's single bundled stylesheet, and
+ * Astro does not scope selectors that target `html`, `body` or `:root` — those
+ * elements cannot carry a component's scope attribute. So `body { display:
+ * grid }` written for this one page arrives UNLAYERED on every page of the
+ * site, where it outranks every @layer rule in global.css and silently replaces
+ * the layout with a centred column. That is not hypothetical; it shipped into
+ * this branch and was found by measuring pixels.
+ *
+ * Inline keeps them in this document. The colours still come from the vendored
+ * token file rather than being typed (N3), and scripts/check-css.mjs now fails
+ * the build if an unlayered body/html/:root rule reaches the bundle again.
+ */
+const css = `
+  :root { color-scheme: dark; }
+  body {
+    margin: 0;
+    min-block-size: 100vh;
+    display: grid;
+    place-items: center;
+    background: ${brand.carbon};
+    color: ${brand.dark.ink};
+    font-family: sans-serif;
+  }
+  main { display: grid; gap: 1.5rem; justify-items: center; }
+  h1 { font-size: 1.125rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+  ul { display: flex; gap: 1.5rem; list-style: none; padding: 0; }
+  a { color: ${brand.dark.inkOrange}; }
+`;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Praxis LS</title>
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content={brand.carbon} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {
+      LOCALES.map((locale) => (
+        <link
+          rel="alternate"
+          hreflang={HTML_LANG[locale]}
+          href={absoluteHref("home", locale, site)}
+        />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={absoluteHref("home", "en", site)} />
+    <style is:inline set:html={css}></style>
+  </head>
+  <body>
+    <main>
+      <h1>Praxis LS</h1>
+      <ul>
+        {
+          options.map((option) => (
+            <li>
+              <a
+                href={option.path}
+                hreflang={HTML_LANG[option.locale]}
+                lang={HTML_LANG[option.locale]}
+              >
+                {option.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </main>
+  </body>
+</html>

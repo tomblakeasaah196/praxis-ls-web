@@ -1,0 +1,44 @@
+---
+/**
+ * Guide §3.9 — ninth, deliberately.
+ *
+ * By the time a reader arrives here they have seen the ledger and watched a
+ * file cross the control tower, so "intelligent" describes something they have
+ * already watched work. BRAND_GUIDELINES.md §6: an adjective is a debt, and
+ * this section is where it is paid off. Nothing above this point on the page
+ * uses the word.
+ */
+import type { HomeCopy } from "~/content/types";
+
+interface Props {
+  copy: HomeCopy;
+}
+
+const { copy } = Astro.props;
+---
+
+<section class="section intelligence" id="intelligence" aria-labelledby="intelligence-heading">
+  <div class="shell intelligence__inner">
+    <h2 id="intelligence-heading">{copy.intelligence.heading}</h2>
+    <p class="lede">{copy.intelligence.body}</p>
+  </div>
+</section>
+
+<style>
+  .intelligence__inner {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .intelligence__inner p {
+    max-width: var(--measure);
+  }
+
+  @media (width >= 60rem) {
+    .intelligence__inner {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+</style>

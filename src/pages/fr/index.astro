@@ -1,0 +1,15 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import HomePage from "~/components/home/HomePage.astro";
+import { home } from "~/content/home.fr";
+---
+
+<BaseLayout
+  locale="fr"
+  route="home"
+  title={home.meta.title}
+  description={home.meta.description}
+  structuredData
+>
+  <HomePage copy={home} locale="fr" />
+</BaseLayout>

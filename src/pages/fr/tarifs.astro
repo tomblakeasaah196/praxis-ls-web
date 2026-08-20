@@ -1,0 +1,18 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import PricingPage from "~/components/pages/PricingPage.astro";
+import { pages } from "~/content/pages.fr";
+import { faqPageJsonLd } from "~/lib/structured-data";
+
+const copy = pages.pricing;
+---
+
+<BaseLayout
+  locale="fr"
+  route="pricing"
+  title={copy.meta.title}
+  description={copy.meta.description}
+  extraJsonLd={faqPageJsonLd(copy.faq)}
+>
+  <PricingPage copy={copy} locale="fr" />
+</BaseLayout>

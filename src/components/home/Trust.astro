@@ -1,0 +1,93 @@
+---
+/**
+ * Guide §3.10. Six controls, each one line, each already true in the product.
+ *
+ * Every line here is a claim someone can be asked to demonstrate on a call, and
+ * the guide's point is that publishing controls we operate beats publishing
+ * certifications we do not hold. That only works if the list stays exactly the
+ * six that are written down.
+ */
+import type { HomeCopy } from "~/content/types";
+import { href, type Locale, type RouteKey } from "~/i18n/routes";
+
+interface Props {
+  copy: HomeCopy;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+const security: RouteKey = "security";
+---
+
+<section class="section trust" id="trust" aria-labelledby="trust-heading">
+  <div class="shell">
+    <h2 id="trust-heading" class="trust__heading">{copy.trust.heading}</h2>
+    <ul class="trust__controls">
+      {
+        copy.trust.controls.map((control) => (
+          <li>
+            <svg
+              class="trust__tick"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              focusable="false"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="8"
+                cy="8"
+                r="7"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                opacity="0.45"
+              />
+              <circle cx="8" cy="8" r="2.75" />
+            </svg>
+            <span>{control}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="trust__out">
+      <a class="link-out" href={href(security, locale)}>{copy.trust.link}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .trust__heading {
+    max-width: 22ch;
+  }
+
+  .trust__controls {
+    margin-block-start: var(--space-xl);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--space-m) var(--space-l);
+  }
+
+  .trust__controls li {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: var(--space-xs);
+    align-items: start;
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+    color: var(--brand-ink-muted);
+    padding-block-start: var(--space-s);
+    border-block-start: 1px solid var(--brand-line);
+  }
+
+  .trust__tick {
+    inline-size: 16px;
+    block-size: 16px;
+    margin-block-start: 0.15em;
+    color: var(--brand-orange);
+    fill: var(--brand-orange);
+  }
+
+  .trust__out {
+    margin-block-start: var(--space-xl);
+  }
+</style>

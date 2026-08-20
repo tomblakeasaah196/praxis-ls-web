@@ -1,0 +1,36 @@
+---
+/**
+ * Guide §3.14. One CTA, and it is the same one that has been in the header
+ * since the reader arrived.
+ */
+import type { HomeCopy } from "~/content/types";
+import { href, type Locale } from "~/i18n/routes";
+
+interface Props {
+  copy: HomeCopy;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+---
+
+<section class="section close" id="close" aria-labelledby="close-heading">
+  <div class="shell close__inner">
+    <h2 id="close-heading">{copy.close.heading}</h2>
+    <p class="lede">{copy.close.body}</p>
+    <p>
+      <a class="btn btn--primary" href={href("contact", locale)}>{copy.close.cta}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .close__inner {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: center;
+    text-align: center;
+    max-width: var(--measure-narrow);
+    margin-inline: auto;
+  }
+</style>

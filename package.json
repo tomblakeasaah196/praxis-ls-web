@@ -1,0 +1,45 @@
+{
+  "name": "praxis-ls-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "praxisls.com — the public marketing site for Praxis LS. Static, bilingual, built from doc/LANDING_PAGE_GUIDE.md in tomblakeasaah196/praxis-ls.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "predev": "node scripts/copy-fonts.mjs",
+    "dev": "astro dev",
+    "prebuild": "node scripts/copy-fonts.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check --minimumSeverity error",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check:brand": "node scripts/check-brand-tokens.mjs",
+    "check:hex": "node scripts/check-no-raw-hex.mjs",
+    "check:fonts": "node scripts/check-fonts.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:budget": "node scripts/check-budget.mjs",
+    "verify": "npm run check:brand && npm run check:hex && npm run check:fonts && npm run typecheck && npm run format:check && npm run build && npm run check:css && npm run check:copy && npm run check:links && npm run check:french && npm run check:budget",
+    "lighthouse": "lhci autorun",
+    "assets": "node scripts/render-assets.mjs",
+    "check:french": "node scripts/check-french.mjs",
+    "check:css": "node scripts/check-css.mjs",
+    "check:copy": "node scripts/check-copy.mjs"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@lhci/cli": "^0.14.0",
+    "astro": "^5.1.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@fontsource-variable/ibm-plex-sans": "^5.1.0",
+    "@fontsource-variable/inter": "^5.1.0",
+    "@fontsource-variable/jetbrains-mono": "^5.1.0"
+  }
+}

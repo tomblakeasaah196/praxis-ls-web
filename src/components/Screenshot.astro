@@ -1,0 +1,110 @@
+---
+/**
+ * A product screenshot slot.
+ *
+ * Right now every one of these is a PLACEHOLDER, and it is meant to look like
+ * one. scripts/marketing/capture-screens.mjs in praxis-ls drives the real
+ * application against a seeded demo tenant; it cannot run from here, and the
+ * brief is explicit that a hand-drawn "product" screenshot is worse than an
+ * obvious placeholder. So what ships is a panel at the capture script's exact
+ * aspect ratio (1600×1000) in the theme's dominant tones, with a badge on it,
+ * under the exact filename the script writes. Swapping in the real captures is
+ * a copy, not an edit — see HANDOFF.md § Screenshots.
+ *
+ * width/height are always set: an image that arrives without reserved space is
+ * the single easiest way to miss the 0.05 CLS budget (guide §6).
+ *
+ * (Note for the next person editing this comment: a bare "less-than" followed
+ * by a space breaks the Astro compiler's frontmatter parse and silently drops
+ * Props inference. Write budgets as "under X" in .astro frontmatter.)
+ */
+import { UI } from "~/i18n/ui";
+import type { Locale } from "~/i18n/routes";
+
+interface Props {
+  /** The capture script's screen id: `operation-file`, `control-tower` or
+   *  `general-ledger`. */
+  screen: "operation-file" | "control-tower" | "general-ledger";
+  /** The guide fixes the hero at dark (§3.2); other slots may ask for light. */
+  theme?: "dark" | "light";
+  locale: Locale;
+  alt: string;
+  /** Above the fold: eager rather than lazy. NOT fetchpriority=high — on a
+   *  412px viewport the H1 is the LCP element, and giving the image high
+   *  priority made it compete with the preloaded display face for bandwidth,
+   *  pushing LCP from 1.4s to 2.1s. Measured. */
+  priority?: boolean;
+  class?: string;
+}
+
+const {
+  screen,
+  theme = "dark",
+  locale,
+  alt,
+  priority = false,
+  class: className,
+}: Props = Astro.props;
+const file = `${screen}--${theme}--${locale}.png`;
+const copy = UI[locale].placeholder;
+---
+
+<figure class:list={["shot", className]} data-placeholder>
+  <img
+    src={`/screens/${file}`}
+    alt={alt}
+    width="1600"
+    height="1000"
+    decoding="async"
+    loading={priority ? "eager" : "lazy"}
+  />
+  <figcaption class="shot__badge">
+    <span class="shot__badge-label">{copy.badge}</span>
+    <code class="shot__badge-file num">{file}</code>
+  </figcaption>
+  <p class="visually-hidden">{copy.note}</p>
+</figure>
+
+<style>
+  .shot {
+    position: relative;
+    margin: 0;
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--brand-surface);
+  }
+
+  .shot img {
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  .shot__badge {
+    position: absolute;
+    inset-block-start: var(--space-2xs);
+    inset-inline-start: var(--space-2xs);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-3xs) var(--space-2xs);
+    border-radius: var(--radius-s);
+    background: var(--brand-orange);
+    color: var(--brand-on-orange);
+    font-size: var(--step-eyebrow);
+    line-height: 1.33;
+  }
+
+  .shot__badge-label {
+    font-family: var(--brand-font-display);
+    letter-spacing: var(--brand-tracking-eyebrow);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .shot__badge-file {
+    font-size: var(--step-eyebrow);
+    opacity: 0.85;
+  }
+</style>

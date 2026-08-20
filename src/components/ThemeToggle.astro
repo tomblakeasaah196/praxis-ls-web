@@ -1,0 +1,64 @@
+---
+/**
+ * Two states, not three (N6 · BRAND_GUIDELINES §5). There is no "auto" here:
+ * `prefers-color-scheme` decides only the surfaces that have no controller, and
+ * this page has one.
+ */
+import { UI } from "~/i18n/ui";
+import type { Locale } from "~/i18n/routes";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = UI[locale].theme;
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  data-to-light={copy.toLight}
+  data-to-dark={copy.toDark}
+  aria-label={copy.toLight}
+>
+  {
+    /* One glyph, two halves — the half-filled circle the guide draws as [◐].
+      It is decorative: the button's name is the aria-label, kept current by
+      src/islands/theme.ts. */
+  }
+  <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="10" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+    <path d="M10 2.75A7.25 7.25 0 0 1 10 17.25Z" fill="currentColor"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 36px;
+    block-size: 36px;
+    padding: 0;
+    border: 1px solid var(--brand-line);
+    border-radius: var(--radius-m);
+    background: transparent;
+    color: var(--brand-ink-muted);
+    cursor: pointer;
+    transition:
+      color var(--duration-fast) var(--ease),
+      border-color var(--duration-fast) var(--ease);
+  }
+
+  .theme-toggle:hover {
+    color: var(--brand-ink);
+    border-color: var(--line-strong);
+  }
+
+  .theme-toggle svg {
+    inline-size: 18px;
+    block-size: 18px;
+  }
+</style>
