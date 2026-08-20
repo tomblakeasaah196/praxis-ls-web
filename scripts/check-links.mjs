@@ -15,6 +15,10 @@
  *      "no English string on a French page" check, at the level a machine can
  *      actually verify.
  *   5. Nothing links to a route that is not built yet.
+ *   6. The Open Graph card a page names exists. It is the one asset on a page
+ *      that no reader ever sees and no browser ever requests, so nothing else
+ *      catches it — the first person to find a missing card is whoever pasted
+ *      the link into a group chat.
  *
  * No network. External links are listed and not fetched: a CI job that fails
  * because someone else's server was slow is a CI job people learn to re-run
@@ -86,6 +90,17 @@ for (const file of pages) {
         problems.push(`${label}: no hreflang="${hreflang}"`);
       }
     }
+  }
+
+  /* og:image and twitter:image are absolute URLs on our own origin, so the
+     link loop below skips them — they are checked here instead. */
+  const cards = new Set(
+    [...html.matchAll(/<meta[^>]+content="(https:\/\/praxisls\.com\/og\/[^"]+)"/g)].map(
+      (match) => new URL(match[1] ?? "").pathname,
+    ),
+  );
+  for (const card of cards) {
+    if (!resolves(card)) problems.push(`${label}: Open Graph card missing → ${card}`);
   }
 
   for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {

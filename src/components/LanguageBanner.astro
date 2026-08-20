@@ -4,9 +4,18 @@
  *
  * Written in the language being OFFERED, not the language of the page: a French
  * reader who lands on the English tree is addressed in French, which is the
- * only version of this banner that does any work. It renders hidden and is
- * revealed by src/islands/language-banner.ts only when the browser's languages
- * actually disagree with the page.
+ * only version of this banner that does any work.
+ *
+ * WHETHER IT SHOWS IS DECIDED BEFORE FIRST PAINT, by the inline script in
+ * BaseHead.astro, which sets `data-lang-offer` on <html> when the browser's
+ * languages disagree with the page and the reader has not dismissed it. This
+ * element is `display: none` until then — via a custom property, because a
+ * component cannot scope a rule that targets :root.
+ *
+ * It used to render with the `hidden` attribute and be revealed by the island
+ * after hydration. That is a 0.105 CLS on any page where the island ran after
+ * the first paint — the banner is the first thing in the body, so revealing it
+ * moves the whole document down. The budget is 0.05.
  */
 import { UI } from "~/i18n/ui";
 import { HTML_LANG, alternateOf, otherLocale, type Locale, type RouteKey } from "~/i18n/routes";
@@ -32,7 +41,6 @@ const alternate = alternateOf(route, other);
   data-lang-banner
   data-lang-banner-href={alternate}
   data-lang-banner-lang={HTML_LANG[other]}
-  hidden
   lang={HTML_LANG[other]}
 >
   <div class="shell lang-banner__inner">
@@ -48,6 +56,7 @@ const alternate = alternateOf(route, other);
 
 <style>
   .lang-banner {
+    display: var(--lang-banner-display);
     background: var(--brand-surface);
     border-block-end: 1px solid var(--brand-line);
     font-size: var(--step-caption);

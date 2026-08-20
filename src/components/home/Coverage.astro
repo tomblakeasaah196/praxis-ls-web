@@ -8,17 +8,35 @@
  * praxis-ls README §4; the guide specifies the structure of this section and
  * not its words. Flagged in HANDOFF.md § Draft copy.
  *
- * Each group is meant to link to the relevant solution page. Those five pages
- * are the second change, so the grid ships without links rather than with links
- * that 404 — noted in HANDOFF.md.
+ * Each group links to the relevant solution page (guide §3.8). Which page that
+ * is comes from one table keyed by the Roman numeral of the module map —
+ * src/content/coverage-links.ts — so the English grid and the French grid
+ * cannot point at different pages, and the mapping can be reviewed against
+ * praxis-ls README §4 without reading either language.
  */
 import type { HomeCopy } from "~/content/types";
+import { COVERAGE_SOLUTION } from "~/content/coverage-links";
+import { SOLUTION_ROUTE } from "~/content/solutions";
+import { href, type Locale } from "~/i18n/routes";
 
 interface Props {
   copy: HomeCopy;
+  locale: Locale;
 }
 
-const { copy } = Astro.props;
+const { copy, locale } = Astro.props;
+
+/* A group with no mapping would be a cell that silently stops linking, so this
+   throws instead — thirteen groups in, thirteen links out. */
+const cells = copy.coverage.groups.map((group) => {
+  const id = COVERAGE_SOLUTION[group.numeral];
+  if (!id) {
+    throw new Error(
+      `Coverage group ${group.numeral} ("${group.name}") has no solution page in coverage-links.ts.`,
+    );
+  }
+  return { group, url: href(SOLUTION_ROUTE[id], locale) };
+});
 ---
 
 <section class="section section--surface coverage" id="coverage" aria-labelledby="coverage-heading">
@@ -36,10 +54,17 @@ const { copy } = Astro.props;
 
     <ul class="coverage__grid">
       {
-        copy.coverage.groups.map((group) => (
+        cells.map(({ group, url }) => (
           <li class="coverage__cell">
             <span class="num coverage__numeral">{group.numeral}</span>
-            <h3 class="coverage__name">{group.name}</h3>
+            <h3 class="coverage__name">
+              {/* The whole cell is the target, but only the heading is the
+                  link: a screen reader's link list then reads thirteen module
+                  groups rather than thirteen repetitions of the one-liner. */}
+              <a class="coverage__link" href={url}>
+                {group.name}
+              </a>
+            </h3>
             <p class="coverage__line">{group.line}</p>
           </li>
         ))
@@ -85,11 +110,43 @@ const { copy } = Astro.props;
   }
 
   .coverage__cell {
+    position: relative;
     background: var(--brand-bg);
     padding: var(--space-m);
     display: grid;
     gap: var(--space-3xs);
     align-content: start;
+  }
+
+  .coverage__cell:hover {
+    background: var(--surface-raised);
+  }
+
+  /* The heading's link covers the cell, so the one-liner is part of the target
+     without being part of the accessible name. The pseudo-element carries no
+     text, so nothing is added to the link's name. */
+  .coverage__link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .coverage__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .coverage__cell:hover .coverage__link {
+    color: var(--brand-ink-orange);
+  }
+
+  .coverage__link:focus-visible {
+    outline: none;
+  }
+
+  .coverage__cell:has(.coverage__link:focus-visible) {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: -2px;
   }
 
   .coverage__numeral {

@@ -19,12 +19,16 @@
  *  3. ONLY THE DISPLAY FACE IS PRELOADED. It paints the H1, which is the LCP
  *     element on every page here.
  *
- *  4. STRUCTURED DATA carries only facts that are in the source documents (N12).
+ *  4. THE OG IMAGE IS PER LANGUAGE, and per page for the six pages that earn
+ *     their own card (guide §5). See src/lib/og.ts.
+ *
+ *  5. STRUCTURED DATA carries only facts that are in the source documents (N12).
  *     No employee count, no founding date, no address, no aggregate rating —
  *     those are OPEN in HANDOFF.md, and a JSON-LD blob is the easiest place in
  *     a site to smuggle an invented number past review.
  */
 import { brand } from "~/lib/brand-tokens";
+import { ogCardPath } from "~/lib/og";
 import {
   DEFAULT_LOCALE,
   HTML_LANG,
@@ -56,7 +60,10 @@ const {
 const site = Astro.site ?? new URL("https://praxisls.com");
 
 const canonical = absoluteHref(route, locale, site);
-const ogImage = new URL(`/og/praxis-ls--${locale}.png`, site).toString();
+/* Per language, and per page where the page earns its own card (guide §5).
+   src/lib/og.ts decides which; the renderer reads the card's words off the
+   built page, so the two cannot drift. */
+const ogImage = new URL(ogCardPath(route, locale), site).toString();
 
 /* The alternates come from the map, not from string surgery on the current
    path: `/en/pricing` and `/fr/tarifs` share no substring. */
@@ -138,16 +145,43 @@ const software = {
      server already rendered, so this only ever has work to do for a reader who
      has chosen light. */
   (function () {
+    var root = document.documentElement;
+
     try {
       var stored = localStorage.getItem("praxis.theme");
       if (stored === "light" || stored === "dark") {
-        document.documentElement.dataset.theme = stored;
+        root.dataset.theme = stored;
       }
     } catch (error) {
       /* Storage can be blocked outright (private browsing, a locked-down
          corporate profile). The document already carries data-theme="dark", so
          the reader gets the primary expression and the toggle still works for
          the length of the visit. */
+    }
+
+    /* The cross-language banner, decided here for the same reason the theme is:
+       before first paint. It is the first element in the body, so revealing it
+       afterwards moves the whole document down — 0.105 CLS against a 0.05
+       budget, measured. The banner is display:none until this attribute exists,
+       and the island only handles dismissal. */
+    try {
+      if (localStorage.getItem("praxis.lang-banner-dismissed") === "1") return;
+    } catch (error) {
+      /* Storage blocked: offer it every time rather than never. */
+    }
+    var page = (root.lang || "en").toLowerCase().split("-")[0];
+    var other = page === "fr" ? "en" : "fr";
+    var preferred =
+      navigator.languages && navigator.languages.length
+        ? navigator.languages
+        : [navigator.language];
+    for (var i = 0; i < preferred.length; i += 1) {
+      var tag = (preferred[i] || "").toLowerCase().split("-")[0];
+      if (tag === page) break;
+      if (tag === other) {
+        root.setAttribute("data-lang-offer", "");
+        break;
+      }
     }
   })();
 </script>

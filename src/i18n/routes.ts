@@ -90,21 +90,18 @@ export const ROUTE_KEYS = Object.keys(ROUTES) as RouteKey[];
 /**
  * Which routes are BUILT in this repository right now.
  *
- * The five solution pages and the Smart Logistics case study are drafted copy
- * and land in the second change (see HANDOFF.md § Built). Keeping them in
- * ROUTES rather than adding them later means the slug map, the switcher and
- * the sitemap are written once and are already correct when the pages arrive;
- * keeping them out of BUILT_ROUTES means nothing links to a URL that 404s, and
- * the link checker can prove it.
+ * It is empty: every route in the map above has a page in both languages. The
+ * set stays because it is the mechanism that let the slug map, the switcher and
+ * the sitemap be written once, before the pages existed, and be correct when
+ * they arrived — the five solution pages and the case study sat in here through
+ * the first change and came out of it in the second, one entry at a time, as
+ * each page landed. The next page to be planned before it is written goes in
+ * here rather than into a comment.
+ *
+ * Anything listed here is left out of the sitemap and out of the footer, and
+ * `npm run check:links` fails on any link to it.
  */
-export const UNBUILT_ROUTES = new Set<RouteKey>([
-  "solutions/freight-forwarding-customs",
-  "solutions/warehouse",
-  "solutions/fleet",
-  "solutions/finance-ohada",
-  "solutions/platform-it",
-  "customers/smart-logistics",
-]);
+export const UNBUILT_ROUTES = new Set<RouteKey>([]);
 
 export const BUILT_ROUTES: RouteKey[] = ROUTE_KEYS.filter((key) => !UNBUILT_ROUTES.has(key));
 

@@ -1,0 +1,16 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import SolutionPage from "~/components/pages/SolutionPage.astro";
+import { solutions } from "~/content/solutions.fr";
+
+const copy = solutions.platform;
+---
+
+<BaseLayout
+  locale="fr"
+  route="solutions/platform-it"
+  title={copy.meta.title}
+  description={copy.meta.description}
+>
+  <SolutionPage copy={copy} id="platform" locale="fr" />
+</BaseLayout>

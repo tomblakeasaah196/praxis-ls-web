@@ -110,3 +110,75 @@ export interface PagesCopy {
   readonly privacy: LegalPage;
   readonly terms: LegalPage;
 }
+
+/**
+ * The five solution pages (guide §2 and §5) and the one case study (§3.3).
+ *
+ * These carry DRAFT COPY. The guide gives them their slugs and the job they do
+ * — "the five solution pages exist to rank for these phrases" (§5) — and gives
+ * none of their words. Every string in solutions.{en,fr}.ts and
+ * customers.{en,fr}.ts is drafted from the module map in praxis-ls README §4,
+ * BRAND_GLOSSARY_FR_EN.md and the homepage's voice, and is listed in
+ * HANDOFF.md § Draft copy as needing review.
+ */
+export interface SolutionCapability {
+  readonly name: string;
+  readonly line: string;
+}
+
+export interface SolutionPage {
+  readonly meta: PageMeta;
+  /** Short label, used by the header menu, the footer and the related-pages
+   *  block. One table, so a page cannot be called two things. */
+  readonly navLabel: string;
+  /** One line under the label in the header menu. */
+  readonly navBlurb: string;
+  readonly eyebrow: string;
+  readonly heading: string;
+  readonly intro: string;
+  readonly coversHeading: string;
+  readonly covers: readonly SolutionCapability[];
+  readonly postingHeading: string;
+  readonly postingBody: string;
+  readonly chainLabel: string;
+  readonly chain: readonly string[];
+  /** Absent on the pages where a third screenshot of the same surface would
+   *  say nothing the first two did not. */
+  readonly screenshot?:
+    { readonly screen: "control-tower" | "general-ledger"; readonly alt: string } | undefined;
+  readonly outLink?:
+    { readonly label: string; readonly route: "security" | "standards" } | undefined;
+  readonly relatedHeading: string;
+  readonly closeHeading: string;
+  readonly closeLine: string;
+}
+
+export interface SolutionsCopy {
+  readonly freight: SolutionPage;
+  readonly warehouse: SolutionPage;
+  readonly fleet: SolutionPage;
+  readonly finance: SolutionPage;
+  readonly platform: SolutionPage;
+}
+
+/**
+ * The case study. Built from LANDING_PAGE_GUIDE.md §3.3 and nothing else.
+ *
+ * `lead` is the credibility strip's sentence, verbatim in both languages. Every
+ * other field says either something §3.3 states or something about what §3.3
+ * withholds — there is no field here for a volume, a figure, a date or a quote,
+ * because the page has nowhere to put one and that is deliberate (N12, brief §6).
+ */
+export interface CaseStudyPage {
+  readonly meta: PageMeta;
+  readonly eyebrow: string;
+  readonly heading: string;
+  readonly lead: string;
+  readonly factsHeading: string;
+  readonly facts: readonly { readonly term: string; readonly line: string }[];
+  readonly sanitisationHeading: string;
+  readonly sanitisationBody: string;
+  readonly emptyLine: string;
+  readonly closeHeading: string;
+  readonly closeLine: string;
+}

@@ -12,6 +12,7 @@
 import Mark from "./Mark.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { UI } from "~/i18n/ui";
+import { solutionNav } from "~/content/solutions";
 import { href, isBuilt, type Locale, type RouteKey } from "~/i18n/routes";
 
 interface Props {
@@ -27,6 +28,9 @@ const columns = [
   {
     heading: ui.product,
     links: [
+      /* The five solution pages sit here rather than in a fifth column: guide
+         §3.15 fixes the footer at four columns, and they are the product. */
+      ...solutionNav(locale).map((entry) => ({ label: entry.label, key: entry.route })),
       { label: ui.security, key: "security" as RouteKey },
       { label: ui.standards, key: "standards" as RouteKey },
       { label: ui.pricing, key: "pricing" as RouteKey },
@@ -35,6 +39,7 @@ const columns = [
   {
     heading: ui.company,
     links: [
+      { label: ui.customers, key: "customers/smart-logistics" as RouteKey },
       { label: ui.about, key: "about" as RouteKey },
       { label: ui.contactUs, key: "contact" as RouteKey },
     ],

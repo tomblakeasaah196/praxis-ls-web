@@ -1,0 +1,136 @@
+---
+/**
+ * Smart Logistics — /en/customers/smart-logistics · /fr/references/smart-logistics.
+ *
+ * Built from LANDING_PAGE_GUIDE.md §3.3 and nothing else, which is the brief's
+ * instruction twice over (brief §4 and §6). §3.3 is one sentence of fact and
+ * one clause of consent, so this is a short page with a lot of white space in
+ * it, and the white space is the point: the customer consented to be named with
+ * sanitisation, and every figure a case study normally carries — volumes,
+ * revenue, client names — is a figure they did not consent to.
+ *
+ * `lead` is §3.3's sentence, verbatim in both languages, and the same sentence
+ * the homepage's credibility strip carries.
+ */
+import PageIntro from "~/components/PageIntro.astro";
+import type { CaseStudyPage } from "~/content/page-types";
+import { href, type Locale } from "~/i18n/routes";
+import { UI } from "~/i18n/ui";
+
+interface Props {
+  copy: CaseStudyPage;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+const ui = UI[locale];
+---
+
+<PageIntro eyebrow={copy.eyebrow} heading={copy.heading} />
+
+<section class="section" aria-label={copy.heading}>
+  <div class="shell">
+    <p class="lead measure">{copy.lead}</p>
+  </div>
+</section>
+
+<section class="section section--surface" aria-labelledby="facts-heading">
+  <div class="shell">
+    <h2 id="facts-heading" class="section-label">{copy.factsHeading}</h2>
+    <dl class="facts">
+      {
+        copy.facts.map((fact) => (
+          <div class="facts__row">
+            <dt class="facts__term">{fact.term}</dt>
+            <dd class="facts__line">{fact.line}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="sanitisation-heading">
+  <div class="shell sanitisation">
+    <h2 id="sanitisation-heading">{copy.sanitisationHeading}</h2>
+    <p class="lede measure">{copy.sanitisationBody}</p>
+    <p class="measure sanitisation__empty">{copy.emptyLine}</p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="close-heading">
+  <div class="shell close">
+    <h2 id="close-heading">{copy.closeHeading}</h2>
+    <p class="lede measure">{copy.closeLine}</p>
+    <p>
+      <a class="btn btn--primary" href={href("contact", locale)}>{ui.cta.bookDemo}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .lead {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+    font-family: var(--brand-font-display);
+    font-weight: 550;
+    text-wrap: pretty;
+  }
+
+  .facts {
+    display: grid;
+    gap: 0;
+    max-width: var(--measure);
+  }
+
+  .facts__row {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-block: var(--space-m);
+    border-block-end: 1px solid var(--brand-line);
+  }
+
+  .facts__row:first-child {
+    border-block-start: 1px solid var(--brand-line);
+  }
+
+  .facts__term {
+    font-family: var(--brand-font-display);
+    font-weight: 600;
+    color: var(--brand-ink-orange);
+  }
+
+  .facts__line {
+    color: var(--brand-ink-muted);
+    line-height: var(--leading-body);
+    margin: 0;
+  }
+
+  .sanitisation,
+  .close {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+  }
+
+  .sanitisation h2,
+  .close h2 {
+    font-size: var(--step-display-m);
+    line-height: var(--leading-display-m);
+    max-width: 22ch;
+  }
+
+  .sanitisation__empty {
+    color: var(--brand-ink-muted);
+    font-size: var(--step-caption);
+    line-height: var(--leading-body);
+  }
+
+  @media (width >= 48rem) {
+    .facts__row {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: var(--space-m);
+      align-items: baseline;
+    }
+  }
+</style>

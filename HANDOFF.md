@@ -1,17 +1,27 @@
 # praxisls.com — handoff
 
 **Repository:** `tomblakeasaah196/praxis-ls-web`
-**Branch:** `claude/praxis-ls-marketing-pr1-8o0mmf`
+**Branch:** `claude/praxis-ls-marketing-pr2-c71kgj` — the second of two changes.
+The first is `claude/praxis-ls-marketing-pr1-8o0mmf` (PR #2), **merged to `main`
+while this was being written**, so this branch is cut from `main` rather than
+from PR1's head; the two trees were identical at that point.
 **Specification:** `tomblakeasaah196/praxis-ls` at `807fc1a`, read-only. No commit,
 branch or PR was made against it (N13).
 
-This is **the first of two changes.** It carries the whole platform — routing,
-theme, design system, CI, budgets — plus every page whose copy is final in
-`LANDING_PAGE_GUIDE.md`. The second change carries the pages whose copy has to
-be drafted: the five solution pages and the Smart Logistics case study. The
+The first change carried the whole platform — routing, theme, design system, CI,
+budgets — plus every page whose copy is final in `LANDING_PAGE_GUIDE.md`. **This
+one carries the pages whose copy had to be drafted** — the five solution pages
+and the Smart Logistics case study — and the two pieces of wiring that were
+waiting on them: the coverage grid's outbound links and the Solutions menu. The
 split is drawn on that line deliberately: reviewing "is this verbatim?" and
 reviewing "is this draft any good?" are different jobs, and mixing them in one
 diff gets the first one skipped.
+
+> **Everything this change adds to a page is DRAFT COPY** — six pages, both
+> languages, plus their meta descriptions, their navigation labels and their
+> Open Graph cards. §7 lists it. Nothing in `LANDING_PAGE_GUIDE.md` specifies
+> any of it beyond the slugs, and the case study is bounded by §3.3 and by
+> nothing else.
 
 ---
 
@@ -52,11 +62,52 @@ diff gets the first one skipped.
 | `/`                 | —                                      | Fallback language chooser, `noindex`. The real answer is a host 302 — see §5.                                                                              |
 | `/sitemap.xml`      | —                                      | Both trees with hreflang alternates.                                                                                                                       |
 
-**Not in this change** (second PR): `/en/solutions/*` ×5 · `/en/customers/smart-logistics`
-and their French counterparts. They are already in the slug map
-(`src/i18n/routes.ts`) and marked `UNBUILT_ROUTES`, so the switcher, the
-sitemap and the link checker all know about them and nothing links to a URL
-that 404s.
+### The six pages this change adds — all **DRAFT COPY**
+
+| EN                                         | FR                                 | What is on it                                                                                                                                      |
+| ------------------------------------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/en/solutions/freight-forwarding-customs` | `/fr/solutions/transit-douane`     | The operation file end to end, seven things it carries, the posting chain quotation → journal entry, a control-tower screenshot.                   |
+| `/en/solutions/warehouse`                  | `/fr/solutions/entrepot`           | Receiving → dispatch, six areas, the three-way match as the posting argument, a control-tower screenshot.                                          |
+| `/en/solutions/fleet`                      | `/fr/solutions/flotte`             | Seven areas of the parc, fleet cost as an entry. No screenshot — a third capture of the same two surfaces would say nothing the first two did not. |
+| `/en/solutions/finance-ohada`              | `/fr/solutions/comptabilite-ohada` | Eight areas from the chart of accounts to the immutable ledger, a general-ledger screenshot, an outlet to `/standards`.                            |
+| `/en/solutions/platform-it`                | `/fr/solutions/plateforme-dsi`     | What IT asks before saying yes; the exit as a line on the pricing page; a general-ledger screenshot; an outlet to `/security`.                     |
+| `/en/customers/smart-logistics`            | `/fr/references/smart-logistics`   | §3.3's sentence, the four facts inside it, and what will never be published. No quotation, no figure, no chart — see §3 OPEN.                      |
+
+Each of the five solution pages has the same shape — what this area covers,
+what it posts, the surface it posts through, where to go next — because the
+argument is the same argument narrowed to one part of the business, and five
+pages that each invent their own structure are five pages to redesign later.
+
+`UNBUILT_ROUTES` is now empty. The set stays in `src/i18n/routes.ts`: it is
+what let the slug map, the switcher, the sitemap and the link checker be
+written once, before these pages existed, and be right when they arrived.
+
+### Wiring that was waiting on those pages
+
+- **The coverage grid links out** (guide §3.8, was D5). Thirteen groups, thirteen
+  links, from one table keyed by the module map's Roman numeral
+  (`src/content/coverage-links.ts`) so the two languages cannot point at
+  different pages. A group with no mapping throws at build time.
+- **"Solutions" is a menu** (guide §3.1, was D4) over the five pages — a
+  disclosure, not an ARIA menu (D12). One sheet on mobile with the five listed
+  inside it, no second layer of interaction. Keyboard: Tab reaches every link,
+  Escape closes and returns focus, focus leaving closes, ArrowDown opens.
+- **The credibility strip's customer name links to the case study.** The words
+  are untouched; the link wraps the emphasised span the deck already stored
+  separately (D15).
+- **The footer** carries the five solution pages in its Product column and the
+  case study under Company. Still four columns (guide §3.15).
+
+### Screenshots and cards
+
+- **All twelve screenshot placeholders are now on a page.** `operation-file`
+  dark stays on the hero in both themes (D6); `control-tower` and
+  `general-ledger` are theme-aware on the solution pages — both captures ship,
+  CSS shows the one matching the reader's theme, both are lazy (D11).
+- **Per-page Open Graph cards** for the six pages that earn one (guide §5),
+  rendered by `scripts/render-assets.mjs` **from the built page** rather than
+  from a second copy of the words (D14). `check:links` fails if a page names a
+  card that is not there.
 
 ### Systems
 
@@ -137,16 +188,19 @@ first two on the built HTML; `scripts/check-copy.mjs` folds all three when it
 diffs the pages against the vendored guide, and forgives nothing else — not a
 changed word, not a changed dash.
 
-**D4 — "Product" and "Solutions" in the header point at homepage sections.**
-_Guide §3.1 vs §2._ The navigation is specified as five items, and the URL map
-has no `/product` and no `/solutions` index — only `/solutions/<slug>`
-children. Both therefore link to the homepage sections that carry those
-arguments (`#spine`, `#coverage`). When the five solution pages land, "Solutions"
-becomes a menu over them.
+**D4 — "Product" in the header points at a homepage section. RESOLVED for
+Solutions.** _Guide §3.1 vs §2._ The navigation is specified as five items, and
+the URL map has no `/product` and no `/solutions` index — only
+`/solutions/<slug>` children. **"Solutions" is now a menu over the five pages**
+(see D12). "Product" still points at `#spine`, because there is still no
+`/product` page in the URL map to point it at, and inventing one would be
+inventing a page.
 
-**D5 — The coverage grid does not link out yet.** _Guide §3.8._ Each group is
-meant to link to the relevant solution page. Those pages are the second change,
-so the grid ships without links rather than with links that 404.
+**D5 — RESOLVED. The coverage grid links out.** _Guide §3.8._ Thirteen groups,
+each to the relevant solution page. Which page is a judgement call — thirteen
+groups over five pages means several groups have no single obvious home — so it
+is one reviewable table rather than thirteen decisions spread through two
+language decks. See D13 and G8.
 
 **D6 — The hero screenshot is the dark capture in both themes.** _Guide §3.2._
 The guide fixes the hero at "the real product UI, dark mode". Rendering the
@@ -179,6 +233,73 @@ canonical correctly points at `https://praxisls.com/…`, which the audit reads 
 without running against the production origin, which is out of scope. Every
 other audit runs.
 
+### Added by this change
+
+**D11 — Screenshots below the fold ship both themes; the hero still ships one.**
+_Guide §3.2 and §8 vs N9._ §8 asks for twelve captures — three screens × two
+themes × two languages — and D6 uses only the dark ones because the hero is on
+the critical path. On a solution page the screenshot is below the fold, so
+`<Screenshot themeAware>` emits both captures for the reader's language and CSS
+shows the one matching the theme. Both are `loading="lazy"` and the hidden one
+is `display: none`, so it has no layout box, never intersects the viewport and
+is never fetched — the reader downloads one image, and the light-theme reader
+downloads the light one. The swap reads a custom property declared on `:root` in
+`global.css` rather than a `html[data-theme]` rule inside the component: Astro
+cannot scope a selector that targets `:root`, and that is exactly the bug §4
+records. **When the real captures land, re-check `check:budget`** — two real
+screenshots on one page is the case that decides whether AVIF/WebP derivatives
+are needed.
+
+**D12 — The Solutions menu is a disclosure, not an ARIA menu.** _Guide §3.1 ·
+N10._ The APG `menu`/`menuitem` pattern takes links out of the tab order and
+puts them on arrow keys. That is right for an application menu bar and wrong for
+site navigation: it means a reader who knows how to Tab through a website
+suddenly cannot, and it tells a screen reader that five pages are five commands.
+What ships is a `<button aria-expanded>` that shows a list of ordinary links.
+Tab reaches each one in document order, Escape closes and returns focus to the
+button, focus leaving closes it, a click outside closes it, and ArrowDown opens
+it and moves to the first link for anyone who expects that. On mobile the five
+sit inside the single sheet under a heading — a menu inside a sheet is the
+"dropdown on mobile" §3.1 rules out, and it would put two Escape targets on one
+screen.
+
+**D13 — Which solution page each module group links to is a judgement call, and
+it is in one table.** _Guide §3.8 · README §4._ `src/content/coverage-links.ts`
+maps the module map's thirteen Roman numerals onto the five pages. The three
+worth arguing about: procurement (XI) points at the warehouse page, where the
+three-way match is described at the point of receiving rather than the point of
+payment; ops costing (IX) points at freight forwarding, because a débours is
+incurred on a file; HR (III) points at finance, because the only thing the
+homepage claims about payroll is that it posts itself. Keyed by numeral so the
+French and English grids cannot drift apart, and so the mapping can be reviewed
+against the module map without reading either language. See G8.
+
+**D14 — The per-page Open Graph cards are rendered from the built pages.**
+_Guide §5._ `scripts/render-assets.mjs` reads each page's eyebrow and `<h1>` out
+of `dist/` and draws the card from them, so a card cannot come to say something
+its page does not. The cost is an ordering rule — `npm run build` before
+`npm run assets` — which the script enforces with an error rather than a stale
+card. Six pages earn a card (the five solution pages and the case study, which
+are the pages guide §5 points search traffic at and the ones a prospect
+forwards); everything else keeps the site-wide card per language.
+
+**D15 — The credibility strip's customer name is a link.** _Guide §3.3 · N1._
+The case study needed an inbound link from the page that names the customer.
+The copy deck already stores that sentence in three pieces so the emphasis can
+move between languages, so the link wraps the emphasised span and no word
+changes — `check:copy` still diffs the sentence byte for byte, and the link's
+accessible name is exactly its visible text.
+
+**D16 — The language banner is decided before first paint, not revealed after
+it.** _N7 · N9._ It used to render with `hidden` and be un-hidden by its island.
+That is a **0.105 CLS** on any page where the island runs after the first paint —
+the banner is the first element in the body, so revealing it moves the whole
+document down — and it is how `/fr/solutions/plateforme-dsi` came in at more
+than twice the 0.05 budget the moment it existed. The decision now happens in
+the inline head script that already decides the theme, expressed as
+`data-lang-offer` on `<html>`; the island keeps the dismissal, which is a click
+and cannot be anywhere else. Measured before and after in §4.
+
 ---
 
 ## 3. OPEN
@@ -190,7 +311,7 @@ Everything here is left blank in the build rather than guessed at (N12).
 | O1  | **The demo form's destination** — inbox, CRM, or calendar tool.                                                                                                                                                                                                                                                                                                                                      | `src/islands/demo-form.ts`, `DEMO_FORM_ENDPOINT` + `submitDemoRequest()`. One constant and one function body. Until then the form validates, collects, and reports honestly that nothing was sent. |
 | O2  | **The response window to promise.** "Confirmation names a real response window and keeps it" (§4) — nobody has stated one, so the confirmation does not invent one.                                                                                                                                                                                                                                  | `pages.{en,fr}.ts` → `contact.success`.                                                                                                                                                            |
 | O3  | **Every pricing figure.** No number appears on `/pricing` or anywhere else.                                                                                                                                                                                                                                                                                                                          | —                                                                                                                                                                                                  |
-| O4  | **Anything about Smart Logistics beyond §3.3.** Nothing beyond the credibility strip is published, and the case-study page is not in this change.                                                                                                                                                                                                                                                    | —                                                                                                                                                                                                  |
+| O4  | **Anything about Smart Logistics beyond §3.3.** The case-study page now exists and carries §3.3 and nothing else: the sentence, the four facts inside it, and what will not be published. There is no field on that page for a quotation, a date, a volume or a figure — not an empty one, none — because a place to put a number is where a number gets invented (N12).                             | `customers.{en,fr}.ts`.                                                                                                                                                                            |
 | O5  | **Team names, biographies, photographs, the registered address, registration details.** `/about` says plainly that they are not published yet.                                                                                                                                                                                                                                                       | `pages.{en,fr}.ts` → `about.openLine`.                                                                                                                                                             |
 | O6  | **The status page URL.** Guide §3.15 puts a link to it in the footer baseline; no URL appears in any source document, so the link is absent.                                                                                                                                                                                                                                                         | `src/components/Footer.astro`.                                                                                                                                                                     |
 | O7  | **The analytics choice.** Nothing is loaded. There is no third-party script on the site at all, and no cookie banner, because there is nothing to consent to yet.                                                                                                                                                                                                                                    | —                                                                                                                                                                                                  |
@@ -200,6 +321,11 @@ Everything here is left blank in the build rather than guessed at (N12).
 | O11 | **The legal pages.** Privacy and terms are stubs that say so. Placeholder terms are terms; placeholder privacy text is a statement about how data is handled.                                                                                                                                                                                                                                        | `pages.{en,fr}.ts`.                                                                                                                                                                                |
 | O12 | **The ledger panel in the control tower carries no figures.** SYSCOHADA account codes and amounts are not in the source documents, and the section arguing the ledger is trustworthy is the worst place on the site to invent one. Each row shows its milestone and an em dash.                                                                                                                      | `home.{en,fr}.ts` → `tower.ledgerAmount`.                                                                                                                                                          |
 | O13 | **The apex is not idle.** `praxisls.com` is in `PLATFORM_HOSTS` and the mail OAuth callback is designed to land on it (`LANDING_PAGE_GUIDE.md` §7). Whether it is live for OAuth today depends on what production sets for `MS_GRAPH_REDIRECT_URI` / `GOOGLE_REDIRECT_URI`. **Check that before repointing anything.** DNS and deployment are out of scope here; §5 records what this build assumes. | `public/_redirects`.                                                                                                                                                                               |
+| O14 | **Smart Logistics' sector.** §3.3 says they consented to their name, their logo and **their sector** being published — and then does not say what the sector is. The page therefore does not name it. One sentence from whoever holds the consent closes this.                                                                                                                                       | `customers.{en,fr}.ts`.                                                                                                                                                                            |
+| O15 | **Smart Logistics' logo.** Consented to, per §3.3, and not provided. The page carries no logo rather than a box where one should be.                                                                                                                                                                                                                                                                 | `customers.{en,fr}.ts`.                                                                                                                                                                            |
+| O16 | **Written approval of the case-study page.** Guide §9's launch checklist requires it, and this page has not been through it. It was written to be approvable — every sentence is either §3.3 or a statement about what §3.3 withholds — but that is not the same as approved.                                                                                                                        | —                                                                                                                                                                                                  |
+| O17 | **All of the drafted copy on the six new pages.** Listed page by page in §7. Nothing on any of them is specified by the guide beyond the slug.                                                                                                                                                                                                                                                       | `solutions.{en,fr}.ts`, `customers.{en,fr}.ts`.                                                                                                                                                    |
+| O18 | **Whether the module-group → solution-page mapping is the one you want.** Thirteen groups, five pages, four of them defensible two ways. One table, D13, and G8 argues the guide should settle it.                                                                                                                                                                                                   | `src/content/coverage-links.ts`.                                                                                                                                                                   |
 
 ---
 
@@ -214,26 +340,52 @@ Emulation is Lighthouse's standard mobile profile — 412×823 at DPR 1.75,
 150 ms RTT, 1 638 Kbps, 4× CPU slowdown — which is the guide's "Slow 4G /
 mid-range Android" (§6). Reports are uploaded as a CI artifact on every run.
 
-| URL           | Perf | A11y | Best practices | SEO | FCP      | **LCP**      | CLS   | TBT  | Total weight |
-| ------------- | ---- | ---- | -------------- | --- | -------- | ------------ | ----- | ---- | ------------ |
-| `/en/`        | 99   | 100  | 100            | 100 | 1 360 ms | **1 810 ms** | 0.010 | 0 ms | 171 KiB      |
-| `/fr/`        | 99   | 100  | 100            | 100 | 1 357 ms | **1 807 ms** | 0.005 | 0 ms | 172 KiB      |
-| `/en/contact` | 100  | 100  | 100            | 100 | 1 207 ms | **1 653 ms** | 0.000 | 0 ms | 143 KiB      |
-| `/fr/contact` | 100  | 100  | 100            | 100 | 1 207 ms | **1 656 ms** | 0.000 | 0 ms | 143 KiB      |
+| URL                                        | Perf | A11y | Best practices | SEO | FCP      | **LCP**      | CLS   | TBT  | Total weight |
+| ------------------------------------------ | ---- | ---- | -------------- | --- | -------- | ------------ | ----- | ---- | ------------ |
+| `/en/`                                     | 99   | 100  | 100            | 100 | 1 357 ms | **1 807 ms** | 0.010 | 0 ms | 173 KiB      |
+| `/fr/`                                     | 99   | 100  | 100            | 100 | 1 359 ms | **1 809 ms** | 0.005 | 0 ms | 174 KiB      |
+| `/en/solutions/freight-forwarding-customs` | 100  | 100  | 100            | 100 | 1 206 ms | **1 506 ms** | 0.017 | 0 ms | 144 KiB      |
+| `/fr/solutions/transit-douane`             | 100  | 100  | 100            | 100 | 1 205 ms | **1 655 ms** | 0.000 | 0 ms | 144 KiB      |
+| `/en/solutions/platform-it`                | 100  | 100  | 100            | 100 | 1 206 ms | **1 506 ms** | 0.000 | 0 ms | 144 KiB      |
+| `/fr/solutions/plateforme-dsi`             | 100  | 100  | 100            | 100 | 1 206 ms | **1 506 ms** | 0.012 | 0 ms | 144 KiB      |
+| `/en/customers/smart-logistics`            | 100  | 100  | 100            | 100 | 1 204 ms | **1 654 ms** | 0.000 | 0 ms | 143 KiB      |
+| `/fr/references/smart-logistics`           | 100  | 100  | 100            | 100 | 1 205 ms | **1 655 ms** | 0.000 | 0 ms | 143 KiB      |
+| `/en/contact`                              | 100  | 100  | 100            | 100 | 1 204 ms | **1 506 ms** | 0.000 | 0 ms | 144 KiB      |
+| `/fr/contact`                              | 100  | 100  | 100            | 100 | 1 207 ms | **1 508 ms** | 0.000 | 0 ms | 144 KiB      |
 
-`/en/security`, measured separately on a single run for reference: performance
-100, FCP 1 204 ms, **LCP 1 504 ms**.
+Ten URLs, both languages, every page type this change adds. LCP lands on one of
+three values — 1 506, 1 655, 1 807 — and never between them; that quantisation
+is the subject of "LCP, measured five more ways" below, and it is the reason
+the two French pages that read 1 655 above are not a French regression: the same
+page reads 1 506 on another run.
+
+CI asserts against six of these ten (`lighthouserc.cjs`): both homepages, the
+heaviest solution page in each language, and both contact pages. Ten URLs at
+three runs each is more than a CI job should spend before people start skipping
+it; the other four were measured the same way for this table.
+
+`/en/security`, measured on a single run during the first change for reference:
+performance 100, FCP 1 204 ms, **LCP 1 504 ms**.
 
 ### Against the budgets in N9
 
-| Budget                          | Target         | Measured                         |     |
-| ------------------------------- | -------------- | -------------------------------- | --- |
-| Lighthouse, all four categories | ≥ 95           | 99–100, both languages           | ✅  |
-| CLS                             | < 0.05         | 0.000–0.010                      | ✅  |
-| INP (TBT as the lab proxy)      | < 200 ms       | 0 ms                             | ✅  |
-| JS shipped, compressed          | < 100 KB       | **2.4 KB** on the heaviest page  | ✅  |
-| Total page weight               | < 600 KB       | **172 KiB** on the heaviest page | ✅  |
-| LCP                             | **< 1 500 ms** | **1 650–1 810 ms**               | ❌  |
+| Budget                          | Target         | Measured                        |     |
+| ------------------------------- | -------------- | ------------------------------- | --- |
+| Lighthouse, all four categories | ≥ 95           | 99–100, both languages          | ✅  |
+| CLS                             | < 0.05         | 0.000–0.010                     | ✅  |
+| INP (TBT as the lab proxy)      | < 200 ms       | 0 ms                            | ✅  |
+| JS shipped, compressed          | < 100 KB       | **2.8 KB** on the heaviest page | ✅  |
+| Total page weight               | < 600 KB       | **188 KB** on the heaviest page | ✅  |
+| LCP                             | **< 1 500 ms** | **1 506–1 809 ms**              | ❌  |
+
+The page-weight number moved from 172 KiB to 188 KB because `check:budget`
+counts every asset a page references, and a theme-aware screenshot references
+two. **A reader downloads one.** Proved rather than assumed: driving the page
+with a scroll and recording every request for `/screens/` returns
+`general-ledger--dark--fr.png` under the dark theme and
+`general-ledger--light--fr.png` under the light one, one file each time. The
+budget check keeps counting both, because a checker that models lazy loading is
+a checker that can be wrong in the reader's favour.
 
 **LCP is the one budget this build does not meet, and I want to be precise
 about why rather than round it down.**
@@ -276,6 +428,89 @@ What would actually close the gap, in the order I would try it:
 3. **Split the homepage's critical CSS from the rest.** ~31 KB is inlined into
    the homepage today, of which the below-the-fold sections are most of it.
 
+### LCP, measured five more ways — and what closed instead
+
+**The brief for this change was: close the LCP gap if it can be closed without
+trading away the display face or adding a heavy build dependency. It cannot,
+and here is the evidence rather than the opinion.** The two candidates the first
+change proposed have now been built and measured. Both move LCP by nothing.
+
+Every row is three runs, median, same mobile profile, `/en/` and `/en/contact`:
+
+| Variant                                                                                | `/en/` FCP   | `/en/` LCP   | `/en/contact` LCP |
+| -------------------------------------------------------------------------------------- | ------------ | ------------ | ----------------- |
+| **A — as shipped** (variable display face, 45.7 KB, preloaded)                         | 1 355 ms     | **1 808 ms** | 1 504 ms          |
+| B — `fetchpriority="high"` on the font preload                                         | 1 357 ms     | 1 807 ms     | 1 506 ms          |
+| C — display face as **two static instances** (400 + 600), preload the 600              | 1 508 ms     | 1 958 ms     | 1 355 ms          |
+| C2 — display face as **one static instance** (600, 24.2 KB), everything display at 600 | 1 360 ms     | 1 810 ms     | 1 505 ms          |
+| E — `font-display: optional` on the display face                                       | 1 355 ms     | 1 805 ms     | 1 655 ms          |
+| G — all three faces instanced down to **81 KB of fonts** in total (from 132 KB)        | **1 207 ms** | 1 806 ms     | 1 506 ms          |
+
+Read it row by row:
+
+- **Candidate 1 — instance the display face — is retired.** C2 halves the file
+  that paints every `<h1>` (45.7 KB → 24.2 KB) and LCP does not move: 1 810 ms
+  against 1 808 ms. C, which ships the 400 weight as a second file so eyebrows
+  keep their weight, makes the homepage **worse** by exactly one round trip —
+  a seventh request against a six-connection HTTP/1.1 harness. The first change
+  estimated this change at ~150 ms; measured, it is 2 ms, and it costs either a
+  weight or a request.
+- **Candidate 2 — `font-display: optional` — is retired too**, and it is the
+  more interesting one. The reasoning was "LCP collapses onto FCP because the
+  heading never repaints". E says 1 805 ms.
+- **What did move, and what it says.** G cuts the _total_ font payload from
+  132 KB to 81 KB by instancing all three families down to one weight each — a
+  brand change nobody has approved, run purely as a measurement — and **FCP
+  improves by a full 150 ms while LCP stays at 1 806 ms.**
+
+The reason all three behave like that is visible in the trace. In the recorded
+page load, `observedFirstContentfulPaint` and `observedLargestContentfulPaint`
+are **the same instant** (148 ms): the `<h1>` paints once, and the font swap
+never produces a second LCP candidate. Driving the same page in a real Chrome
+under the same throttling over the DevTools protocol — 150 ms RTT, 1 638 Kbps,
+4× CPU — gives one LCP candidate at **588 ms**, equal to FCP, with the display
+face arriving at 914 ms and the other two at 1.3 s, changing nothing.
+
+**So the 1.8 s is Lantern's simulation of the LCP element's dependency graph,
+which includes the webfont request whatever `font-display` says and whatever the
+paint actually did.** That is why the number lands on 1 506 / 1 655 / 1 807 and
+never between them: it is FCP plus a whole number of round trips, and the levers
+available in this repository move bytes, not round trips.
+
+What follows from that, honestly stated:
+
+1. **The pages are not slow.** The heading paints at first paint, on every page,
+   in both languages, and CLS/TBT/JS/weight all sit well inside budget.
+2. **The remaining gap is a transport and hosting question**, not a page one:
+   fewer round trips means a warm HTTP/2 (or HTTP/3) connection and an edge
+   close to Douala and Abidjan. Measuring that here is not possible honestly —
+   serving `dist/` over local TLS + HTTP/2 made both numbers _worse_ (FCP
+   1 651 ms, LCP 2 101 ms) because the handshake is real and the CDN is not.
+   The apex plan in §5 is where this gets decided.
+3. **Candidate 3 from the first change — splitting the homepage's critical CSS —
+   is still untested**, and it is now the only one left. What G proves is that
+   it would move FCP; what G also proves is that moving FCP by 150 ms moved LCP
+   by 2 ms. Do it for the reader, not for the score.
+
+Nothing from this investigation is shipped. The fonts, the preload and
+`font-display: swap` are exactly as the first change left them.
+
+### The CLS regression this change introduced, and removed
+
+`/fr/solutions/plateforme-dsi` measured **CLS 0.106** on its first run — two of
+three runs — against a 0.05 budget. It was not the page: it was the language
+banner, which rendered `hidden` and was revealed by its island. On a page where
+the island happens to run after the first paint, revealing the first element in
+the body moves the whole document down. Every French page could do it; this one
+did it reproducibly.
+
+Fixed by deciding the banner in the same inline head script that decides the
+theme, before first paint (D16).
+
+| Page                           | Before              | After     |
+| ------------------------------ | ------------------- | --------- |
+| `/fr/solutions/plateforme-dsi` | 0.106 (2 of 3 runs) | **0.012** |
+
 The Lighthouse configuration keeps `largest-contentful-paint ≤ 1500` as a
 **warning** rather than an error, deliberately: the number in the config should
 be the number in the guide, and the gap should be visible on every CI run rather
@@ -291,11 +526,11 @@ CI. None of it is checked by reading.
 | ------------------------------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | Homepage copy matches §3 **exactly** — diffed, not eyeballed              | `npm run check:copy`   | 76 strings, byte-identical to `vendor/copy/landing-page-guide-copy.md` (the guide, digest-pinned to `807fc1a`) and present on the page. |
 | French typography (N8) on every built French page                         | `npm run check:french` | Narrow no-break spaces before `: ; ! ?`, guillemets with no-break spaces inside, accented capitals, sentence-case headings, `15 %`.     |
-| `hreflang` + canonical correct on every page; one `<h1>`; `lang` per tree | `npm run check:links`  | 17 pages, all internal links resolve, no page missing `fr`/`en`/`x-default`.                                                            |
+| `hreflang` + canonical correct on every page; one `<h1>`; `lang` per tree | `npm run check:links`  | **29 pages**, all internal links resolve, no page missing `fr`/`en`/`x-default`, and every Open Graph card a page names exists.         |
 | No raw hex outside the vendored token file (N3)                           | `npm run check:hex`    | Clean. The check reads every `.astro`, `.css`, `.ts`, `.js`, `.svg` and `.json` in the repo.                                            |
 | No font named outside the three permitted families (N5)                   | `npm run check:fonts`  | Clean, fallback stacks included — every stack ends in a bare generic keyword.                                                           |
 | The vendored tokens are byte-identical to upstream (N2)                   | `npm run check:brand`  | `identical to praxis-ls (git show 807fc1a:packages/brand/tokens.css) ✓`                                                                 |
-| JS and page-weight budgets                                                | `npm run check:budget` | 2.4 KB JS compressed, 170 KiB heaviest page.                                                                                            |
+| JS and page-weight budgets                                                | `npm run check:budget` | 2.8 KB JS compressed, 188 KB heaviest page (counting both captures of every theme-aware screenshot; a reader fetches one).              |
 | No unlayered `html`/`body`/`:root` rule in the shared stylesheet          | `npm run check:css`    | Clean across 16 stylesheets — see D-note below.                                                                                         |
 
 ### Accessibility
@@ -318,6 +553,30 @@ Both themes were checked visually at 320 px, 390 px, 1000 px and 1280 px, in
 French and English. Keyboard operation: the skip link, the header sheet
 (Escape closes it and returns focus), the role tabs (one tab stop, arrow keys
 between tabs, Home/End) and the form were all driven from the keyboard.
+
+**The Solutions menu was driven from the keyboard and the results recorded**,
+because "keyboard-complete" is the kind of claim that is made and not checked
+(`Escape` on a disclosure is the usual casualty). Driven with Playwright against
+the built site, on the French tree:
+
+| Step                         | Result                                                             |
+| ---------------------------- | ------------------------------------------------------------------ |
+| Tab from the top of the page | reaches the button in 6 stops                                      |
+| Enter                        | opens, `aria-expanded="true"`                                      |
+| Tab                          | lands on « Transit et dédouanement »                               |
+| Escape                       | closes, focus back on the button                                   |
+| ArrowDown                    | opens and moves to the first link                                  |
+| Tab out of the menu          | closes                                                             |
+| Click outside                | closes                                                             |
+| On `/fr/solutions/flotte`    | button marked current, « Flotte » `aria-current`                   |
+| Mobile (390 px): the sheet   | one sheet, 10 links, 5 of them solutions, **0 nested disclosures** |
+
+**One real bug was found doing it, and it was the first change's, not this
+one's.** Opening the mobile sheet from the keyboard leaves focus on the burger,
+which is _outside_ the sheet — and the Escape handler was bound to the sheet, so
+it never saw that reader's key. The reader most likely to press Escape was the
+one it did not work for. The listener is now on the header, which contains both,
+and the table row above is that case passing.
 
 ### One bug worth naming, because it nearly shipped
 
@@ -371,13 +630,25 @@ point the apex A record at a static host.
 
 ---
 
-## 6. Screenshots — the swap procedure
+## 6. Screenshots and cards — the swap procedure
 
 The twelve files in `public/screens/` are **placeholders and look like it**: a
 flat panel at the capture script's exact geometry (1600×1000) in the theme's
 dominant tones, with the filename and the word PLACEHOLDER on it. They draw no
 interface — no toolbar, no table, no numbers — because a hand-drawn "product"
 screenshot that ships is worse than an obvious placeholder.
+
+**All twelve are now on a page**, which they were not after the first change:
+
+| Screen           | Where                                                           | Themes shipped                 |
+| ---------------- | --------------------------------------------------------------- | ------------------------------ |
+| `operation-file` | The homepage hero, both languages                               | dark only (D6 — critical path) |
+| `control-tower`  | `/solutions/freight-forwarding-customs`, `/solutions/warehouse` | dark **and** light (D11)       |
+| `general-ledger` | `/solutions/finance-ohada`, `/solutions/platform-it`            | dark **and** light (D11)       |
+
+The reader downloads one of each pair: the hidden one is `display: none`, has no
+layout box, never intersects the viewport, and is therefore never fetched by a
+lazy loader. Switching the theme fetches the other one at that moment.
 
 They are named exactly as `scripts/marketing/capture-screens.mjs` writes them
 (`${screen}--${theme}--${lang}.png`, that script line 187):
@@ -415,6 +686,15 @@ so `--window-size=1200,630` yields a 1200×543 viewport and pads the screenshot
 back out with background colour. The script warns when it has to fall back and
 asserts the output geometry.
 
+**The Open Graph cards.** Fourteen now: two site-wide (one per language) and one
+per language for each of the six pages that earn their own (D14). The per-page
+cards are drawn from the **built** page's eyebrow and `<h1>`, so the order is
+`npm run build` then `npm run assets`; the script errors rather than rendering a
+stale card if `dist/` is missing. `npm run check:links` fails when a page names
+a card that is not in `dist/og/`, which is the only guard that catches a card
+nobody has looked at — no browser requests it and no reader sees it until it is
+already in somebody's group chat.
+
 ---
 
 ## 7. Draft copy — every page and section awaiting approval
@@ -423,21 +703,25 @@ Everything in this list is **`DRAFT COPY — needs review`**. Nothing in it is
 specified by `LANDING_PAGE_GUIDE.md`; it is drafted from the README module map,
 the glossary and the homepage's voice.
 
-| Where                                    | What is drafted                                                                                                                      |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Homepage §8 (Coverage)                   | Heading, intro, and all thirteen group names + one-liners, both languages.                                                           |
-| Homepage §13 (Pricing shape)             | Heading, intro, and the French tier descriptions. EN tier text is verbatim.                                                          |
-| Homepage §7 (By role)                    | The four **tab labels** in French. The four lines are verbatim in both languages.                                                    |
-| Homepage §12 outlet link                 | "See the standards page" / « Voir la page des normes ».                                                                              |
-| Every `meta description`, both languages | Written per page by hand, never generated (guide §5) — but not specified.                                                            |
-| `/security`                              | Intro, "The six controls" heading, the certification line, four FAQ entries. Heading and the six controls are verbatim.              |
-| `/standards`                             | Intro and the "How this table is kept" block. Table and note verbatim.                                                               |
-| `/pricing`                               | Intro, add-ons wording, the metered-AI block, the quotation block, four FAQ entries.                                                 |
-| `/about`                                 | The entire page.                                                                                                                     |
-| `/contact`                               | Field labels, hints, error messages, the confirmation, the free-provider notice. Field NAMES are from §4.                            |
-| `/legal/privacy`, `/legal/terms`         | The stub text.                                                                                                                       |
-| Site chrome (`src/i18n/ui.ts`)           | Footer column headings, the theme toggle's accessible names, the language banner's action and dismiss labels, the placeholder badge. |
-| Open Graph card lines                    | Uses the verbatim eyebrow and H1 per language; layout is drafted.                                                                    |
+| Where                                             | What is drafted                                                                                                                                                                                                                                               |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Homepage §8 (Coverage)                            | Heading, intro, and all thirteen group names + one-liners, both languages.                                                                                                                                                                                    |
+| Homepage §13 (Pricing shape)                      | Heading, intro, and the French tier descriptions. EN tier text is verbatim.                                                                                                                                                                                   |
+| Homepage §7 (By role)                             | The four **tab labels** in French. The four lines are verbatim in both languages.                                                                                                                                                                             |
+| Homepage §12 outlet link                          | "See the standards page" / « Voir la page des normes ».                                                                                                                                                                                                       |
+| Every `meta description`, both languages          | Written per page by hand, never generated (guide §5) — but not specified.                                                                                                                                                                                     |
+| `/security`                                       | Intro, "The six controls" heading, the certification line, four FAQ entries. Heading and the six controls are verbatim.                                                                                                                                       |
+| `/standards`                                      | Intro and the "How this table is kept" block. Table and note verbatim.                                                                                                                                                                                        |
+| `/pricing`                                        | Intro, add-ons wording, the metered-AI block, the quotation block, four FAQ entries.                                                                                                                                                                          |
+| `/about`                                          | The entire page.                                                                                                                                                                                                                                              |
+| `/contact`                                        | Field labels, hints, error messages, the confirmation, the free-provider notice. Field NAMES are from §4.                                                                                                                                                     |
+| `/legal/privacy`, `/legal/terms`                  | The stub text.                                                                                                                                                                                                                                                |
+| Site chrome (`src/i18n/ui.ts`)                    | Footer column headings, the theme toggle's accessible names, the language banner's action and dismiss labels, the placeholder badge.                                                                                                                          |
+| Open Graph card lines                             | Uses the verbatim eyebrow and H1 per language; layout is drafted.                                                                                                                                                                                             |
+| **The five solution pages** (both languages)      | **Everything.** Meta title and description, eyebrow, H1, intro, the "what it covers" list, the posting argument and its chain, screenshot alt text, the closing line. The guide gives these pages their slugs and their SEO job (§5) and none of their words. |
+| **`/customers/smart-logistics`** (both languages) | Everything except the lead sentence, which is §3.3 verbatim: the four facts drawn out of that sentence, the sanitisation paragraph, the line about what is absent, the close.                                                                                 |
+| Solution navigation labels and blurbs             | The five labels and one-liners used by the header menu, the footer and each page's related-pages block (`navLabel`, `navBlurb`).                                                                                                                              |
+| The module-group → solution-page mapping          | `src/content/coverage-links.ts`. Not copy, but a content decision that shows on the homepage. See O18 and G8.                                                                                                                                                 |
 
 The French half of every one of these was written as French, not translated
 from the English — including the ones where the English came first, which were
@@ -496,18 +780,35 @@ shorthand for the sibling slug, and that is how it is implemented
 (`/en/legal/terms`, `/fr/mentions-legales/conditions`) — but the table should be
 written out, because the next person to read it will have to make the same guess.
 
----
+**G7 — Five pages cannot rank for five phrases, and the guide says they will.**
+§5 lists _logiciel transitaire Cameroun_, _ERP OHADA_, _logiciel de
+dédouanement_, _comptabilité SYSCOHADA_, _freight forwarding software Africa_
+and then says "the five solution pages exist to rank for these". The pages are
+written for those phrases — each one carries its phrases in the title, the H1
+and the intro, in the language the phrase is typed in — and that is the part a
+build can do. The part it cannot do is the rest of ranking: nobody links to a
+five-page site, and §10 puts `/docs` and a changelog in the "next" pile. If
+these phrases matter, the published-artefacts plan in §10 is not "next", it is
+the same project. **Ship the pages, then commit to the cadence** — otherwise
+five pages will be judged against a target they were never able to reach alone.
 
-## 9. What the second change carries
+**G8 — §3.8 assumes every module group has an obvious solution page. Four of
+them do not.** Thirteen groups over five pages: dashboard, HR, procurement,
+document vault and system/security each have a defensible home on two different
+pages, and the guide leaves the mapping to whoever writes the grid. D13 records
+the calls I made and `coverage-links.ts` makes them reviewable in one screen,
+but the guide should name the mapping — it is an information-architecture
+decision about how a reader moves through the site, and it will otherwise be
+re-litigated every time somebody edits the grid.
 
-Named here so review can see the whole shape:
-
-- `/en/solutions/freight-forwarding-customs` ⇄ `/fr/solutions/transit-douane`
-- `/en/solutions/warehouse` ⇄ `/fr/solutions/entrepot`
-- `/en/solutions/fleet` ⇄ `/fr/solutions/flotte`
-- `/en/solutions/finance-ohada` ⇄ `/fr/solutions/comptabilite-ohada`
-- `/en/solutions/platform-it` ⇄ `/fr/solutions/plateforme-dsi`
-- `/en/customers/smart-logistics` ⇄ `/fr/references/smart-logistics`, from §3.3
-  and nothing else
-- The coverage grid's outbound links (D5) and the Solutions menu (D4)
-- Per-page Open Graph cards where a page earns one
+**G9 — The one-page-per-customer shape does not survive one customer.**
+Decision 11 is "one named case study — Smart Logistics, sanitised", and §3.3
+gives exactly one sentence about them. That produces a page which is honest,
+short, and mostly about what it will not say. I think it is worth publishing —
+`/customers/smart-logistics` is where a prospect who has heard the name goes,
+and finding a page that says "here is what they let us publish, and here is what
+they did not" is better than a 404 — but it is not a case study, and calling it
+one in the navigation would be a promise the page does not keep. The label in
+the footer is "Customers" / « Références » for that reason. **The fix is not
+more words: it is fifteen minutes with Smart Logistics and something they are
+happy to be quoted on** (O14–O16).
